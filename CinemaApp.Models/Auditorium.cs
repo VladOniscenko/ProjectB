@@ -1,3 +1,4 @@
+namespace CinemaApp.Models;
 public class Auditorium{
     public int ID;
     public int MaxSeats;

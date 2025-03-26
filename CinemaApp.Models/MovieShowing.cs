@@ -1,3 +1,4 @@
+namespace CinemaApp.Models;
 public class MovieShowing{
     public int ID;
     public Movie Movie;

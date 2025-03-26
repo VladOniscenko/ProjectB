@@ -1,3 +1,4 @@
+namespace CinemaApp.Models;
 public class Seat{
     //made id and seatnumber different as every auditorium has a seatnumber beginning at 1 (can change if not preffered)
     public int ID;

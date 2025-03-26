@@ -1,3 +1,4 @@
+namespace CinemaApp.Models;
 public class Customer{
     public int ID;
     public string UserName;
