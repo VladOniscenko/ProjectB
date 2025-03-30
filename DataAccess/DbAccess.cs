@@ -1,90 +1,69 @@
-using System;
-using System.IO;
-using Microsoft.Data.Sqlite;
 using Dapper;
-namespace ProjectB.DataAccess;
+using Microsoft.Data.Sqlite;
+using System;
+using System.Linq;
+using System.Reflection;
 
-public class DbAccess<T>
+namespace ProjectB.DataAccess
 {
-    private readonly string _connectionString;
-    private readonly string _tableName;
-
-    public DbAccess(string tableName)
+    public class DbAccess<T>
     {
-        _connectionString = $"Data Source={DbInitializer.GetDbPath()}";
-        _tableName = tableName;
-        DbInitializer.Initialize();
-    }
+        public readonly string ConnectionString;
+        private readonly string _tableName;
 
-    public void Write(T entity)
-    {
-        string sql = $"INSERT INTO {_tableName} ({GetColumnNames()}) VALUES ({GetParameterNames()})";
-
-        using (var connection = new SqliteConnection(_connectionString))
+        public DbAccess(string tableName)
         {
-            connection.Open();
-            connection.Execute(sql, entity);
+            _tableName = tableName;
+            ConnectionString = $"{DbInitializer.GetDbPath()}";
+            DbInitializer.Initialize();
         }
-    }
 
-    public void Update(T entity)
-    {
-        string sql = $"UPDATE {_tableName} SET {GetUpdateColumns()} WHERE ID = @ID";
-
-        using (var connection = new SqliteConnection(_connectionString))
+        public void Write(T entity)
         {
-            connection.Open();
-            connection.Execute(sql, entity);
+            string sql = $"INSERT INTO {_tableName} ({GetColumnNames()}) VALUES ({GetParameterNames()})";
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                connection.Execute(sql, entity);
+            }
         }
-    }
 
-    public void Delete(int id)
-    {
-        string sql = $"DELETE FROM {_tableName} WHERE id = @ID";
-
-        using (var connection = new SqliteConnection(_connectionString))
+        public void Update(T entity)
         {
-            connection.Open();
-            connection.Execute(sql, new { ID = id });
+            string sql = $"UPDATE {_tableName} SET {GetUpdateColumns()} WHERE Id = @Id";
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                connection.Execute(sql, entity);
+            }
         }
-    }
 
-    public T GetById(int id)
-    {
-        string sql = $"SELECT * FROM {_tableName} WHERE id = @ID";
-
-        using (var connection = new SqliteConnection(_connectionString))
+        public void Delete(int id)
         {
-            connection.Open();
-            return connection.QueryFirstOrDefault<T>(sql, new { ID = id });
+            string sql = $"DELETE FROM {_tableName} WHERE Id = @Id";
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+                connection.Execute(sql, new { Id = id });
+            }
         }
-    }
 
-    public IEnumerable<T> GetAll()
-    {
-        string sql = $"SELECT * FROM {_tableName}";
+        private string GetColumnNames() =>
+            string.Join(", ", typeof(T)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.Name != "Id")
+                .Select(p => p.Name));
 
-        using (var connection = new SqliteConnection(_connectionString))
-        {
-            connection.Open();
-            return connection.Query<T>(sql);
-        }
-    }
+        private string GetParameterNames() =>
+            string.Join(", ", typeof(T)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.Name != "Id")
+                .Select(p => $"@{p.Name}"));
 
-    private string GetColumnNames()
-    {
-        return string.Join(", ", typeof(T).GetProperties().Select(p => p.Name));
-    }
-
-    private string GetParameterNames()
-    {
-        return string.Join(", ", typeof(T).GetProperties().Select(p => "@" + p.Name));
-    }
-
-    private string GetUpdateColumns()
-    {
-        return string.Join(", ", typeof(T).GetProperties()
-            .Where(p => !string.Equals(p.Name, "id", StringComparison.OrdinalIgnoreCase))
-            .Select(p => $"{p.Name} = @{p.Name}"));
+        private string GetUpdateColumns() =>
+            string.Join(", ", typeof(T)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.Name != "Id")
+                .Select(p => $"{p.Name} = @{p.Name}"));
     }
 }

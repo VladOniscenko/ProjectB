@@ -16,7 +16,7 @@ public static class DbInitializer
 
                 string sql = @"
                 CREATE TABLE IF NOT EXISTS movie (
-                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Title TEXT NOT NULL,
                     Description TEXT,
                     Runtime INTEGER,

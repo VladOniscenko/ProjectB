@@ -1,23 +1,28 @@
-﻿using Microsoft.Data.Sqlite;
-using Dapper;
-
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
 using ProjectB.DataModels;
-namespace ProjectB.DataAccess;
 
-public class MoviesAccess : DbAccess<Movie>
+namespace ProjectB.DataAccess
 {
-    private const string TableName = "movie";
-
-    public MoviesAccess() : base(TableName) { }
-
-    public Movie GetByTitle(string title)
+    public static class MoviesAccess
     {
-        string sql = $"SELECT * FROM movie WHERE title = @Title";
+        private static readonly DbAccess<Movie> DbAccess = new DbAccess<Movie>("movie");
 
-        using (var connection = new SqliteConnection($"Data Source={DbInitializer.GetDbPath()}"))
+        public static void Write(Movie movie) => DbAccess.Write(movie);
+        
+        public static void Update(Movie movie) => DbAccess.Update(movie);
+
+        public static void Delete(int id) => DbAccess.Delete(id);
+
+        public static Movie GetByTitle(string title)
         {
-            connection.Open();
-            return connection.QueryFirstOrDefault<Movie>(sql, new { Title = title });
+            string sql = $"SELECT * FROM movie WHERE title = @Title LIMIT 1";
+
+            using (var connection = new SqliteConnection(DbAccess.ConnectionString))
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<Movie>(sql, new { Title = title });
+            }
         }
     }
 }
