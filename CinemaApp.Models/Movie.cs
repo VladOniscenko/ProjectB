@@ -13,6 +13,7 @@ public class Movie
     public DateTime ReleaseDate { get; set; }
     public string Country { get; set; }
 
+    // this constructor overload is needed for dapper
     public Movie() { }
 
     public Movie(string title, string description, int runtime, string actors, double rating, string genre, int ageRestriction, DateTime releaseDate, string country)
