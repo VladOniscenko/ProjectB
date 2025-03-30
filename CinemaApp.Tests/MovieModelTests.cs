@@ -1,3 +1,4 @@
+using CinemaApp.DataAccess;
 using CinemaApp.Models;
 
 namespace CinemaApp.Tests
@@ -5,6 +6,22 @@ namespace CinemaApp.Tests
     [TestClass]
     public class MovieModelTests
     {
+
+        public Movie CreateMovieModel()
+        {
+            string title = "Harry Potter and the Prisoner of Azkaban";
+            string description = "Harry Potter's third year at Hogwarts is filled with new dangers as Sirius Black escapes from Azkaban.";
+            int runtime = 142;
+            string actors = "Daniel Radcliffe, Emma Watson, Rupert Grint, Gary Oldman";
+            double rating = 7.9;
+            string genre = "Fantasy";
+            int ageRestriction = 12;
+            DateTime releaseDate = new DateTime(2004, 5, 31);
+            string country = "UK / USA";
+
+            return new Movie(title, description, runtime, actors, rating, genre, ageRestriction, releaseDate, country);
+        }
+        
         [TestMethod]
         public void MovieModel_Creation_ShouldSetPropertiesCorrectly()
         {
@@ -17,9 +34,9 @@ namespace CinemaApp.Tests
             int ageRestriction = 12;
             DateTime releaseDate = new DateTime(2004, 5, 31);
             string country = "UK / USA";
-
-            var movie = new Movie(title, description, runtime, actors, rating, genre, ageRestriction, releaseDate, country);
-
+            
+            Movie movie = CreateMovieModel();
+            
             // Assert
             Assert.AreEqual(title, movie.Title);
             Assert.AreEqual(description, movie.Description);
@@ -37,6 +54,15 @@ namespace CinemaApp.Tests
         {
             var movie = new Movie();
             Assert.IsNotNull(movie);
+        }
+        
+        [TestMethod]
+        public void MovieModel_Insert()
+        {
+            Movie movie = CreateMovieModel();
+            MoviesAccess ma = new MoviesAccess();
+            ma.Write(movie);
+
         }
     }
 }
