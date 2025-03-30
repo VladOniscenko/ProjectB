@@ -8,34 +8,48 @@ public static class DbInitializer
 {
     public static void Initialize()
     {
-        string connectionString = DbInitializer.GetDbPath();
-        using (var connection = new SqliteConnection(connectionString))
+        try
         {
-            connection.Open();
+            using (var connection = new SqliteConnection($"Data Source={DbInitializer.GetDbPath()}"))
+            {
+                connection.Open();
 
-            string sql = @"
+                string sql = @"
                 CREATE TABLE IF NOT EXISTS movie (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    description TEXT,
-                    runtime INTEGER,
-                    actors TEXT,
-                    rating REAL,
-                    genre TEXT,
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Title TEXT NOT NULL,
+                    Description TEXT,
+                    Runtime INTEGER,
+                    Actors TEXT,
+                    Rating INTEGER,
+                    Genre TEXT,
                     AgeRestriction INTEGER,
-                    release_date TEXT,
-                    country TEXT
+                    ReleaseDate TEXT,
+                    Country TEXT
                 );";
 
-            using (var command = new SqliteCommand(sql, connection))
-            {
-                command.ExecuteNonQuery();
+                using (var command = new SqliteCommand(sql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database-init error: {ex.Message}");
         }
     }
 
+
     public static string GetDbPath()
     {
-        return "Data Source=cinema.db;";
+        return "cinema.db";
     }
+
+    
+    public static void RemoveDbFile()
+    {
+        File.Delete(DbInitializer.GetDbPath());
+    }
+
 }

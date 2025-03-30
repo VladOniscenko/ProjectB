@@ -14,7 +14,7 @@ public class MoviesAccess : DbAccess<Movie>
     {
         string sql = $"SELECT * FROM movie WHERE title = @Title";
 
-        using (var connection = new SqliteConnection(DbInitializer.GetDbPath()))
+        using (var connection = new SqliteConnection($"Data Source={DbInitializer.GetDbPath()}"))
         {
             connection.Open();
             return connection.QueryFirstOrDefault<Movie>(sql, new { Title = title });

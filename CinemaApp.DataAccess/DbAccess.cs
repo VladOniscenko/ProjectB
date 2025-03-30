@@ -11,7 +11,7 @@ public class DbAccess<T>
 
     public DbAccess(string tableName)
     {
-        _connectionString = DbInitializer.GetDbPath();
+        _connectionString = $"Data Source={DbInitializer.GetDbPath()}";
         _tableName = tableName;
         DbInitializer.Initialize();
     }
@@ -29,7 +29,7 @@ public class DbAccess<T>
 
     public void Update(T entity)
     {
-        string sql = $"UPDATE {_tableName} SET {GetUpdateColumns()} WHERE id = @ID";
+        string sql = $"UPDATE {_tableName} SET {GetUpdateColumns()} WHERE ID = @ID";
 
         using (var connection = new SqliteConnection(_connectionString))
         {
