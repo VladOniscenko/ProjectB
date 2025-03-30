@@ -1,6 +1,9 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using ProjectB.DataModels;
+using Microsoft.Data.Sqlite;
+using Dapper;
+
 
 namespace ProjectB.DataAccess
 {
@@ -18,6 +21,7 @@ namespace ProjectB.DataAccess
         {
             string sql = $"SELECT * FROM movie WHERE title = @Title LIMIT 1";
 
+            
             using (var connection = new SqliteConnection(DbAccess.ConnectionString))
             {
                 connection.Open();
