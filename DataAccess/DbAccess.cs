@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using Dapper;
-using CinemaApp.DataAccess;
+namespace ProjectB.DataAccess;
 
 public class DbAccess<T>
 {

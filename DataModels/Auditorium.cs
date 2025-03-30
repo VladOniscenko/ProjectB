@@ -1,11 +1,11 @@
-namespace CinemaApp.Models;
+namespace ProjectB.DataModels;
 public class Auditorium{
-    public int ID;
+    public int Id;
     public int MaxSeats;
     public List<Seat> Seats;
 
     public Auditorium(int id, int maxSeats, List<Seat> seats){
-        ID = id;
+        Id = id;
         MaxSeats = maxSeats;
         Seats = seats;
     }

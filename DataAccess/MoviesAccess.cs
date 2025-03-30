@@ -1,8 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using Dapper;
 
-using CinemaApp.Models;
-namespace CinemaApp.DataAccess;
+using ProjectB.DataModels;
+namespace ProjectB.DataAccess;
 
 public class MoviesAccess : DbAccess<Movie>
 {

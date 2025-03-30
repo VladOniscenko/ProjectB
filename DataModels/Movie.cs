@@ -1,4 +1,4 @@
-namespace CinemaApp.Models;
+namespace ProjectB.DataModels;
 
 public class Movie
 {

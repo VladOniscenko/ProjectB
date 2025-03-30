@@ -1,12 +1,12 @@
-namespace CinemaApp.Models;
+namespace ProjectB.DataModels;
 public class Customer{
-    public int ID;
+    public int Id;
     public string UserName;
     public string Password;
     public List<Reservation> Reservations = new();
 
     public Customer(int id, string userName, string password){
-        ID = id;
+        Id = id;
         UserName = userName;
         Password = password;
     }

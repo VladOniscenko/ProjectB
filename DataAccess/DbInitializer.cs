@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 
-namespace CinemaApp.DataAccess;
+namespace ProjectB.DataAccess;
 
 public static class DbInitializer
 {
@@ -10,7 +10,7 @@ public static class DbInitializer
     {
         try
         {
-            using (var connection = new SqliteConnection($"Data Source={DbInitializer.GetDbPath()}"))
+            using (var connection = new SqliteConnection($"{DbInitializer.GetDbPath()}"))
             {
                 connection.Open();
 
@@ -43,7 +43,7 @@ public static class DbInitializer
 
     public static string GetDbPath()
     {
-        return "cinema.db";
+        return $"Data Source=DataSources/cinema.db";
     }
 
     
