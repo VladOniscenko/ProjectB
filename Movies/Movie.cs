@@ -1,4 +1,4 @@
-namespace ProjectB.myModels;
+namespace ProjectB.Movies;
 
 public class Movie
 {
@@ -9,9 +9,12 @@ public class Movie
     public string Actors { get; set; }
     public double Rating { get; set; }
     public string Genre { get; set; }
-    public int AgeRestriction { get; set; }
-    public string ReleaseDate { get; set; }
+    public string AgeRestriction { get; set; }
+    public DateTime ReleaseDate { get; set; }
     public string Country { get; set; }
-    
-    
+
+    public override string ToString()
+    {
+        return $"{Id}: {Title} ({ReleaseDate.Year}) - {Genre} - {Rating}/10";
+    }
 }
