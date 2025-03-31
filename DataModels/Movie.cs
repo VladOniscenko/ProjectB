@@ -28,4 +28,22 @@ public class Movie
         ReleaseDate = releaseDate;
         Country = country;
     }
+
+    public static string Table()
+    {
+        return @"
+            CREATE TABLE IF NOT EXISTS movie (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Title TEXT NOT NULL,
+                Description TEXT,
+                Runtime INTEGER,
+                Actors TEXT,
+                Rating INTEGER,
+                Genre TEXT,
+                AgeRestriction INTEGER,
+                ReleaseDate TEXT,
+                Country TEXT
+            );
+        ";
+    }
 }

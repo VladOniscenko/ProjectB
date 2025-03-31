@@ -1,8 +1,5 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace ProjectB.DataAccess

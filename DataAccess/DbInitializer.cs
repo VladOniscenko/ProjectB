@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using ProjectB.DataModels;
 
 namespace ProjectB.DataAccess;
 
@@ -20,19 +21,11 @@ public static class DbInitializer
             {
                 connection.Open();
 
-                string sql = @"
-                CREATE TABLE IF NOT EXISTS movie (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Title TEXT NOT NULL,
-                    Description TEXT,
-                    Runtime INTEGER,
-                    Actors TEXT,
-                    Rating INTEGER,
-                    Genre TEXT,
-                    AgeRestriction INTEGER,
-                    ReleaseDate TEXT,
-                    Country TEXT
-                );";
+                string sql = "";
+                sql += Movie.Table();
+                sql += Auditorium.Table();
+                sql += User.Table();
+                sql += Cinema.Table();
 
                 using (var command = new SqliteCommand(sql, connection))
                 {

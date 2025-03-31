@@ -20,7 +20,6 @@ namespace ProjectB.DataAccess
         public static Movie GetByTitle(string title)
         {
             string sql = $"SELECT * FROM movie WHERE title = @Title LIMIT 1";
-
             
             using (var connection = new SqliteConnection(DbAccess.ConnectionString))
             {

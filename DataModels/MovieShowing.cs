@@ -1,13 +1,13 @@
 namespace ProjectB.DataModels;
 public class MovieShowing{
     public int Id;
-    public Movie Movie;
+    public int Movie;
     public DateTime DateTimeShowing;
     public Auditorium Auditorium;
 
-    public MovieShowing(int id, Movie movie, DateTime dateTimeShowing, Auditorium auditorium){
+    public MovieShowing(int id, int movieId, DateTime dateTimeShowing, Auditorium auditorium){
         Id = id;
-        Movie = movie;
+        Movie = movieId;
         DateTimeShowing = dateTimeShowing;
         Auditorium = auditorium;
     }
