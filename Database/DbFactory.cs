@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using ProjectB.Auditoriums;
-using ProjectB.Cinemas;
-using ProjectB.Movies;
-using ProjectB.Reservations;
-using ProjectB.SeatReservations;
-using ProjectB.Seats;
-using ProjectB.Showtimes;
-using ProjectB.Users;
+using ProjectB.Models.Auditoriums;
+using ProjectB.Models.Cinemas;
+using ProjectB.Models.Movies;
+using ProjectB.Models.Reservations;
+using ProjectB.Models.SeatReservations;
+using ProjectB.Models.Seats;
+using ProjectB.Models.Showtimes;
+using ProjectB.Models.Users;
 
 namespace ProjectB.Database;
 

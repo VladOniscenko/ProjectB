@@ -1,5 +1,5 @@
 ﻿using ProjectB.Database;
-using ProjectB.Movies;
+using ProjectB.Models.Movies;
 namespace ProjectB;
 
 class Program

@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 
-namespace ProjectB.Auditoriums;
+namespace ProjectB.Models.Auditoriums;
 
 public class AuditoriumRepository
 {

@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 
-namespace ProjectB.Reservations;
+namespace ProjectB.Models.Reservations;
 
 public class ReservationRepository
 {

@@ -1,4 +1,4 @@
-namespace ProjectB.Users;
+namespace ProjectB.Models.Users;
 
 public class User
 {

@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 
-namespace ProjectB.Users;
+namespace ProjectB.Models.Users;
 
 public class UserRepository
 {

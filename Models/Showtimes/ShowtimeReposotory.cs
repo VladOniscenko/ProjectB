@@ -1,38 +1,40 @@
 using Dapper;
 using ProjectB.Database;
 
-namespace ProjectB.Seats;
+namespace ProjectB.Models.Showtimes;
 
-public class SeatRepository
+public class ShowtimeRepository
 {
     public static void InitializeDatabase()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute(@"
-            CREATE TABLE IF NOT EXISTS Seats (
+            CREATE TABLE IF NOT EXISTS Showtimes (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                MovieId INTEGER NOT NULL,
                 AuditoriumId INTEGER NOT NULL,
-                Row TEXT NOT NULL,
-                Number INTEGER NOT NULL,
+                StartTime TEXT NOT NULL,
+                EndTime TEXT NOT NULL,
+                FOREIGN KEY (MovieId) REFERENCES Movies(Id),
                 FOREIGN KEY (AuditoriumId) REFERENCES Auditoriums(Id)
             );
         ");
     }
     
-    public void AddSeat(Seat seat)
+    public void AddShowtime(Showtime showtime)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute(@"
-            INSERT INTO Seats (AuditoriumId, Row, Number) 
-            VALUES (@AuditoriumId, @Row, @Number)", seat);
+            INSERT INTO Showtimes (MovieId, AuditoriumId, StartTime, EndTime) 
+            VALUES (@MovieId, @AuditoriumId, @StartTime, @EndTime)", showtime);
     }
 
-    public IEnumerable<Seat> GetAllSeats()
+    public IEnumerable<Showtime> GetAllShowtimes()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<Seat>("SELECT * FROM Seats");
+        return connection.Query<Showtime>("SELECT * FROM Showtimes");
     }
 }

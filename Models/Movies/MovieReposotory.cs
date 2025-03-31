@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 
-namespace ProjectB.Movies;
+namespace ProjectB.Models.Movies;
 
 public class MovieRepository
 {

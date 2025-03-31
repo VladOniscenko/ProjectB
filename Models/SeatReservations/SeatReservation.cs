@@ -1,4 +1,4 @@
-namespace ProjectB.SeatReservations;
+namespace ProjectB.Models.SeatReservations;
 
 public class SeatReservation
 {

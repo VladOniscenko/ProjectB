@@ -1,4 +1,4 @@
-namespace ProjectB.Seats;
+namespace ProjectB.Models.Seats;
 
 public class Seat
 {
