@@ -11,39 +11,12 @@ namespace ProjectB.DataAccess
     {
         public readonly string ConnectionString;
         private readonly string _tableName;
-        private readonly string _dbPath;
 
         public DbAccess(string tableName)
         {
             _tableName = tableName;
-            _dbPath = GetDatabasePath();
-            ConnectionString = $"Data Source={_dbPath}";
-            EnsureDatabaseExists();
-        }
-
-        private string GetDatabasePath()
-        {
-            string projectRoot = AppDomain.CurrentDomain.BaseDirectory;
-            string directoryPath = Path.Combine(projectRoot, "../../../../../DataSources");
-            string dbPath = Path.Combine(directoryPath, "project.db");
-
-            return dbPath;
-        }
-
-        private void EnsureDatabaseExists()
-        {
-            string directoryPath = Path.GetDirectoryName(_dbPath);
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-                Console.WriteLine($"Created missing directory: {directoryPath}");
-            }
-
-            if (!File.Exists(_dbPath))
-            {
-                File.Create(_dbPath).Close();
-                Console.WriteLine($"Database file not found, created a new one at: {_dbPath}");
-            }
+            ConnectionString = DbInitializer.ConnectionString;
+            DbInitializer.Initialize();
         }
 
         public void Write(T entity)
