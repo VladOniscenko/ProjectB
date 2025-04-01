@@ -1,5 +1,6 @@
 using Dapper;
 using ProjectB.Database;
+using BCrypt.Net;
 
 namespace ProjectB.Models.Users;
 
@@ -22,13 +23,58 @@ public class UserRepository
         ");
     }
     
+    public static void PopulateTable()
+    {
+        try
+        {
+            var userRepo = new UserRepository();
+
+            // Check if an admin with the specific email exists
+            var adminExists = userRepo.GetAllUsers().Any(u => u.Email == "admin@admin.com");
+
+            if (!adminExists)
+            {
+                var adminUser = new User
+                {
+                    FirstName = "Admin",
+                    LastName = "User",
+                    Email = "admin@admin.com",
+                    Password = "admin",
+                    IsAdmin = true
+                };
+
+                userRepo.AddUser(adminUser);
+                Console.WriteLine("Admin user created.");
+            }
+            else
+            {
+                Console.WriteLine("Admin user already exists.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing admin user: {ex.Message}");
+        }
+    }
+
+
+    
     public void AddUser(User user)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
+
+        // Hash the password before storing it
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
         connection.Execute(@"
-            INSERT INTO Users (FirstName, LastName, Email, Password, Reservations, IsAdmin) 
-            VALUES (@FirstName, @LastName, @Email, @Password, @Reservations, @IsAdmin)", user);
+        INSERT INTO Users (FirstName, LastName, Email, Password, Reservations, IsAdmin) 
+        VALUES (@FirstName, @LastName, @Email, @Password, @Reservations, @IsAdmin)", user);
+    }
+    
+    public bool VerifyPassword(string enteredPassword, string storedHash)
+    {
+        return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
     }
 
     public IEnumerable<User> GetAllUsers()

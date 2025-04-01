@@ -1,5 +1,7 @@
 using Dapper;
 using ProjectB.Database;
+using ProjectB.Models.Auditoriums;
+using ProjectB.Models.Movies;
 
 namespace ProjectB.Models.Showtimes;
 
@@ -21,6 +23,62 @@ public class ShowtimeRepository
             );
         ");
     }
+    
+    public void DeleteAllShowtimes()
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        connection.Execute("DELETE FROM Showtimes");
+    }
+    
+    public static void PopulateTable()
+    {
+        MovieRepository movieRepository = new();
+        AuditoriumRepository auditoriumRepository = new();
+        ShowtimeRepository showtimeRepository = new();
+
+        var movies = movieRepository.GetNewestMovies(25);
+        var auditoriums = auditoriumRepository.GetAllAuditoriums();
+    
+        if (!movies.Any() || !auditoriums.Any())
+        {
+            Console.WriteLine("No movies or auditoriums found.");
+            return;
+        }
+
+        showtimeRepository.DeleteAllShowtimes();
+
+        DateTime startOfWeek = DateTime.Now.Date;
+        Random random = new();
+
+        foreach (var movie in movies)
+        {
+            foreach (var auditorium in auditoriums)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    DateTime startTime = startOfWeek.AddDays(random.Next(7))
+                        .AddHours(random.Next(9, 22))
+                        .AddMinutes(15 * random.Next(0, 4));
+                    
+                    DateTime endTime = startTime.AddMinutes(movie.Runtime);
+                    
+                    Showtime showtime = new()
+                    {
+                        MovieId = movie.Id,
+                        AuditoriumId = auditorium.Id,
+                        StartTime = startTime,
+                        EndTime = endTime
+                    };
+                    
+                    showtimeRepository.AddShowtime(showtime);
+                }
+                Console.WriteLine($"Showtimes created for movie: {movie.Title}");
+
+            }
+        }
+    }
+
     
     public void AddShowtime(Showtime showtime)
     {
