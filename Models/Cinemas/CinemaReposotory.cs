@@ -1,6 +1,6 @@
 using Dapper;
 using ProjectB.Database;
-
+using ProjectB;
 namespace ProjectB.Models.Cinemas;
 
 public class CinemaRepository
@@ -17,6 +17,17 @@ public class CinemaRepository
         ");
     }
     
+    public static void PopulateTable()
+    {
+        string cinemaName = Cinema.MainCinemaName;
+        CinemaRepository cinemaRepo = new();
+        if (!cinemaRepo.GetAllCinemas().Any(u => u.CinemaName == cinemaName))
+        {
+            cinemaRepo.AddCinema(new Cinema(cinemaName));
+        }
+    }
+    
+    
     public void AddCinema(Cinema cinema)
     {
         using var connection = DbFactory.CreateConnection();
@@ -31,5 +42,17 @@ public class CinemaRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<Cinema>("SELECT * FROM Cinemas");
+    }
+
+    public Cinema? GetMainCinema()
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        var cinema = connection.QueryFirstOrDefault<Cinema>(
+            "SELECT * FROM Cinemas WHERE CinemaName = @CinemaName", 
+            new { CinemaName = Cinema.MainCinemaName });
+
+        return cinema;
     }
 }

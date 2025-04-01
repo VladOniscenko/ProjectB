@@ -1,5 +1,11 @@
 using Dapper;
 using ProjectB.Database;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using ProjectB.Models.Movies;
+using ProjectB.Database;
 
 namespace ProjectB.Models.Movies;
 
@@ -24,14 +30,49 @@ public class MovieRepository
             );
         ");
     }
-    
+
+    public static void PopulateTable()
+    {
+        try
+        {
+            var movieRepo = new MovieRepository();
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Database", "movies.json");
+
+            if (!File.Exists(filePath))
+            {
+                throw new Exception("movies.json file not found.");
+            }
+
+            string jsonContent = File.ReadAllText(filePath);
+            List<Movie>? movies = JsonSerializer.Deserialize<List<Movie>>(jsonContent);
+
+            if (movies == null || movies.Count == 0)
+            {
+                throw new Exception("No movies found in the JSON file.");
+            }
+
+            foreach (Movie movie in movies)
+            {
+                movieRepo.AddMovie(movie);
+            }
+
+            Console.WriteLine($"Added: {movies.Count} Movies");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing movies.json: {ex.Message}");
+        }
+    }
+
+
     public void AddMovie(Movie movie)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute(@"
             INSERT INTO Movies (Title, Description, Runtime, Actors, Rating, Genre, AgeRestriction, ReleaseDate, Country) 
-            VALUES (@Title, @Description, @Runtime, @Actors, @Rating, @Genre, @AgeRestriction, @ReleaseDate, @Country)", movie);
+            VALUES (@Title, @Description, @Runtime, @Actors, @Rating, @Genre, @AgeRestriction, @ReleaseDate, @Country)",
+            movie);
     }
 
     public IEnumerable<Movie> GetAllMovies()
@@ -39,5 +80,16 @@ public class MovieRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<Movie>("SELECT * FROM Movies");
+    }
+    
+    public List<Movie> GetNewestMovies(int count)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies ORDER BY ReleaseDate DESC LIMIT @Count",
+            new { Count = count }
+        ).ToList();
     }
 }
