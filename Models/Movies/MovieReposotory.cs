@@ -82,7 +82,7 @@ public class MovieRepository
         return connection.Query<Movie>("SELECT * FROM Movies");
     }
     
-    public List<Movie> GetNewestMovies(int count)
+    public List<Movie> GetNewestMovies(int count = 10)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
@@ -90,6 +90,50 @@ public class MovieRepository
         return connection.Query<Movie>(
             "SELECT * FROM Movies ORDER BY ReleaseDate DESC LIMIT @Count",
             new { Count = count }
+        ).ToList();
+    }
+    
+    public List<Movie> GetBestRatedMovies(int count = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies ORDER BY Rating DESC LIMIT @Count",
+            new { Count = count }
+        ).ToList();
+    }
+    
+    public List<Movie> GetBestAndNewestMovies(int count = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies ORDER BY Rating DESC, ReleaseDate DESC LIMIT @Count",
+            new { Count = count }
+        ).ToList();
+    }
+    
+    public List<Movie> GetMoviesByGenre(string genre, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Genre) LIKE LOWER('%' || @Genre || '%') LIMIT @Count",
+            new { Count = limit, Genre = genre }
+        ).ToList();
+    }
+    
+    public List<Movie> GetMoviesByTitle(string title, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Title) LIKE LOWER('%' || @Title || '%') LIMIT @Count",
+            new { Count = limit, Title = title }
         ).ToList();
     }
 }

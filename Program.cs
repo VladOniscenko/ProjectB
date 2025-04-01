@@ -24,7 +24,7 @@ class Program
         //     Country = "USA"
         // });
         
-        foreach (Movie movie in movieRepo.GetAllMovies())
+        foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
         {
             Console.WriteLine($"{movie}");
         }

@@ -37,7 +37,7 @@ public static void PopulateTable()
     AuditoriumRepository auditoriumRepository = new();
     ShowtimeRepository showtimeRepository = new();
 
-    var movies = movieRepository.GetNewestMovies(25);
+    var movies = movieRepository.GetBestAndNewestMovies(25);
     var auditoriums = auditoriumRepository.GetAllAuditoriums();
 
     if (!movies.Any() || !auditoriums.Any())
