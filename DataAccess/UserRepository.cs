@@ -18,7 +18,6 @@ public class UserRepository
                 LastName TEXT NOT NULL,
                 Email TEXT NOT NULL UNIQUE,
                 Password TEXT NOT NULL,
-                Reservations TEXT,
                 IsAdmin INTEGER NOT NULL CHECK (IsAdmin IN (0,1))
             );
         ");
@@ -69,8 +68,8 @@ public class UserRepository
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
         connection.Execute(@"
-        INSERT INTO Users (FirstName, LastName, Email, Password, Reservations, IsAdmin) 
-        VALUES (@FirstName, @LastName, @Email, @Password, @Reservations, @IsAdmin)", user);
+        INSERT INTO Users (FirstName, LastName, Email, Password, IsAdmin) 
+        VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
     
     public bool VerifyPassword(string enteredPassword, string storedHash)
