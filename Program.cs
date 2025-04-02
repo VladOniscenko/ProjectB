@@ -1,4 +1,4 @@
-﻿using ProjectB.DataAccess;
+﻿﻿using ProjectB.DataAccess;
 
 namespace ProjectB
 {
@@ -15,6 +15,11 @@ namespace ProjectB
         DbFactory.InitializeDatabase();
         
         var movieRepo = new MovieRepository();
+
+        string prompt = "Welcome customer!";
+        string[] options = { "Register", "Login", "Movies", "About us", "Exit" };
+        Menu menu = new Menu(prompt, options);
+        int SelectedIndex = menu.Run();
         
         // movieRepo.AddMovie(new Movie 
         // { 
@@ -30,11 +35,8 @@ namespace ProjectB
         // });
         
         foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
->>>>>>> Stashed changes
         {
-            Console.WriteLine("Hello World!");
-            DbInitializer.Initialize();
+            Console.WriteLine($"{movie}");
         }
-
     }
 }
