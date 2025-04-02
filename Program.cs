@@ -1,4 +1,4 @@
-﻿using ProjectB.Database;
+﻿﻿using ProjectB.Database;
 using ProjectB.Models.Movies;
 using ProjectB.DataAccess;
 namespace ProjectB;
@@ -7,6 +7,11 @@ class Program
 {
     static void Main()
     {
+
+        string prompt = "Welcome customer!";
+        string[] options = { "Register", "Login", "Movies", "About us", "Exit" };
+        Menu menu = new Menu(prompt, options);
+        int SelectedIndex = menu.Run();
 
         DbFactory.InitializeDatabase();
         
@@ -25,9 +30,9 @@ class Program
         //     Country = "USA"
         // });
         
-        foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
-        {
-            Console.WriteLine($"{movie}");
-        }
+        // foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
+        // {
+        //     Console.WriteLine($"{movie}");
+        // }
     }
 }
