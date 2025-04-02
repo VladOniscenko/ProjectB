@@ -1,8 +1,9 @@
 using Dapper;
 using ProjectB.Database;
 using ProjectB.Models.Auditoriums;
+using ProjectB.Models.Seats;
 
-namespace ProjectB.Models.Seats;
+namespace ProjectB.DataAccess;
 
 public class SeatRepository
 {

@@ -1,13 +1,9 @@
 using Dapper;
 using ProjectB.Database;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using ProjectB.Models.Movies;
-using ProjectB.Database;
 
-namespace ProjectB.Models.Movies;
+namespace ProjectB.DataAccess;
 
 public class MovieRepository
 {

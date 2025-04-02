@@ -1,9 +1,8 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.Auditoriums;
-using ProjectB.Models.Movies;
+using ProjectB.Models.Showtimes;
 
-namespace ProjectB.Models.Showtimes;
+namespace ProjectB.DataAccess;
 
 public class ShowtimeRepository
 {

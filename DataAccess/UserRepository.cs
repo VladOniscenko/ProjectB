@@ -1,8 +1,9 @@
 using Dapper;
 using ProjectB.Database;
 using BCrypt.Net;
+using ProjectB.Models.Users;
 
-namespace ProjectB.Models.Users;
+namespace ProjectB.DataAccess;
 
 public class UserRepository
 {

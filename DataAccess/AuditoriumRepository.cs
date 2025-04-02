@@ -1,8 +1,9 @@
 using Dapper;
 using ProjectB.Database;
+using ProjectB.Models.Auditoriums;
 using ProjectB.Models.Cinemas;
 
-namespace ProjectB.Models.Auditoriums;
+namespace ProjectB.DataAccess;
 
 public class AuditoriumRepository
 {
