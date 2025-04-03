@@ -17,4 +17,20 @@ public class Movie
     {
         return $"{Id}: {Title} ({ReleaseDate.Year}) - {Genre} - {Rating}/10";
     }
+
+    public string ShowMovie(Movie movie)
+    {
+        return 
+        @$"
+        Movie title: {movie.Title}
+        Movie despriction: {movie.Description}
+        Runtime: {movie.Runtime} minutes
+        Featuring: {movie.Actors}
+        Rating: {movie.Rating}
+        Genre: {movie.Genre}
+        Agerestriction: {movie.AgeRestriction}
+        Release: {movie.ReleaseDate}
+        Country: {movie.Country}
+        ";
+    }
 }
