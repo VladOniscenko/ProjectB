@@ -1,4 +1,5 @@
-﻿using ProjectB.Database;
+﻿using System.Diagnostics;
+using ProjectB.Database;
 using ProjectB.Models.Movies;
 namespace ProjectB;
 
@@ -24,12 +25,9 @@ class Program
         //     Country = "USA"
         // });
         
-        foreach (Movie movie in movieRepo.GetAllMovies())
-        {
-            Console.WriteLine($"{movie}");
-        }
+        
     }
-
+    
     public static bool validateString(int length, string input)
     {
         if (input.Length < length || input.Contains("PG") && input.Length < length)
