@@ -5,9 +5,25 @@ using System.ComponentModel.DataAnnotations;
 public static class UserCreation{
     // needs to check if account was already made and all fields are according to standards
 
+    public static void DrawInputBox(int x, int y, int width, string label){
+        Console.SetCursorPosition(x, y);
+        Console.Write(label + ": ");
+        Console.SetCursorPosition(x + label.Length + 2, y);
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
+        Console.Write(new string(' ', width));
+        Console.SetCursorPosition(x + label.Length + 2, y);
+    }
+
+ 
+
 
     public static void CreateUser(){
+        Console.Clear();
         UserRepository userRepository =  new UserRepository();
+        Console.WriteLine("╔══════════════════════╗");
+        Console.WriteLine("║   Create New User    ║");
+        Console.WriteLine("╚══════════════════════╝");
 
 
         User newUser = new User();
