@@ -64,12 +64,5 @@ namespace ProjectB
  
             return SelectedIndex;
         }
-
-
-        public void Start()
-        {
-            DisplayOptions();
-        }
-
     }
 }
