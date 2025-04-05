@@ -49,12 +49,6 @@ public static class UserCreation{
         // Console.ForegroundColor = defaultColor2;
 
 
-
-
-
-        Console.WriteLine("huh?");
-
-
         userRepository.AddUser(newUser);
     }
 
