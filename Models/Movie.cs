@@ -9,7 +9,7 @@ public class Movie
     public string Actors { get; set; }
     public double Rating { get; set; }
     public string Genre { get; set; }
-    public string AgeRestriction { get; set; }
+    public int AgeRestriction { get; set; }
     public DateTime ReleaseDate { get; set; }
     public string Country { get; set; }
 

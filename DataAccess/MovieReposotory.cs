@@ -20,7 +20,7 @@ public class MovieRepository
                 Actors TEXT NOT NULL,
                 Rating REAL NOT NULL,
                 Genre TEXT NOT NULL,
-                AgeRestriction TEXT NOT NULL,
+                AgeRestriction INT NOT NULL,
                 ReleaseDate TEXT NOT NULL,
                 Country TEXT NOT NULL
             );
