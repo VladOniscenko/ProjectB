@@ -26,7 +26,7 @@ public class Movie
         Movie despriction: {movie.Description}
         Runtime: {movie.Runtime} minutes
         Featuring: {movie.Actors}
-        Rating: {movie.Rating}
+        Rating: {movie.Rating}/10
         Genre: {movie.Genre}
         Agerestriction: {movie.AgeRestriction}
         Release: {movie.ReleaseDate}
