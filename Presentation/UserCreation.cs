@@ -122,7 +122,7 @@ public static class UserCreation{
 
         newUser.IsAdmin = false;
         if(CheckIfDataCorrect(newUser)){
-            // userRepository.AddUser(newUser);
+            userRepository.AddUser(newUser);
             Console.WriteLine("\nYour account has been made!");
         }
         else{
