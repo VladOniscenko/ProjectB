@@ -122,7 +122,6 @@ public static class UserCreation{
             newUser.Password = DrawInputBox(0, 7, "Password", true);
         }
 
-        newUser.IsAdmin = false;
         if(CheckIfDataCorrect(newUser)){
             userRepository.AddUser(newUser);
             Console.WriteLine("\nYour account has been made!");
