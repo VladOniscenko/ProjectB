@@ -1,40 +1,42 @@
+namespace ProjectB.Presentation
+{
 using ProjectB.DataAccess;
 using ProjectB.Models.Users;
 using System.ComponentModel.DataAnnotations;
 
 public static class UserCreation{
     // needs to check if account was already made and all fields are according to standards
-    const int boxX = 15;
-    const int width = 25;
+    const int BoxX = 15;
+    const int Width = 25;
 
 
     public static string DrawInputBox(int x, int y, string label, bool isPassword = false){
         Console.SetCursorPosition(x, y);
         Console.Write(label + ": ");
-        Console.SetCursorPosition(boxX, y);
+        Console.SetCursorPosition(BoxX, y);
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write(new string(' ', width));
-        Console.SetCursorPosition(boxX, y);
-        return ReadInputBox(boxX, y, width, isPassword);
+        Console.Write(new string(' ', Width));
+        Console.SetCursorPosition(BoxX, y);
+        return ReadInputBox(BoxX, y, Width, isPassword);
     }
 
-    public static string ReadInputBox(int boxX, int Y, int boxLength, bool isPassword){
+    public static string ReadInputBox(int boxX, int y, int boxLength, bool isPassword){
         string input = "";
 
         while(true){
             var key = Console.ReadKey(intercept: true);
 
             if(key.Key == ConsoleKey.Enter){
-                Console.SetCursorPosition(boxX + input.Length, Y);
+                Console.SetCursorPosition(boxX + input.Length, y);
                 break;
             }
 
             if (key.Key == ConsoleKey.Backspace && input.Length > 0){
                 input = input.Remove(input.Length - 1);
-                Console.SetCursorPosition(boxX + input.Length, Y);
+                Console.SetCursorPosition(boxX + input.Length, y);
                 Console.Write(" ");
-                Console.SetCursorPosition(boxX + input.Length, Y);
+                Console.SetCursorPosition(boxX + input.Length, y);
             }
 
             else if(!char.IsControl(key.KeyChar) && input.Length < boxLength - 1){
@@ -186,5 +188,5 @@ public static class UserCreation{
 
 }
 
-}
+}}
 
