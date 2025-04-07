@@ -104,19 +104,20 @@ public static class UserCreation
 
 
         newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
-        bool doesUserExist = CheckIfUserExists(newUser.Email, userRepository);
+        bool doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
         while(!email.IsValid(newUser.Email) || !doesUserExist){
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(0, 9);
-            if(!CheckIfUserExists(newUser.Email, userRepository)){
+            if(!UserRepository.CheckIfUserExists(newUser.Email)){
+                Console.SetCursorPosition(0, 9);
                 Console.Write("    Account with this email already exists");
             }
             else{
+                Console.SetCursorPosition(0, 9);
                 Console.Write("    Please enter a valid email address");
             }
             Console.ResetColor();
             newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
-            doesUserExist = CheckIfUserExists(newUser.Email, userRepository);
+            doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
         }
         Console.SetCursorPosition(0, 9);
         Console.Write("                                                                  ");
@@ -146,7 +147,7 @@ public static class UserCreation
 
         Console.Clear();
         Console.WriteLine("You have entered the following information:");
-        Console.WriteLine($"    First name: {user.FirstName}\n   Last name:   {user.LastName} \n    Email:      {user.Email}\n    Password:   {new string('*', user.Password.Length)}");
+        Console.WriteLine($"    First name: {user.FirstName}\n    Last name:  {user.LastName} \n    Email:      {user.Email}\n    Password:   {new string('*', user.Password.Length)}");
         Console.WriteLine("\n   Is this correct?");
         Console.Write("    ");
         Console.BackgroundColor = ConsoleColor.White;
@@ -187,14 +188,6 @@ public static class UserCreation
         }
     }
 
-    public static bool CheckIfUserExists(string email, UserRepository userRepository){
-        foreach(User user in userRepository.GetAllUsers()){
-            if(user.Email == email){
-                return false;
-            }
-        }
-        return true;
-
-}}
+}
 
 

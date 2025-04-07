@@ -2,6 +2,7 @@ using Dapper;
 using ProjectB.Database;
 using BCrypt.Net;
 using ProjectB.Models.Users;
+using System.Windows.Markup;
 
 namespace ProjectB.DataAccess;
 
@@ -82,5 +83,12 @@ public class UserRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<User>("SELECT * FROM Users");
+    }
+
+    public static bool CheckIfUserExists(string email){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new {email}).Count() == 0;
+
     }
 }
