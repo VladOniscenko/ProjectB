@@ -8,7 +8,7 @@ public static class UserCreation
 {
     // needs to check if account was already made and all fields are according to standards
     const int BoxX = 15;
-    const int Width = 25;
+    const int Width = 30;
 
 
     public static string DrawInputBox(int x, int y, string label, string previouslyWritten, bool isPassword = false){
