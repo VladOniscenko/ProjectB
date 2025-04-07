@@ -60,6 +60,14 @@ public static class UserCreation
         return input;
     }
 
+    public static void ShowErrorMessage(int y, string errorMessage){
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.SetCursorPosition(0, y);
+        Console.Write(errorMessage);
+        Console.ResetColor();
+
+    }
+
  
 
 
@@ -81,10 +89,9 @@ public static class UserCreation
 
         newUser.FirstName = DrawInputBox(0, 4, "First name", newUser.FirstName);
         while(newUser.FirstName.Length < 3 || newUser.FirstName.Any(c => !char.IsLetter(c))){
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(0, 5);
-            Console.Write("    Name must be longer than 3 characters and can only contain letters");
-            Console.ResetColor();
+
+            ShowErrorMessage( 5, "    Name must be longer than 3 characters and can only contain letters");
+
             newUser.FirstName = DrawInputBox(0, 4, "First name", newUser.FirstName);
         }
         Console.SetCursorPosition(0, 5);
@@ -92,11 +99,11 @@ public static class UserCreation
 
 
         newUser.LastName = DrawInputBox(0, 6, "Last name", newUser.LastName);
+
         while(newUser.LastName.Length < 3 || newUser.LastName.Any(c => !char.IsLetter(c))){
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(0, 7);
-            Console.Write("    Name must be longer than 3 characters and can only contain letters");
-            Console.ResetColor();
+
+            ShowErrorMessage(7, "    Name must be longer than 3 characters and can only contain letters");
+
             newUser.LastName = DrawInputBox(0, 6, "Last name", newUser.LastName);
         }
         Console.SetCursorPosition(0, 7);
@@ -105,17 +112,16 @@ public static class UserCreation
 
         newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
         bool doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
+
         while(!email.IsValid(newUser.Email) || !doesUserExist){
-            Console.ForegroundColor = ConsoleColor.Red;
-            if(!UserRepository.CheckIfUserExists(newUser.Email)){
-                Console.SetCursorPosition(0, 9);
-                Console.Write("    Account with this email already exists");
+
+            if(!email.IsValid(newUser.Email)){
+                ShowErrorMessage(9, "    Please enter a valid email address       ");
             }
             else{
-                Console.SetCursorPosition(0, 9);
-                Console.Write("    Please enter a valid email address");
+                ShowErrorMessage(9, "    Account with this email already exists");
             }
-            Console.ResetColor();
+
             newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
             doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
         }
@@ -126,15 +132,12 @@ public static class UserCreation
         newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
         while(newUser.Password.Length < 4 || !newUser.Password.Any(c => !char.IsLetterOrDigit(c)) ||
         !newUser.Password.Any(char.IsUpper) || !newUser.Password.Any(char.IsDigit)){
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.SetCursorPosition(0, 11);
-            Console.Write("    Please enter a valid password (must contain an uppercase letter, a number and symbol)");
-            Console.ResetColor();
+            ShowErrorMessage(11, "    Please enter a valid password (must contain an uppercase letter, a number and symbol)");
             newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
         }
 
         if(CheckIfDataCorrect(newUser)){
-            // userRepository.AddUser(newUser);
+            userRepository.AddUser(newUser);
             Console.WriteLine("\nYour account has been made!");
         }
         else{
@@ -147,7 +150,7 @@ public static class UserCreation
 
         Console.Clear();
         Console.WriteLine("You have entered the following information:");
-        Console.WriteLine($"    First name: {user.FirstName}\n    Last name:  {user.LastName} \n    Email:      {user.Email}\n    Password:   {new string('*', user.Password.Length)}");
+        Console.WriteLine($"    First name:  {user.FirstName}\n    Last name:   {user.LastName} \n    Email:       {user.Email}\n    Password:    {new string('*', user.Password.Length)}");
         Console.WriteLine("\n   Is this correct?");
         Console.Write("    ");
         Console.BackgroundColor = ConsoleColor.White;
