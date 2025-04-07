@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Net.Http.Headers;
+using System.Security.AccessControl;
 using ProjectB.Database;
 using ProjectB.Models.Movies;
 namespace ProjectB;
@@ -29,15 +31,44 @@ class Program
         
     }
     
-    public static bool validateString(int length, string input)
+    public static T GetAndValidateInput<T>(string prompt, int min = 0, int max= 100)
     {
-        if (input.Length < length || input.Contains("PG") && input.Length < length)
+            Console.Clear();
+            Console.WriteLine($"{prompt}:");
+            string input = Console.ReadLine();
+
+            if (typeof(T) == typeof(int))
             {
-                Console.WriteLine("Invalid title, try again");
-                Thread.Sleep(1000);
-                return false;
+                if (int.TryParse(input,out int value) && value >= min && value <= max)
+                {
+                    return (T) (object) value!;
+                }
             }
-        else{return true;}
+            else if (typeof(T) == typeof(string))
+            {
+                if (!string.IsNullOrEmpty(input) && input.Length >= min && input.Length <= max)
+                {
+                    return (T) (object) input!;
+                }
+            }
+            else if (typeof(T) == typeof(double))
+            {
+                if (double.TryParse(input,out double value))
+                {
+                    return (T) (object) value;
+                }
+            }
+            else if (typeof(T) == typeof(DateTime))
+            {
+                if (DateTime.TryParse(input,out DateTime value))
+                {
+                    return (T) (object) value;
+                }
+            }
+
+            Console.WriteLine("Invalid input");
+            Thread.Sleep(1000);
+            return GetAndValidateInput<T>(prompt,min,max);
     }
     public static Movie Create()
     {
@@ -50,8 +81,8 @@ class Program
             string actorsInput = "";
             double rating = 0;
             string genreInput = "";
-            string ageInput = "";
-            DateTime releaseDate = DateTime.MinValue;
+            int ageInput = 0;
+            DateTime? releaseDate = null;
             string countryInput = "";
 
 
@@ -60,109 +91,140 @@ class Program
             switch (currentState)
             {
                 case "title":
-                    Console.Clear();
-                    Console.WriteLine("Enter title:");
-                    movieTitle = Console.ReadLine();
-                    if (!validateString(3, movieTitle))
+                    if (!string.IsNullOrEmpty(movieTitle))
                     {
-                        continue;
+                        movieTitle = GetAndValidateInput<string>($"Enter movie title(Currently: {movieTitle})");
+                    }
+                    else
+                    {
+                        movieTitle = GetAndValidateInput<string>($"Enter movie title");
                     }
                     currentState = "description";
                     break;
 
                 case "description":
-                    Console.Clear();
-                    Console.WriteLine("Enter description:");
-                    movieDescription = Console.ReadLine();
-                    if (!validateString(10, movieDescription))
+                    if (!string.IsNullOrEmpty(movieTitle))
                     {
-                        continue;
+                        movieDescription = GetAndValidateInput<string>($"Enter movie description(Currently: {movieDescription})");
                     }
+                    else
+                    {
+                        movieDescription = GetAndValidateInput<string>("Enter movie description");
+                    }    
                     currentState = "Runtime";
                     break;
 
                 case "Runtime":
-                    Console.Clear();
-                    Console.WriteLine("Enter the runtime of the movie in minutes:");
-                    string runtimeInput = Console.ReadLine();
-                    if (!int.TryParse(runtimeInput, out runtime) || runtime < 30)
+                    if (runtime != null)
                     {
-                        Console.WriteLine("Invalid runtime, try again");
-                        Thread.Sleep(1000);
-                        continue;
+                        runtime = GetAndValidateInput<int>($"Enter the runtime of the movie in minutes(Currently: {runtime})");
+                    }
+                    else
+                    {
+                        runtime = GetAndValidateInput<int>("Enter the runtime of the movie in minutes");
                     }
                     currentState = "Actors";
                     break;
 
                 case "Actors":
-                    Console.Clear();
-                    Console.WriteLine("Enter the featuring actors:");
-                    actorsInput = Console.ReadLine();
-                    if (!validateString(10, actorsInput))
+                    if (string.IsNullOrEmpty(actorsInput))
                     {
-                        continue;
+                        actorsInput = GetAndValidateInput<string>($"Enter actors featuring(Currently: {actorsInput})");
+                    }
+                    else
+                    {
+                        actorsInput = GetAndValidateInput<string>("Enter actors featuring");
                     }
                     currentState = "Rating";
                     break;
 
                 case "Rating":
-                    Console.Clear();
-                    Console.WriteLine("Enter Rating (0 - 10):");
-                    string ratingInput = Console.ReadLine();
-                    rating = double.Parse(ratingInput);
-                    if (rating > 10.0 && rating < 0.0)
+                    if (rating != null)
                     {
-                        Console.WriteLine("Invalid rating, try again");
-                        Thread.Sleep(1000);
-                        continue;
+                        rating = GetAndValidateInput<double>($"Enter the movie rating(Currently {rating})");
+                    }
+                    else
+                    {
+                        rating = GetAndValidateInput<double>("Enter the movie rating");
                     }
                     currentState = "Genre";
                     break;
 
                 case "Genre":
-                    Console.Clear();
-                    Console.WriteLine("Enter Genre:");
-                    genreInput = Console.ReadLine();
-                    if (!validateString(3, genreInput))
+                    if (string.IsNullOrEmpty(genreInput))
                     {
-                        continue;
+                        genreInput = GetAndValidateInput<string>($"Enter the movie's genre(s) (Currently {genreInput})");
+                    }
+                    else
+                    {
+                        genreInput = GetAndValidateInput<string>("Enter the movie's genre(s)");
                     }
                     currentState = "Age";
                     break;
 
                 case "Age":
-                    Console.Clear();
-                    Console.WriteLine("Enter age restriction:");
-                    ageInput = Console.ReadLine();
-                    if (!validateString(1, ageInput))
+                    if (ageInput != null)
                     {
-                        continue;
+                        ageInput = GetAndValidateInput<int>($"Enter the movie's age restriction (Currently {ageInput})");
+                    }
+                    else
+                    {
+                        ageInput = GetAndValidateInput<int>("Enter the movie's age restriction ");
                     }
                     currentState = "Release";
                     break;
 
                 case "Release":
-                    Console.Clear();
-                    Console.WriteLine("Enter release date:");
-                    string releaseInput = Console.ReadLine();
-                    if (!DateTime.TryParse(releaseInput, out releaseDate))
+                    if (releaseDate.HasValue)
                     {
-                        Console.WriteLine("Invalid release date, try again");
-                        Thread.Sleep(1000);
-                        continue;
+                        releaseDate = GetAndValidateInput<DateTime>($"Enter release date (Currently{releaseDate})");
+                    }
+                    else
+                    {
+                        releaseDate = GetAndValidateInput<DateTime>("Enter release date");
                     }
                     currentState = "Country";
                     break;
 
                 case "Country":
-                    Console.Clear();
-                    Console.WriteLine("Enter country of origin:");
-                    countryInput = Console.ReadLine();
-                    if (!validateString(3, countryInput))
+                    if (string.IsNullOrEmpty(countryInput))
                     {
-                        continue;
+                        countryInput = GetAndValidateInput<string>($"Enter country of origin (Currently {countryInput})");
                     }
-                    completed = true;
+                    else
+                    {
+                        countryInput = GetAndValidateInput<string>("Enter country of origin");
+                    }
+                    currentState = "Finish";
+                    break;
+
+                case "Finish":
+                    Console.Clear();
+                    Console.WriteLine(@$"
+                    Movie title: {movieTitle}
+                    Movie despriction: {movieDescription}
+                    Runtime: {runtime} minutes
+                    Featuring: {actorsInput}
+                    Rating: {rating}/10
+                    Genre: {genreInput}
+                    Agerestriction: {ageInput}
+                    Release: {releaseDate}
+                    Country: {countryInput}
+                    ");
+                    Console.WriteLine("Do you confirm this movie? (y/n)");
+                    string confirmInput = Console.ReadLine();
+                    if (confirmInput == "y")
+                    {
+                        completed = true;
+                    }
+                    else if (confirmInput == "n")
+                    {
+                        currentState = "title";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input try again");
+                    }
                     break;
             }
         }
@@ -175,7 +237,7 @@ class Program
             Rating = rating,
             Genre = genreInput,
             AgeRestriction = ageInput,
-            ReleaseDate = releaseDate,
+            ReleaseDate = (DateTime)releaseDate,
             Country = countryInput
         };
     }
