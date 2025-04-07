@@ -77,11 +77,11 @@ class Program
 
             string movieTitle = "";
             string movieDescription = "";
-            int runtime = 0;
+            int? runtime = null;
             string actorsInput = "";
-            double rating = 0;
+            double? rating = null;
             string genreInput = "";
-            int ageInput = 0;
+            int? ageInput = null;
             DateTime? releaseDate = null;
             string countryInput = "";
 
@@ -93,23 +93,23 @@ class Program
                 case "title":
                     if (!string.IsNullOrEmpty(movieTitle))
                     {
-                        movieTitle = GetAndValidateInput<string>($"Enter movie title(Currently: {movieTitle})");
+                        movieTitle = GetAndValidateInput<string>($"Enter movie title(Currently: {movieTitle})", 3, 50);
                     }
                     else
                     {
-                        movieTitle = GetAndValidateInput<string>($"Enter movie title");
+                        movieTitle = GetAndValidateInput<string>($"Enter movie title",3, 50);
                     }
                     currentState = "description";
                     break;
 
                 case "description":
-                    if (!string.IsNullOrEmpty(movieTitle))
+                    if (!string.IsNullOrEmpty(movieDescription))
                     {
-                        movieDescription = GetAndValidateInput<string>($"Enter movie description(Currently: {movieDescription})");
+                        movieDescription = GetAndValidateInput<string>($"Enter movie description(Currently: {movieDescription})", 20, 500);
                     }
                     else
                     {
-                        movieDescription = GetAndValidateInput<string>("Enter movie description");
+                        movieDescription = GetAndValidateInput<string>("Enter movie description", 20, 500);
                     }    
                     currentState = "Runtime";
                     break;
@@ -117,23 +117,23 @@ class Program
                 case "Runtime":
                     if (runtime != null)
                     {
-                        runtime = GetAndValidateInput<int>($"Enter the runtime of the movie in minutes(Currently: {runtime})");
+                        runtime = GetAndValidateInput<int>($"Enter the runtime of the movie in minutes(Currently: {runtime})", 1, 240);
                     }
                     else
                     {
-                        runtime = GetAndValidateInput<int>("Enter the runtime of the movie in minutes");
+                        runtime = GetAndValidateInput<int>("Enter the runtime of the movie in minutes", 1, 240);
                     }
                     currentState = "Actors";
                     break;
 
                 case "Actors":
-                    if (string.IsNullOrEmpty(actorsInput))
+                    if (!string.IsNullOrEmpty(actorsInput))
                     {
-                        actorsInput = GetAndValidateInput<string>($"Enter actors featuring(Currently: {actorsInput})");
+                        actorsInput = GetAndValidateInput<string>($"Enter actors featuring(Currently: {actorsInput})", 3, 50);
                     }
                     else
                     {
-                        actorsInput = GetAndValidateInput<string>("Enter actors featuring");
+                        actorsInput = GetAndValidateInput<string>("Enter actors featuring", 3, 50);
                     }
                     currentState = "Rating";
                     break;
@@ -141,23 +141,23 @@ class Program
                 case "Rating":
                     if (rating != null)
                     {
-                        rating = GetAndValidateInput<double>($"Enter the movie rating(Currently {rating})");
+                        rating = GetAndValidateInput<double>($"Enter the movie rating(Currently {rating})", 1 ,10 );
                     }
                     else
                     {
-                        rating = GetAndValidateInput<double>("Enter the movie rating");
+                        rating = GetAndValidateInput<double>("Enter the movie rating",1 ,10);
                     }
                     currentState = "Genre";
                     break;
 
                 case "Genre":
-                    if (string.IsNullOrEmpty(genreInput))
+                    if (!string.IsNullOrEmpty(genreInput))
                     {
-                        genreInput = GetAndValidateInput<string>($"Enter the movie's genre(s) (Currently {genreInput})");
+                        genreInput = GetAndValidateInput<string>($"Enter the movie's genre(s) (Currently {genreInput})", 3, 50);
                     }
                     else
                     {
-                        genreInput = GetAndValidateInput<string>("Enter the movie's genre(s)");
+                        genreInput = GetAndValidateInput<string>("Enter the movie's genre(s)", 3, 50);
                     }
                     currentState = "Age";
                     break;
@@ -165,11 +165,11 @@ class Program
                 case "Age":
                     if (ageInput != null)
                     {
-                        ageInput = GetAndValidateInput<int>($"Enter the movie's age restriction (Currently {ageInput})");
+                        ageInput = GetAndValidateInput<int>($"Enter the movie's age restriction (Currently {ageInput})",1,99);
                     }
                     else
                     {
-                        ageInput = GetAndValidateInput<int>("Enter the movie's age restriction ");
+                        ageInput = GetAndValidateInput<int>("Enter the movie's age restriction",1,99);
                     }
                     currentState = "Release";
                     break;
@@ -187,13 +187,13 @@ class Program
                     break;
 
                 case "Country":
-                    if (string.IsNullOrEmpty(countryInput))
+                    if (!string.IsNullOrEmpty(countryInput))
                     {
-                        countryInput = GetAndValidateInput<string>($"Enter country of origin (Currently {countryInput})");
+                        countryInput = GetAndValidateInput<string>($"Enter country of origin (Currently {countryInput})",4 , 56);
                     }
                     else
                     {
-                        countryInput = GetAndValidateInput<string>("Enter country of origin");
+                        countryInput = GetAndValidateInput<string>("Enter country of origin",4 , 56);
                     }
                     currentState = "Finish";
                     break;
@@ -232,11 +232,11 @@ class Program
         {
             Title = movieTitle,
             Description = movieDescription,
-            Runtime = runtime,
+            Runtime = (int)runtime,
             Actors = actorsInput,
-            Rating = rating,
+            Rating = (double)rating,
             Genre = genreInput,
-            AgeRestriction = ageInput,
+            AgeRestriction = (int)ageInput,
             ReleaseDate = (DateTime)releaseDate,
             Country = countryInput
         };
