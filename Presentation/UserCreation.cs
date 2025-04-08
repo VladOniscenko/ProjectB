@@ -85,7 +85,7 @@ public static class UserCreation
         }
 
         newUser.FirstName = DrawInputBox(0, 4, "First name", newUser.FirstName);
-        while(UserLogic.ValidateName(newUser.FirstName)){
+        while(!UserLogic.IsNameValid(newUser.FirstName)){
 
             ShowErrorMessage( 5, "    Name must be longer than 3 characters and can only contain letters");
 
@@ -97,7 +97,7 @@ public static class UserCreation
 
         newUser.LastName = DrawInputBox(0, 6, "Last name", newUser.LastName);
 
-        while(UserLogic.ValidateName(newUser.LastName)){
+        while(!UserLogic.IsNameValid(newUser.LastName)){
 
             ShowErrorMessage(7, "    Name must be longer than 3 characters and can only contain letters");
 
@@ -109,9 +109,9 @@ public static class UserCreation
 
         newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
 
-        while(UserLogic.VerifyEmailFormat(newUser.Email) || !UserLogic.VerifyThatUserDoesNotExist(newUser.Email)){
+        while(!UserLogic.IsEmailValid(newUser.Email) || UserLogic.DoesUserExist(newUser.Email)){
 
-            if(UserLogic.VerifyEmailFormat(newUser.Email)){
+            if(!UserLogic.IsEmailValid(newUser.Email)){
                 ShowErrorMessage(9, "    Please enter a valid email address       ");
             }
             else{
@@ -125,7 +125,7 @@ public static class UserCreation
 
 
         newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
-        while(UserLogic.ValidatePassword(newUser.Password)){
+        while(!UserLogic.IsPasswordValid(newUser.Password)){
             ShowErrorMessage(11, "    Please enter a valid password (must contain an uppercase letter, a number and symbol)");
             newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
         }
