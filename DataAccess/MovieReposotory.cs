@@ -132,4 +132,14 @@ public class MovieRepository
             new { Count = limit, Title = title }
         ).ToList();
     }
+
+    public List<Movie> GetMoviesWithShowtimeInNextWeek()
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE ReleaseDate >= DATE('now') AND ReleaseDate < DATE('now', '+7 days')"
+        ).ToList();
+    }
 }
