@@ -5,7 +5,7 @@ namespace ProjectB.DataAccess;
 
 public class CinemaRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
