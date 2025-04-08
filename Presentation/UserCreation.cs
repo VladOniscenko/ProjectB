@@ -1,6 +1,5 @@
 using ProjectB.DataAccess;
 using ProjectB.Models.Users;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProjectB.Presentation;
 
@@ -84,11 +83,9 @@ public static class UserCreation
         if (user is not null){
             newUser = user;
         }
-        var email = new EmailAddressAttribute();
-
 
         newUser.FirstName = DrawInputBox(0, 4, "First name", newUser.FirstName);
-        while(newUser.FirstName.Length < 3 || newUser.FirstName.Any(c => !char.IsLetter(c))){
+        while(UserLogic.ValidateName(newUser.FirstName)){
 
             ShowErrorMessage( 5, "    Name must be longer than 3 characters and can only contain letters");
 
@@ -100,7 +97,7 @@ public static class UserCreation
 
         newUser.LastName = DrawInputBox(0, 6, "Last name", newUser.LastName);
 
-        while(newUser.LastName.Length < 3 || newUser.LastName.Any(c => !char.IsLetter(c))){
+        while(UserLogic.ValidateName(newUser.LastName)){
 
             ShowErrorMessage(7, "    Name must be longer than 3 characters and can only contain letters");
 
@@ -111,11 +108,10 @@ public static class UserCreation
 
 
         newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
-        bool doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
 
-        while(!email.IsValid(newUser.Email) || !doesUserExist){
+        while(UserLogic.VerifyEmailFormat(newUser.Email) || !UserLogic.VerifyThatUserDoesNotExist(newUser.Email)){
 
-            if(!email.IsValid(newUser.Email)){
+            if(UserLogic.VerifyEmailFormat(newUser.Email)){
                 ShowErrorMessage(9, "    Please enter a valid email address       ");
             }
             else{
@@ -123,15 +119,13 @@ public static class UserCreation
             }
 
             newUser.Email = DrawInputBox(0, 8, "Email", newUser.Email);
-            doesUserExist = UserRepository.CheckIfUserExists(newUser.Email);
         }
         Console.SetCursorPosition(0, 9);
         Console.Write("                                                                  ");
 
 
         newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
-        while(newUser.Password.Length < 4 || !newUser.Password.Any(c => !char.IsLetterOrDigit(c)) ||
-        !newUser.Password.Any(char.IsUpper) || !newUser.Password.Any(char.IsDigit)){
+        while(UserLogic.ValidatePassword(newUser.Password)){
             ShowErrorMessage(11, "    Please enter a valid password (must contain an uppercase letter, a number and symbol)");
             newUser.Password = DrawInputBox(0, 10, "Password",newUser.Password, true);
         }
