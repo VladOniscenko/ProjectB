@@ -1,4 +1,4 @@
-﻿﻿using ProjectB.Database;
+﻿using ProjectB.Database;
 using ProjectB.Models.Movies;
 using ProjectB.DataAccess;
 namespace ProjectB;
@@ -7,7 +7,7 @@ class Program
 {
     static void Main()
     {   
-        Start();
+        Menu.RunMenu();
 
         DbFactory.InitializeDatabase();
         
@@ -30,31 +30,5 @@ class Program
         // {
         //     Console.WriteLine($"{movie}");
         // }
-    }
-
-    static public void Start()
-    {
-        RunMenu();
-    }
-
-    static private void RunMenu()
-    {
-        string prompt = @"
- ____             __               ____                                              __             
-/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
-\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
- \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
-  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
-   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
-    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
-               /\___/                                                                               
-               \/__/                                                                                       
-
-Welcome customer!
-Use Up & Down keys to select an option.
-                ";
-        string[] options = { "Register", "Login", "Movies", "About us", "Exit" };
-        Menu menu = new Menu(prompt, options);
-        int SelectedIndex = menu.Run();
     }
 }

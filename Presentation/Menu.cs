@@ -1,4 +1,3 @@
-using System;
 using static System.Console;
 
 // Used this video to help me out
@@ -17,24 +16,40 @@ namespace ProjectB
             Prompt = prompt;
             Options = options;
         }
+
+        public static string CenterText(string text, int boxWidth, bool isActive = false)
+        {
+          int spaces = boxWidth - text.Length;
+          if (isActive)
+          {
+            spaces -= 6;
+            text = $">> {text} <<";
+          }
+          int padleft = spaces / 2;
+          int padright = spaces - padleft;
+          return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
+        }
         
         public void DisplayOptions()
         {
-            Console.Clear();
+            Clear();
             WriteLine(Prompt);
+            
+            WriteLine("╔══════════════════════════════════════╗");
             for (int i = 0; i < Options.Length; i++)
             {
                 string currentOption = Options[i];
 
                 if (i == SelectedIndex)
-                {
-                    Console.WriteLine($">> {currentOption} <<"); 
+                {   
+                    WriteLine($"║{CenterText(currentOption, 38, true)}║"); 
                 }
                 else
                 {
-                    Console.WriteLine($"   {currentOption}");
-                }
+                    WriteLine($"║{CenterText(currentOption, 38)}║"); 
+                } 
             }
+            WriteLine("╚══════════════════════════════════════╝");
         }
 
         public int Run()
@@ -42,7 +57,7 @@ namespace ProjectB
             ConsoleKey keyPressed;
             do
             {
-                Console.Clear();
+                Clear();
                 DisplayOptions();
 
                 ConsoleKeyInfo keyInfo = ReadKey(true);
@@ -59,10 +74,74 @@ namespace ProjectB
                 }
             }
             while (keyPressed != ConsoleKey.Enter);
-
-            // Code block for keyPressed cases
  
             return SelectedIndex;
+        }
+
+        static public void RunMenu()
+        {
+            string prompt = @"
+ ____             __               ____                                              __             
+/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
+\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
+ \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
+  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
+   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
+    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
+               /\___/                                                                               
+               \/__/                                                                                       
+
+Welcome customer!
+Use Up & Down keys to select an option.
+                ";
+            string[] options = { "Register", "Login", "Movies", "About us", "Exit" };
+            Menu menu = new Menu(prompt, options);
+            int SelectedIndex = menu.Run();
+
+            // Code block for keyPressed cases
+            switch(SelectedIndex)
+            {
+                case 0:
+                    Console.Clear();
+                    Register();
+                    break;
+                case 1:
+                    Console.Clear();
+                    Login();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Movies();
+                    break;
+                case 3:
+                    Console.Clear();
+                    AboutUs();
+                    break;
+                case 4:
+                    Console.Clear();
+                    return;
+            }
+        }
+
+        // Methods for each option in menu. Might change/remove?
+        static void Register()
+        {
+            WriteLine("Works.");
+        }
+
+        static void Login()
+        {
+            WriteLine("Works.");
+        }
+
+        static void Movies()
+        {
+            WriteLine("Works.");
+        }
+
+        static void AboutUs()
+        {
+            WriteLine("Works.");
         }
     }
 }
