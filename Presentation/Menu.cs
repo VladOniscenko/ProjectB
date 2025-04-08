@@ -57,7 +57,8 @@ namespace ProjectB
             ConsoleKey keyPressed;
             do
             {
-                Clear();
+                Console.CursorVisible = false;
+                Console.SetCursorPosition(0, 0);
                 DisplayOptions();
 
                 ConsoleKeyInfo keyInfo = ReadKey(true);
