@@ -1,8 +1,6 @@
 using Dapper;
 using ProjectB.Database;
-using BCrypt.Net;
 using ProjectB.Models.Users;
-using System.Windows.Markup;
 
 namespace ProjectB.DataAccess;
 
@@ -23,7 +21,7 @@ public class UserRepository
             );
         ");
     }
-    
+
     public static void PopulateTable()
     {
         try
@@ -57,7 +55,6 @@ public class UserRepository
     }
 
 
-    
     public void AddUser(User user)
     {
         using var connection = DbFactory.CreateConnection();
@@ -70,7 +67,7 @@ public class UserRepository
         INSERT INTO Users (FirstName, LastName, Email, Password, IsAdmin) 
         VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
-    
+
     public bool VerifyPassword(string enteredPassword, string storedHash)
     {
         return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
@@ -83,10 +80,10 @@ public class UserRepository
         return connection.Query<User>("SELECT * FROM Users");
     }
 
-    public static bool CheckIfUserExistByEmail(string email){
+    public static bool CheckIfUserExistByEmail(string email)
+    {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return !(connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new {email}).Count() == 0);
-
+        return !(connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new { email }).Count() == 0);
     }
 }
