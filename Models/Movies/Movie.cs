@@ -16,7 +16,5 @@ public class Movie
     public override string ToString()
     {
         return $"{Id}: {Title} ({ReleaseDate.Year}) - {Genre} - {Rating}/10";
-    }
-
-    
+    }    
 }
