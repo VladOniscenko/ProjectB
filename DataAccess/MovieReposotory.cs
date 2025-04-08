@@ -132,4 +132,9 @@ public class MovieRepository
             new { Count = limit, Title = title }
         ).ToList();
     }
+
+    internal void AddMovie(object v)
+    {
+        throw new NotImplementedException();
+    }
 }
