@@ -13,7 +13,7 @@ class Program
         DbFactory.InitializeDatabase();
         
         var movieRepo = new MovieRepository();
-        movieRepo.AddMovie(Create());
+        movieRepo.AddMovie(Create(movieRepo));
         
         // movieRepo.AddMovie(new Movie 
         // { 
@@ -70,7 +70,7 @@ class Program
             Thread.Sleep(1000);
             return GetAndValidateInput<T>(prompt,min,max);
     }
-    public static Movie Create()
+    public static Movie Create(MovieRepository movieRepository)
     {
             bool completed = false;
             string currentState = "title";
@@ -215,7 +215,52 @@ class Program
                     string confirmInput = Console.ReadLine();
                     if (confirmInput == "y")
                     {
-                        completed = true;
+                        Console.WriteLine("Would you like to add another movie? (y/n)");
+                        string addInput = Console.ReadLine();
+                        if (addInput == "y")
+                        {
+                            movieRepository.AddMovie(new Movie
+                            {
+                                Title = movieTitle,
+                                Description = movieDescription,
+                                Runtime = (int)runtime,
+                                Actors = actorsInput,
+                                Rating = (double)rating,
+                                Genre = genreInput,
+                                AgeRestriction = (int)ageInput,
+                                ReleaseDate = (DateTime)releaseDate,
+                                Country = countryInput
+                            });
+                            
+                            completed = false;
+                            currentState = "title";
+
+                            movieTitle = "";
+                            movieDescription = "";
+                            runtime = null;
+                            actorsInput = "";
+                            rating = null;
+                            genreInput = "";
+                            ageInput = null;
+                            releaseDate = null;
+                            countryInput = "";
+
+                        }
+                        else if  ( addInput == "n")
+                        {
+                            return new Movie
+                            {
+                                Title = movieTitle,
+                                Description = movieDescription,
+                                Runtime = (int)runtime,
+                                Actors = actorsInput,
+                                Rating = (double)rating,
+                                Genre = genreInput,
+                                AgeRestriction = (int)ageInput,
+                                ReleaseDate = (DateTime)releaseDate,
+                                Country = countryInput
+                            };
+                        }
                     }
                     else if (confirmInput == "n")
                     {
