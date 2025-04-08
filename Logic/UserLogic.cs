@@ -20,7 +20,7 @@ public static class UserLogic{
     }
 
     public static bool DoesUserExist(string newEmail){
-        return UserRepository.DoesUserExistsInRepo(newEmail);
+        return UserRepository.CheckIfUserExistByEmail(newEmail);
     }
 
 
