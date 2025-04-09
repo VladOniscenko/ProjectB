@@ -7,7 +7,7 @@ namespace ProjectB.DataAccess;
 
 public class SeatRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

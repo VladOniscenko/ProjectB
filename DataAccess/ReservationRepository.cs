@@ -6,7 +6,7 @@ namespace ProjectB.DataAccess;
 
 public class ReservationRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
