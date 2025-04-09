@@ -108,7 +108,7 @@ Use Up & Down keys to select an option.
             switch(SelectedIndex)
             {
                 case 0:
-                    Register();
+                    MenuActionRegister();
                     break;
                 case 1:
                     Login();
@@ -125,32 +125,41 @@ Use Up & Down keys to select an option.
                     MenuActionCreateMovie();
                     break;
             }
-        }
 
-        // Methods for each option in menu. Might change/remove?
-        static void Register()
-        {
-            WriteLine("Works.");
+            RunMenu();
         }
 
         static void Login()
         {
-            WriteLine("Works.");
+            NotImplemented();
         }
 
         static void Movies()
         {
-            WriteLine("Works.");
+            NotImplemented();
         }
 
         static void AboutUs()
         {
-            WriteLine("Works.");
+            NotImplemented();
         }        
         
         static void MenuActionCreateMovie()
         {
             CreateMovie.Create();
+        }
+        
+        static void MenuActionRegister()
+        {
+            UserCreation.CreateUser();
+        }
+
+        static void NotImplemented()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Not implemented yet");
+            Console.ResetColor();
+            Console.ReadKey();
         }
     }
 }
