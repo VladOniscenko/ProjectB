@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ProjectB.DataAccess;
+using ProjectB.Models;
 
 
 public static class UserLogic{
@@ -22,6 +23,4 @@ public static class UserLogic{
     public static bool DoesUserExist(string newEmail){
         return UserRepository.DoesUserExistsInRepo(newEmail);
     }
-
-
 }

@@ -1,6 +1,6 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.Reservations;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 

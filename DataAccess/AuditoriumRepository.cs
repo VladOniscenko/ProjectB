@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.Auditoriums;
-using ProjectB.Models.Cinemas;
+using ProjectB.Models;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 
