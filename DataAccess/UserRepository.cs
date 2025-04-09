@@ -23,7 +23,7 @@ public class UserRepository
             );
         ");
     }
-
+    
     public static void PopulateTable()
     {
         try
@@ -55,8 +55,7 @@ public class UserRepository
             Console.WriteLine($"Error initializing admin user: {ex.Message}");
         }
     }
-
-
+    
     public void AddUser(User user)
     {
         using var connection = DbFactory.CreateConnection();
