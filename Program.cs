@@ -6,7 +6,8 @@ namespace ProjectB;
 class Program
 {
     static void Main()
-    {
+    {   
+        Menu.RunMenu();
 
         DbFactory.InitializeDatabase();
         
@@ -25,9 +26,9 @@ class Program
         //     Country = "USA"
         // });
         
-        foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
-        {
-            Console.WriteLine($"{movie}");
-        }
+        // foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
+        // {
+        //     Console.WriteLine($"{movie}");
+        // }
     }
 }
