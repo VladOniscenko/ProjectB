@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 using System.Text.Json;
-using ProjectB.Models;
+using ProjectB.Models.Movies;
 
 namespace ProjectB.DataAccess;
 

@@ -1,7 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 using BCrypt.Net;
-using ProjectB.Models;
+using ProjectB.Models.Users;
 using System.Windows.Markup;
 
 namespace ProjectB.DataAccess;

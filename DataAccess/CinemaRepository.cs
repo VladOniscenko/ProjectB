@@ -1,6 +1,6 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models;
+using ProjectB.Models.Cinemas;
 namespace ProjectB.DataAccess;
 
 public class CinemaRepository

@@ -1,5 +1,5 @@
 using ProjectB.DataAccess;
-using ProjectB.Models;
+using ProjectB.Models.Users;
 
 namespace ProjectB.Presentation;
 

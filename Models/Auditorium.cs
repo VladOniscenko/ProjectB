@@ -1,4 +1,4 @@
-namespace ProjectB.Models;
+namespace ProjectB.Models.Auditoriums;
 
 public class Auditorium
 {
