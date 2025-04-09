@@ -136,12 +136,32 @@ Use Up & Down keys to select an option.
 
         static void Movies()
         {
-            NotImplemented();
+            // NotImplemented();
+            
+            // todo this is temporary for the presentation
+            Console.WriteLine("=== Newest and best rated movies ===");
+            
+            var movieRepo = new MovieRepository();
+            foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
+            {
+                Console.WriteLine($"{movie}");
+            }
+            
+            Console.ReadKey();
         }
 
         static void AboutUs()
         {
-            NotImplemented();
+            // NotImplemented();
+            
+            // todo this is temporary for the presentation
+            Console.WriteLine("=== Welcome to Byte Cinema ===");
+            Console.WriteLine("Where storytelling meets cutting-edge technology.");
+            Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");
+            Console.WriteLine("From blockbusters to indie films – we bring stories to life, byte by byte.");
+            Console.WriteLine("Sit back, relax, and enjoy the show.");
+            
+            Console.ReadKey();
         }        
         
         static void MenuActionCreateMovie()
