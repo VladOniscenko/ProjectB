@@ -80,7 +80,6 @@ public static class UserCreation
         Console.ResetColor();
         Console.CursorVisible = false;
         Console.Clear();
-        UserRepository userRepository = new UserRepository();
         Console.WriteLine("╔══════════════════════╗");
         Console.WriteLine("║   Create New User    ║");
         Console.WriteLine("╚══════════════════════╝");
@@ -139,7 +138,7 @@ public static class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            userRepository.AddUser(newUser);
+            UserLogic.CreateUser(newUser);
             Console.WriteLine("\nYour account has been made!");
         }
         else
