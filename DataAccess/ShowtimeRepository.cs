@@ -1,6 +1,6 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.Showtimes;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 

@@ -1,4 +1,4 @@
-namespace ProjectB.Models.Showtimes;
+namespace ProjectB.Models;
 
 public class Showtime
 {
