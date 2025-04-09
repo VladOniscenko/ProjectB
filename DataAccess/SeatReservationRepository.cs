@@ -1,12 +1,12 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.SeatReservations;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 
 public class SeatReservationRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

@@ -1,4 +1,4 @@
-namespace ProjectB.Models.Cinemas;
+namespace ProjectB.Models;
 
 public class Cinema
 {

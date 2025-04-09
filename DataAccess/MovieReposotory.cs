@@ -1,13 +1,13 @@
 using Dapper;
 using ProjectB.Database;
 using System.Text.Json;
-using ProjectB.Models.Movies;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 
 public class MovieRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

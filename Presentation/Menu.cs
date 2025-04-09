@@ -1,4 +1,8 @@
 using static System.Console;
+using ProjectB.Database;
+using ProjectB.Models;
+using ProjectB.DataAccess;
+using ProjectB.Presentation;
 
 // Used this video to help me out
 // https://www.youtube.com/watch?v=qAWhGEPMlS8
@@ -95,32 +99,31 @@ namespace ProjectB
 Welcome customer!
 Use Up & Down keys to select an option.
                 ";
-            string[] options = { "Register", "Login", "Movies", "About us", "Exit" };
+            string[] options = { "Register", "Login", "Movies", "About us", "Exit", "Create Movie (admin only)" };
             Menu menu = new Menu(prompt, options);
             int SelectedIndex = menu.Run();
 
             // Code block for keyPressed cases
+            Console.Clear();
             switch(SelectedIndex)
             {
                 case 0:
-                    Console.Clear();
                     Register();
                     break;
                 case 1:
-                    Console.Clear();
                     Login();
                     break;
                 case 2:
-                    Console.Clear();
                     Movies();
                     break;
                 case 3:
-                    Console.Clear();
                     AboutUs();
                     break;
                 case 4:
-                    Console.Clear();
                     return;
+                case 5:
+                    MenuActionCreateMovie();
+                    break;
             }
         }
 
@@ -143,6 +146,11 @@ Use Up & Down keys to select an option.
         static void AboutUs()
         {
             WriteLine("Works.");
+        }        
+        
+        static void MenuActionCreateMovie()
+        {
+            CreateMovie.Create();
         }
     }
 }

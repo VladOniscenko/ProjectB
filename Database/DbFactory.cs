@@ -22,14 +22,14 @@ public class DbFactory
         }
         
         // create tables
-        MovieRepository.InitializeDatabase();
-        UserRepository.InitializeDatabase();
-        CinemaRepository.InitializeDatabase();
-        AuditoriumRepository.InitializeDatabase();
-        ShowtimeRepository.InitializeDatabase();
-        SeatReservationRepository.InitializeDatabase();
-        SeatRepository.InitializeDatabase();
-        ReservationRepository.InitializeDatabase();
+        MovieRepository.InitializeTable();
+        UserRepository.InitializeTable();
+        CinemaRepository.InitializeTable();
+        AuditoriumRepository.InitializeTable();
+        ShowtimeRepository.InitializeTable();
+        SeatReservationRepository.InitializeTable();
+        SeatRepository.InitializeTable();
+        ReservationRepository.InitializeTable();
         
         // check if database is filled
         if (!dropAndFill)

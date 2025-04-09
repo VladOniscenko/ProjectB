@@ -1,13 +1,13 @@
 using Dapper;
 using ProjectB.Database;
-using ProjectB.Models.Auditoriums;
-using ProjectB.Models.Cinemas;
+using ProjectB.Models;
+using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 
 public class AuditoriumRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

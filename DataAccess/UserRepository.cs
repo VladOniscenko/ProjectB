@@ -1,12 +1,16 @@
 using Dapper;
 using ProjectB.Database;
 using ProjectB.Models.Users;
+using BCrypt.Net;
+using ProjectB.Models;
+using System.Windows.Markup;
+
 
 namespace ProjectB.DataAccess;
 
 public class UserRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
