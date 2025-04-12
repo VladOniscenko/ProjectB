@@ -1,13 +1,14 @@
 using Dapper;
 using ProjectB.Database;
 using BCrypt.Net;
-using ProjectB.Models.Users;
+using ProjectB.Models;
+using System.Windows.Markup;
 
 namespace ProjectB.DataAccess;
 
 public class UserRepository
 {
-    public static void InitializeDatabase()
+    public static void InitializeTable()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
@@ -30,9 +31,7 @@ public class UserRepository
             var userRepo = new UserRepository();
 
             // Check if an admin with the specific email exists
-            var adminExists = userRepo.GetAllUsers().Any(u => u.Email == "admin@admin.com");
-
-            if (!adminExists)
+            if (CheckIfUserExistByEmail("admin@admin.com"))
             {
                 var adminUser = new User
                 {
@@ -56,8 +55,6 @@ public class UserRepository
             Console.WriteLine($"Error initializing admin user: {ex.Message}");
         }
     }
-
-
     
     public void AddUser(User user)
     {
@@ -71,7 +68,7 @@ public class UserRepository
         INSERT INTO Users (FirstName, LastName, Email, Password, IsAdmin) 
         VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
-    
+
     public bool VerifyPassword(string enteredPassword, string storedHash)
     {
         return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
@@ -82,5 +79,12 @@ public class UserRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<User>("SELECT * FROM Users");
+    }
+
+    public static bool CheckIfUserExistByEmail(string email)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return !(connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new { email }).Count() == 0);
     }
 }
