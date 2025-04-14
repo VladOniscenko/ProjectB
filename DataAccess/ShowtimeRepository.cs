@@ -22,78 +22,77 @@ public class ShowtimeRepository
             );
         ");
     }
-    
+
     public void DeleteAllShowtimes()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute("DELETE FROM Showtimes");
     }
-    
-public static void PopulateTable()
-{
-    MovieRepository movieRepository = new();
-    AuditoriumRepository auditoriumRepository = new();
-    ShowtimeRepository showtimeRepository = new();
 
-    var movies = movieRepository.GetBestAndNewestMovies(25);
-    var auditoriums = auditoriumRepository.GetAllAuditoriums();
-
-    if (!movies.Any() || !auditoriums.Any())
+    public static void PopulateTable()
     {
-        Console.WriteLine("No movies or auditoriums found.");
-        return;
-    }
+        MovieRepository movieRepository = new();
+        AuditoriumRepository auditoriumRepository = new();
+        ShowtimeRepository showtimeRepository = new();
 
-    showtimeRepository.DeleteAllShowtimes();
+        var movies = movieRepository.GetBestAndNewestMovies(25);
+        var auditoriums = auditoriumRepository.GetAllAuditoriums();
 
-    DateTime startOfWeek = DateTime.Now.Date;
-    Random random = new();
-
-    foreach (var movie in movies)
-    {
-        foreach (var auditorium in auditoriums)
+        if (!movies.Any() || !auditoriums.Any())
         {
-            List<DateTime> bookedTimes = new();
+            Console.WriteLine("No movies or auditoriums found.");
+            return;
+        }
 
-            for (int i = 0; i < 10; i++)
+        showtimeRepository.DeleteAllShowtimes();
+
+        DateTime startOfWeek = DateTime.Now.Date;
+        Random random = new();
+
+        foreach (var movie in movies)
+        {
+            foreach (var auditorium in auditoriums)
             {
-                DateTime startTime;
-                DateTime endTime;
-                bool overlap;
+                List<DateTime> bookedTimes = new();
 
-                do
+                for (int i = 0; i < 10; i++)
                 {
-                    startTime = startOfWeek.AddDays(random.Next(7))
-                        .AddHours(random.Next(9, 22))
-                        .AddMinutes(15 * random.Next(0, 4));
+                    DateTime startTime;
+                    DateTime endTime;
+                    bool overlap;
 
-                    endTime = startTime.AddMinutes(movie.Runtime + random.Next(15, 30)); // Add buffer
+                    do
+                    {
+                        startTime = startOfWeek.AddDays(random.Next(7))
+                            .AddHours(random.Next(9, 22))
+                            .AddMinutes(15 * random.Next(0, 4));
 
-                    overlap = bookedTimes.Any(existing => 
-                        (startTime >= existing && startTime < existing.AddMinutes(movie.Runtime + 15)));
+                        endTime = startTime.AddMinutes(movie.Runtime + random.Next(15, 30)); // Add buffer
 
-                } while (overlap);
+                        overlap = bookedTimes.Any(existing =>
+                            (startTime >= existing && startTime < existing.AddMinutes(movie.Runtime + 15)));
+                    } while (overlap);
 
-                bookedTimes.Add(startTime);
+                    bookedTimes.Add(startTime);
 
-                Showtime showtime = new()
-                {
-                    MovieId = movie.Id,
-                    AuditoriumId = auditorium.Id,
-                    StartTime = startTime,
-                    EndTime = endTime
-                };
+                    Showtime showtime = new()
+                    {
+                        MovieId = movie.Id,
+                        AuditoriumId = auditorium.Id,
+                        StartTime = startTime,
+                        EndTime = endTime
+                    };
 
-                showtimeRepository.AddShowtime(showtime);
+                    showtimeRepository.AddShowtime(showtime);
+                }
+
+                Console.WriteLine($"Showtimes created for movie: {movie.Title} in Auditorium {auditorium.Id}");
             }
-
-            Console.WriteLine($"Showtimes created for movie: {movie.Title} in Auditorium {auditorium.Id}");
         }
     }
-}
 
-    
+
     public void AddShowtime(Showtime showtime)
     {
         using var connection = DbFactory.CreateConnection();
@@ -103,10 +102,21 @@ public static void PopulateTable()
             VALUES (@MovieId, @AuditoriumId, @StartTime, @EndTime)", showtime);
     }
 
-    public IEnumerable<Showtime> GetAllShowtimes()
+    public IEnumerable<Showtime> All()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<Showtime>("SELECT * FROM Showtimes");
+    }
+
+    public Showtime? Find(int id)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.QuerySingleOrDefault<Showtime>(
+            "SELECT * FROM Showtimes WHERE Id = @Id",
+            new { Id = id }
+        );
     }
 }

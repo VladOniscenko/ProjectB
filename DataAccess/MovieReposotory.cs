@@ -132,4 +132,15 @@ public class MovieRepository
             new { Count = limit, Title = title }
         ).ToList();
     }
+    
+    public Movie? Find(int id)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.QuerySingleOrDefault<Movie>(
+            "SELECT * FROM Movies WHERE Id = @Id",
+            new { Id = id }
+        );
+    }
 }

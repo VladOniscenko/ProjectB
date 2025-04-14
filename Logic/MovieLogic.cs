@@ -12,4 +12,16 @@ public static class MovieLogic
 
         return true;
     }
+    
+    public static Movie? Find(int id)
+    {
+        MovieRepository movieRepository = new();
+        return movieRepository.Find(id);
+    }
+
+    public static IEnumerable<Movie> All()
+    {
+        MovieRepository movieRepository = new();
+        return movieRepository.GetAllMovies();
+    }
 }
