@@ -23,17 +23,20 @@ public static class SeatSelection
         }
 
         IEnumerable<Seat> seats = SeatLogic.GetSeatsByAuditorium(auditorium.Id);
-        int row = 1;
+        int? currentRow = null;
+
         foreach (var seat in seats)
         {
-            if (row != seat.Row)
+            if (currentRow != seat.Row)
             {
-                Console.WriteLine("\n");
-                row++;
+                if (currentRow != null)
+                    Console.WriteLine();
+
+                Console.Write($"Row {seat.Row:D2} | ");
+                currentRow = seat.Row;
             }
-            
-            
-            Console.Write(seat.Number + " ");
+
+            Console.Write(seat.Active == 1 ? $"{seat.Number:D2} " : "-- ");
         }
         
         Console.ReadLine();
