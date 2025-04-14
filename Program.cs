@@ -6,9 +6,7 @@ class Program
 {
     static void Main()
     {
-        
-        SeatSelection.SelectSeats(1);
-        // DbFactory.InitializeDatabase();
-        // Menu.RunMenu();
+        DbFactory.InitializeDatabase();
+        Menu.RunMenu();
     }
 }
