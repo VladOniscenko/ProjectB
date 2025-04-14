@@ -1,6 +1,5 @@
-﻿using ProjectB.Database;
-using ProjectB.Models;
-using ProjectB.DataAccess;
+﻿using ProjectB.Presentation;
+using ProjectB.Database;
 namespace ProjectB;
 
 class Program
