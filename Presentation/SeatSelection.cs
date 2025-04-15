@@ -3,35 +3,52 @@ using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
-public static class SeatSelection
+public class SeatSelection
 {
-    public static void SelectSeats(int showtimeId)
+    public readonly Showtime? SelectedShowtime;
+    public readonly Movie? SelectedMovie;
+    public readonly Auditorium? SelectedAuditorium;
+    public readonly IEnumerable<SeatReservation>? ReservedSeats;
+    public readonly IEnumerable<Seat>? Seats;
+    public readonly List<int>? ReservedSeatIds;
+
+    public SeatSelection(int showtimeId)
     {
-        Showtime? showtime = ShowtimeLogic.Find(showtimeId);
-        if (showtime == null)
+        SelectedShowtime = ShowtimeLogic.Find(showtimeId);
+        if (SelectedShowtime == null)
         {
             ConsoleMethods.Error("Showtime was not found!");
             return;
         }
 
-        Movie? movie = MovieLogic.Find(showtime.MovieId);
-        Auditorium? auditorium = AuditoriumLogic.Find(showtime.AuditoriumId);
-        if (movie == null || auditorium == null)
+        SelectedMovie = MovieLogic.Find(SelectedShowtime.MovieId);
+        SelectedAuditorium = AuditoriumLogic.Find(SelectedShowtime.AuditoriumId);
+        if (SelectedMovie == null || SelectedAuditorium == null)
         {
             ConsoleMethods.Error("Movie or Auditorium was not found!");
             return;
         }
         
-        // todo retrieve taken seats
+        Seats = SeatLogic.GetSeatsByAuditorium(SelectedAuditorium.Id);
+        if (Seats == null || Seats.Count() <= 0)
+        {
+            ConsoleMethods.Error("Seats not found!");
+            return;
+        }
         
-        IEnumerable<Seat> seats = SeatLogic.GetSeatsByAuditorium(auditorium.Id);
+        ReservedSeats = SeatReservationLogic.GetReservedSeatsByShowtimeId(SelectedShowtime.Id);
+        ReservedSeatIds = ReservedSeats.Select(s => s.SeatId).ToList();
+    }
+    public void SelectSeats(int showtimeId)
+    {
         Seat? currentSeat = null;
-
         while (true)
         {
             Console.Clear();
+            PrintSeatSelectionRules();
+
             int? currentRow = null;
-            foreach (var seat in seats)
+            foreach (var seat in Seats)
             {
                 if (currentRow != seat.Row)
                 {
@@ -74,7 +91,13 @@ public static class SeatSelection
                     }
                 }
 
-                Console.Write(seat.Active == 1 ? $"[ ]" : "   ");
+                string seatContent = " ";
+                if (ReservedSeatIds.Contains(seat.Id))
+                {
+                    seatContent = "X";
+                }
+                
+                Console.Write(seat.Active == 1 ? $"[{seatContent}]" : "   ");
                 Console.ResetColor();
                 Console.Write(" ");
             }
@@ -84,7 +107,7 @@ public static class SeatSelection
 
             if (pressedKey.Key == ConsoleKey.RightArrow || pressedKey.Key == ConsoleKey.D)
             {
-                var nextSeat = seats.FirstOrDefault(s => s.Row == currentSeat.Row && s.Number == currentSeat.Number + 1 && s.Active == 1);
+                var nextSeat = Seats.FirstOrDefault(s => s.Row == currentSeat.Row && s.Number == currentSeat.Number + 1 && s.Active == 1);
                 if (nextSeat != null)
                 {
                     currentSeat = nextSeat;
@@ -92,7 +115,7 @@ public static class SeatSelection
             }
             else if (pressedKey.Key == ConsoleKey.LeftArrow || pressedKey.Key == ConsoleKey.A)
             {
-                var nextSeat = seats.FirstOrDefault(s => s.Row == currentSeat.Row && s.Number == currentSeat.Number - 1 && s.Active == 1);
+                var nextSeat = Seats.FirstOrDefault(s => s.Row == currentSeat.Row && s.Number == currentSeat.Number - 1 && s.Active == 1);
                 if (nextSeat != null)
                 {
                     currentSeat = nextSeat;
@@ -100,7 +123,7 @@ public static class SeatSelection
             }
             else if (pressedKey.Key == ConsoleKey.DownArrow || pressedKey.Key == ConsoleKey.S)
             {
-                var nextSeat = seats.FirstOrDefault(s => s.Row == currentSeat.Row - 1 && s.Number == currentSeat.Number && s.Active == 1);
+                var nextSeat = Seats.FirstOrDefault(s => s.Row == currentSeat.Row - 1 && s.Number == currentSeat.Number && s.Active == 1);
                 if (nextSeat != null)
                 {
                     currentSeat = nextSeat;
@@ -108,13 +131,35 @@ public static class SeatSelection
             }
             else if (pressedKey.Key == ConsoleKey.UpArrow || pressedKey.Key == ConsoleKey.W)
             {
-                var nextSeat = seats.FirstOrDefault(s => s.Row == currentSeat.Row + 1 && s.Number == currentSeat.Number && s.Active == 1);
+                var nextSeat = Seats.FirstOrDefault(s => s.Row == currentSeat.Row + 1 && s.Number == currentSeat.Number && s.Active == 1);
                 if (nextSeat != null)
                 {
                     currentSeat = nextSeat;
                 }
             }
-
         }
     }
+    
+    static void PrintSeatSelectionRules()
+    {
+        Console.WriteLine("Rules:");
+
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("[X]");
+        Console.ResetColor();
+        Console.WriteLine(" - Reserved (already taken)");
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("[ ]");
+        Console.ResetColor();
+        Console.WriteLine(" - Available (free)");
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.Write("[S]");
+        Console.ResetColor();
+        Console.WriteLine(" - Selected (your choice)");
+
+        Console.WriteLine();
+    }
+
 }

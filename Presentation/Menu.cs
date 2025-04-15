@@ -125,7 +125,7 @@ Use Up & Down keys to select an option.
                     MenuActionCreateMovie();
                     break;                
                 case 6:
-                    SeatSelection.SelectSeats(1);
+                    MenuActionSelectSeats();
                     break;
             }
 
@@ -175,6 +175,12 @@ Use Up & Down keys to select an option.
         static void MenuActionRegister()
         {
             UserCreation.CreateUser();
+        }
+
+        static void MenuActionSelectSeats()
+        {
+            SeatSelection seatSelection = new(1);
+            seatSelection.SelectSeats(1);
         }
 
         static void NotImplemented()
