@@ -27,6 +27,16 @@ public static class SeatSelection
 
         foreach (var seat in seats)
         {
+            
+            if (currentRow != seat.Row)
+            {
+                if (currentRow != null)
+                    Console.WriteLine();
+
+                Console.Write($"Row {seat.Row:D2} | ");
+                currentRow = seat.Row;
+            }
+            
             string type = "--";
             if (seat.Type == "love_seat")
             {
@@ -42,15 +52,6 @@ public static class SeatSelection
             {
                 type = "NO";
                 Console.ForegroundColor = ConsoleColor.Blue;
-            }
-            
-            if (currentRow != seat.Row)
-            {
-                if (currentRow != null)
-                    Console.WriteLine();
-
-                Console.Write($"Row {seat.Row:D2} | ");
-                currentRow = seat.Row;
             }
 
             Console.Write(seat.Active == 1 ? $"{seat.Number:D2} " : "-- ");
