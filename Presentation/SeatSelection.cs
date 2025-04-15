@@ -27,6 +27,23 @@ public static class SeatSelection
 
         foreach (var seat in seats)
         {
+            string type = "--";
+            if (seat.Type == "love_seat")
+            {
+                type = "LV";
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else if (seat.Type == "vip")
+            {
+                type = "VP";
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else if (seat.Type == "normal")
+            {
+                type = "NO";
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            
             if (currentRow != seat.Row)
             {
                 if (currentRow != null)
@@ -37,6 +54,7 @@ public static class SeatSelection
             }
 
             Console.Write(seat.Active == 1 ? $"{seat.Number:D2} " : "-- ");
+            Console.ResetColor();
         }
         
         Console.ReadLine();

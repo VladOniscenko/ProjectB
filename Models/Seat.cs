@@ -7,4 +7,5 @@ public class Seat
     public int Row { get; set; }
     public int Number { get; set; }
     public int Active { get; set; }
+    public string Type { get; set; }
 }
