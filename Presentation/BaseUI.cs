@@ -1,9 +1,19 @@
 public static class BaseUI{
     const int BoxX = 15;
     const int Width = 30;
+    //make width boXx AND X Y OPTIONAL
+    //
+    public static string DrawInputBox(string label, int BoxX = 15, int Width = 30, int x = -1, int y = -1, 
+                                        string? previouslyWritten = null, bool isPassword = false)
+    {   
+        if(x == -1){
+            x = Console.CursorLeft;
+        }
 
-    public static string DrawInputBox(int x, int y, string label, string? previouslyWritten = null, bool isPassword = false)
-    {
+        if(y == -1){
+            y = Console.CursorTop;
+        }
+
         Console.SetCursorPosition(x, y);
         Console.Write(label + ": ");
         Console.SetCursorPosition(BoxX, y);
@@ -11,10 +21,10 @@ public static class BaseUI{
         Console.ForegroundColor = ConsoleColor.Black;
         Console.Write(new string(' ', Width));
         Console.SetCursorPosition(BoxX, y);
-        return ReadInputBox(BoxX, y, Width, previouslyWritten, isPassword);
+        return ReadInputBox(BoxX, Width, isPassword, y, previouslyWritten);
     }
 
-    public static string ReadInputBox(int boxX, int y, int boxLength, string? previouslyWritten, bool isPassword)
+    public static string ReadInputBox(int boxX, int boxLength, bool isPassword, int y, string? previouslyWritten)
     {
         string input = "";
         if (previouslyWritten is not null && !isPassword)
@@ -60,10 +70,12 @@ public static class BaseUI{
         return input;
     }
 
-    public static void ShowErrorMessage(int y, string errorMessage)
+    public static void ShowErrorMessage(string errorMessage, int? yAxis = null)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.SetCursorPosition(0, y);
+        if(yAxis is int Y){
+            Console.SetCursorPosition(0, Y);
+        }
         Console.Write("    " + errorMessage);
         Console.ResetColor();
     }
