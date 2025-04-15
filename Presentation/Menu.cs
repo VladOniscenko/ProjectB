@@ -135,19 +135,11 @@ Use Up & Down keys to select an option.
         }
 
         static void Movies()
-        {
-            // NotImplemented();
-            
-            // todo this is temporary for the presentation
-            Console.WriteLine("=== Newest and best rated movies ===");
-            
+        {    
             var movieRepo = new MovieRepository();
-            foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
-            {
-                Console.WriteLine($"{movie}");
-            }
             
-            Console.ReadKey();
+            MovieList movieList = new MovieList(movieRepo);
+            movieList.OpenUserMenu();
         }
 
         static void AboutUs()

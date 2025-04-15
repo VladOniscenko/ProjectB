@@ -1,5 +1,5 @@
 using ProjectB.Database;
-using ProjectB.Models.Movies;
+using ProjectB.Models;
 using ProjectB.DataAccess;
 using System.Runtime.InteropServices;
 using System.Collections;
@@ -13,46 +13,17 @@ public class MovieList
         this.movieRepo = movieRepo;
     }
 
-    /// <summary>
-    /// Opens a menu for the user to select what they want to do. 
-    /// </summary>
     public void OpenUserMenu()
     {
-        while (true)
-        {
-            // Console.Clear();
-            // Console.WriteLine("Movie List");
-            // Console.WriteLine("1. View Movies");
-            // Console.WriteLine("2. Exit");
-            // Console.Write("Select an option: ");
-
-            // string choice = Console.ReadLine();
-            // ask userr to select an option from the menu
-            int choice = ShowMenu("Movie List", new List<string> { "View Movies", "Exit" });
-            switch (choice)
-            {
-                case 0:
-                    ViewMoviesInRepo(movieRepo);
-                    break;
-                case 1:
-                    return;                
-            }
-        }
+        ViewMoviesInRepo(movieRepo);
     }
 
+    // Takes from the Repo and makes a list of movies
     private void ViewMoviesInRepo(MovieRepository movieRepo)
     {
-        // Console.Clear();
-        // Console.WriteLine("Movie List");
-        // Console.WriteLine("===========");
-
         List<Movie> movies = movieRepo.GetAllMovies()
             .Where(m => m.ReleaseDate >= DateTime.Today.AddDays(-60) && m.ReleaseDate <= DateTime.Today.AddDays(14))
             .ToList();
-        // List<Movie> movies = movieRepo.GetAllMovies().ToList();
-        // test
-        // Console.WriteLine($"DEBUG: {movies.Count} movies loaded from DB.");
-        // Console.ReadKey(); // 
 
         if (movies.Count == 0)
         {
@@ -67,8 +38,7 @@ public class MovieList
 
         while (true)
         {
-            Console.Clear();
-
+            Console.SetCursorPosition(0,0);
             Console.WriteLine("Movie List");
             Console.WriteLine("===========");
 
@@ -80,13 +50,7 @@ public class MovieList
             var moviesToShow = movies.Skip(page * maxMoviesToShow).Take(maxMoviesToShow).ToList();
             
             // convert movies to string options to choose from in the menu
-            List<string> movieOptions = moviesToShow.Select(m => $"{m.Title} ({m.Runtime} min)").ToList();
-            
-            // for (int i = 0; i < moviesToShow.Count; i++)
-            // {
-            //     Console.WriteLine($"{i + 1}.{moviesToShow[i].Title} ({moviesToShow[i].Runtime} min)");
-        
-            // }
+            List<string> movieOptions = moviesToShow.Select(m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}").ToList();
 
             // make optiions for the previous and next pagge
             if (page > 0){
@@ -100,15 +64,6 @@ public class MovieList
             movieOptions.Add("Back to Main Menu");
             // show the movies in the menu
             int selectedMovieIndex = ShowMenu($"Showing movies (Page {page + 1}/{TotalPages})", movieOptions);
-
-            // Console.WriteLine("\nOptions:");
-            // Console.WriteLine("N. Next Page");
-            // Console.WriteLine("P. Previous Page");
-            // Console.WriteLine("Enter bumner to Select Movie");
-            // Console.WriteLine("B. Back to Main Menu");
-
-            // Console.Write("Please select an option: ");
-            // string choice = Console.ReadLine();
 
             if (selectedMovieIndex <moviesToShow.Count)
             {
@@ -125,7 +80,7 @@ public class MovieList
                 {
                     page--;
                 }
-                else if (hasNext && selectedMovieIndex == offset + 1)
+                else if (hasNext && selectedMovieIndex == offset)
                 {
                     page++;
                 }
@@ -143,76 +98,25 @@ public class MovieList
         }
     }
 
-    // static void ShowMovieDetails(Movie movie)
-    // {
-    //     // test
-    //     Console.WriteLine($"DEBUG: Showing details for '{movie.Title}'");
-    //     Console.ReadKey(); 
-        
-    //     while (true)
-    //     {
-    //         Console.Clear();
-    //         Console.WriteLine("Movie Details");
-    //         Console.WriteLine("=============");
-    //         Console.WriteLine($"Title: {movie.Title}");
-    //         Console.WriteLine($"Description: {movie.Description}");
-    //         Console.WriteLine($"Runtime: {movie.Runtime} minutes");
-    //         Console.WriteLine($"Actors: {movie.Actors}");
-    //         Console.WriteLine($"Rating: {movie.Rating}");
-    //         Console.WriteLine($"Genre: {movie.Genre}");
-    //         Console.WriteLine($"Age Restriction: {movie.AgeRestriction}");
-    //         Console.WriteLine($"Release Date: {movie.ReleaseDate.ToShortDateString()}");
-    //         Console.WriteLine($"Country: {movie.Country}");
-
-    //         // Console.WriteLine();
-
-    //         // give user the option to buy ticket options
-    //         List<string> options = new() { "Buy Ticket", "Back to Movie List" };
-    //         int selected = ShowMenu("Choose an option:", options);
-
-    //         if (selected == 0)
-    //         {
-    //             // ticket bought
-    //             Console.Clear();
-    //             Console.WriteLine("Ticket purchased successfully!");
-    //             Console.WriteLine("\nPress any key to return to the movie list...");
-    //             Console.ReadKey();
-    //             break;
-    //         }
-    //         else if (selected == 1)
-    //         {
-    //             // Back to movie list
-    //             break;
-    //         }
-    //     }
-    // }
+    // Shows the movie in a nice format
     static void ShowMovieDetails(Movie movie)
     {
-        // Console.WriteLine("DEBUG - Movie Raw Dump:");
-        // Console.WriteLine($"Title: {movie.Title}");
-        // Console.WriteLine($"Runtime: {movie.Runtime}");
-        // Console.WriteLine($"ReleaseDate: {movie.ReleaseDate}");
-        // Console.WriteLine("Press any key to continue...");
-        // Console.ReadKey();
-
-        // Console.Clear(); // now clear AFTER showing debug info
         Console.Clear();
-        Console.WriteLine("Movie Details");
-        Console.WriteLine("=============");
-        Console.WriteLine($"Title: {movie.Title}");
-        Console.WriteLine($"Description: {movie.Description}");
-        Console.WriteLine($"Runtime: {movie.Runtime} minutes");
-        Console.WriteLine($"Actors: {movie.Actors}");
-        Console.WriteLine($"Rating: {movie.Rating}");
-        Console.WriteLine($"Genre: {movie.Genre}");
-        Console.WriteLine($"Age Restriction: {movie.AgeRestriction}");
-        Console.WriteLine($"Release Date: {movie.ReleaseDate.ToShortDateString()}");
-        Console.WriteLine($"Country: {movie.Country}");
+        Console.WriteLine("=== MOVIE DETAILS ===");
+        Console.WriteLine("------------------------------");
+        Console.WriteLine($"Title           : {movie.Title}");
+        Console.WriteLine($"Description     : {movie.Description}");
+        Console.WriteLine($"Runtime         : {movie.Runtime} minutes");
+        Console.WriteLine($"Actors          : {movie.Actors}");
+        Console.WriteLine($"Rating          : {CalcStars(movie.Rating)} ({movie.Rating}/5)");
+        Console.WriteLine($"Genre           : {movie.Genre}");
+        Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
+        Console.WriteLine($"Country         : {movie.Country}");
+        Console.WriteLine("------------------------------");
     }
 
-    /// <summary>
     /// Shows a menu with options to purchase the selected movie.
-    /// </summary>
     private void ShowPurchaseMenu()
     {
         int startingRow = Console.CursorTop;
@@ -223,33 +127,30 @@ public class MovieList
 
         if (selected == 0)
         {
-            Console.Clear();
             Console.WriteLine("Ticket purchased successfully!");
             Console.WriteLine("\nPress any key to return to the movie list...");
             Console.ReadKey();
+            // Start ticket buying function here
+            Menu.RunMenu();
             return;
         }
         else if (selected == 1)
         {                        
-            // Back to movie list
+            Console.Clear();
             return;
         }
     }
 
     // create method to use keyboard arrows instead of console input 
-    private int ShowMenu(string title, List<string> options, bool clearScreen = true)
+    private int ShowMenu(string title, List<string> options )
     {
         int selected = 0;
         ConsoleKey key;
         List<string> writtenLines = new();
-
+ 
         do
         {
-            if (clearScreen)
-            {
-                Console.Clear();
-            }
-            // Console.Clear();
+            Console.SetCursorPosition(0,0);
             Console.WriteLine(title);
             Console.WriteLine(new string('=', title.Length));
 
@@ -266,6 +167,7 @@ public class MovieList
                 {
                     Console.WriteLine($"  {options[i]}");
                 }
+                Console.WriteLine(new string('-', options[i].Length));
             }
 
             key = Console.ReadKey(true).Key;
@@ -358,5 +260,32 @@ public class MovieList
             Console.SetCursorPosition(0, startRow + i);
             Console.WriteLine(new string(' ', Console.WindowWidth)); // Clear the line
         }
+    }
+
+    private static string CalcStars(double rating)
+    {
+        string StarString = "";
+        int StarsNumber = Convert.ToInt32(rating) / 2;
+
+        switch(StarsNumber)
+        {
+            case 1:
+            StarString = "[*    ]";
+            break;
+            case 2:
+            StarString = "[**   ]";
+            break;
+            case 3:
+            StarString = "[***  ]";
+            break;
+            case 4:
+            StarString = "[**** ]";
+            break;
+            case 5:
+            StarString = "[*****]";
+            break;
+        }
+
+        return StarString;
     }
 }
