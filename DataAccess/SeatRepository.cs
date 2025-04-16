@@ -244,11 +244,28 @@ public class SeatRepository
         return connection.Query<Seat>("SELECT * FROM Seats");
     }
 
-    public IEnumerable<Seat> GetSeatsByAuditorium(int id)
+    public IEnumerable<Seat> GetSeatsByShowtime(int showtimeId)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<Seat>(@"SELECT * FROM Seats WHERE AuditoriumId = @Id ORDER BY Row DESC, Number ASC",
-            new { Id = id });
+        return connection.Query<Seat>(@"
+            WITH TargetShowtime AS (
+                SELECT Id AS ShowtimeId, AuditoriumId
+                FROM Showtimes
+                WHERE Id = @Id
+            )
+            SELECT
+                s.*,
+                CASE
+                    WHEN sr.SeatId IS NOT NULL THEN 1
+                    ELSE 0
+                    END AS Taken
+            FROM Seats AS s
+                     JOIN TargetShowtime AS ts ON s.AuditoriumId = ts.AuditoriumId
+                     LEFT JOIN SeatReservations AS sr
+                               ON sr.ShowtimeId = ts.ShowtimeId AND sr.SeatId = s.Id
+            ORDER BY s.Row DESC, s.Number ASC;
+        ",
+            new { Id = showtimeId });
     }
 }

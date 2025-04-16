@@ -5,9 +5,9 @@ namespace ProjectB.Logic;
 
 public class SeatLogic
 {
-    public static IEnumerable<Seat> GetSeatsByAuditorium(int id)
+    public static IEnumerable<Seat> GetSeatsByShowtime(int showtimeId)
     {
         SeatRepository seatRepository = new();
-        return seatRepository.GetSeatsByAuditorium(id);
+        return seatRepository.GetSeatsByShowtime(showtimeId);
     }
 }
