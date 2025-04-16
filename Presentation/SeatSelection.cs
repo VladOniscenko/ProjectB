@@ -43,12 +43,12 @@ public class SeatSelection
 
     public void Run()
     {
-        Console.Clear();
-        PrintSeatSelectionContent();
-
         Running = true;
         while (Running)
         {
+            Console.Clear();
+            PrintSeatSelectionContent();
+            
             RedrawSeatGrid();
 
             ConsoleKeyInfo pressedKey = Console.ReadKey();
@@ -58,14 +58,7 @@ public class SeatSelection
 
     public void RedrawSeatGrid()
     {
-        Console.SetCursorPosition(0, 20);
-        for (int i = 20; i < Console.WindowHeight; i++)
-        {
-            Console.SetCursorPosition(0, i);
-            Console.Write(new string(' ', Console.WindowWidth));
-        }
 
-        Console.SetCursorPosition(0, 20);
         PrintSeatNumbers();
         PrintSeats();
     }
@@ -100,7 +93,6 @@ public class SeatSelection
                 {
                     Console.WriteLine();
                 }
-
                 currentRow = seat.Row;
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
