@@ -63,20 +63,26 @@ public class SeatSelection
                     _ => null
                 };
 
-                if (seatColor != null)
-                {
-                    Console.ForegroundColor = seatColor.Value;
-                }
-
                 // highlight the seat that is currently selected
                 if (SelectedSeat.Id == seat.Id)
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                 }
+                else if (seat.Selected)
+                {
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    seatColor = ConsoleColor.Magenta;
+                }
+                
+                if (seatColor != null)
+                {
+                    Console.ForegroundColor = seatColor.Value;
+                }
 
                 // set content of the chair
                 // [ ] = available and [X] is taken
                 string seatContent = seat.Taken == 1 ? "X" : " ";
+                seatContent = seat.Selected ? "S" : seatContent;
                 Console.Write(seat.Active == 1 ? $"[{seatContent}]" : "   ");
                 Console.ResetColor();
                 Console.Write(" ");
@@ -84,7 +90,15 @@ public class SeatSelection
             
             Console.WriteLine();
             ConsoleKeyInfo pressedKey = Console.ReadKey();
-            SelectedSeat = Move(pressedKey);
+
+            if (pressedKey.Key == ConsoleKey.Enter)
+            {
+                ReservationLogic.AddOrRemoveSeat(SelectedSeat);
+            }
+            else
+            {
+                SelectedSeat = Move(pressedKey);   
+            }
         }
     }
     
@@ -95,7 +109,12 @@ public class SeatSelection
         Console.WriteLine();
 
         Console.WriteLine("Rules:");
-
+        
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.WriteLine("[S] - Selected seats");
+        Console.ResetColor();
+        
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("[X] - Reserved (already taken)");
 
