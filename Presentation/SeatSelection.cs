@@ -7,14 +7,15 @@ public class SeatSelection
 {
     public readonly Showtime? SelectedShowtime;
     public readonly Movie? SelectedMovie;
+    public readonly Auditorium? SelectedAuditorium;
     public readonly IEnumerable<Seat>? Seats;
     private readonly int MaxNumber;
     private readonly int MaxRow;
     private bool Running = false;
     private int interactiveStartLine;
-    
-    public Seat? SelectedSeat {get; private set;} = null;
-    
+
+    public Seat? SelectedSeat { get; private set; } = null;
+
     public SeatSelection(int showtimeId)
     {
         SelectedShowtime = ShowtimeLogic.Find(showtimeId);
@@ -26,54 +27,64 @@ public class SeatSelection
 
         SelectedMovie = MovieLogic.Find(SelectedShowtime.MovieId);
         Seats = SeatLogic.GetSeatsByShowtime(SelectedShowtime.Id);
+        SelectedAuditorium = AuditoriumLogic.Find(SelectedShowtime.AuditoriumId);
         if (SelectedMovie == null || Seats == null || Seats.Count() <= 0)
         {
             ConsoleMethods.Error("Something went wrong! Get in touch with our Customer service!");
             return;
         }
-        
+
         // get first active seat
         SelectedSeat = Seats.FirstOrDefault(s => s.Active == 1);
-        
+
         MaxNumber = Seats.Max(s => s.Number);
         MaxRow = Seats.Max(s => s.Row);
     }
 
     public void Run()
     {
+        Console.Clear();
         PrintSeatSelectionContent();
-        Console.SetCursorPosition(0, interactiveStartLine - 3);
 
         Running = true;
         while (Running)
         {
-            Console.SetCursorPosition(0, interactiveStartLine);
+            RedrawSeatGrid();
 
-            PrintSeatNumbers();
-            PrintSeats();
-
-            Console.WriteLine();
             ConsoleKeyInfo pressedKey = Console.ReadKey();
             HandledEvent(pressedKey);
         }
     }
 
+    public void RedrawSeatGrid()
+    {
+        Console.SetCursorPosition(0, 20);
+        for (int i = 20; i < Console.WindowHeight; i++)
+        {
+            Console.SetCursorPosition(0, i);
+            Console.Write(new string(' ', Console.WindowWidth));
+        }
+
+        Console.SetCursorPosition(0, 20);
+        PrintSeatNumbers();
+        PrintSeats();
+    }
+
     private void HandledEvent(ConsoleKeyInfo pressedKey)
     {
-        
         if (pressedKey.Key == ConsoleKey.Enter)
         {
             ReservationLogic.AddOrRemoveSeat(SelectedSeat);
             return;
         }
-        
-        if(pressedKey.Key == ConsoleKey.Backspace)
+
+        if (pressedKey.Key == ConsoleKey.Backspace)
         {
             Running = false;
             return;
         }
-        
-        SelectedSeat = Move(pressedKey);   
+
+        SelectedSeat = Move(pressedKey);
     }
 
     private void PrintSeats()
@@ -89,13 +100,14 @@ public class SeatSelection
                 {
                     Console.WriteLine();
                 }
+
                 currentRow = seat.Row;
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write($"{seat.Row:D2} ║     ");
                 Console.ResetColor();
             }
-                
+
             ConsoleColor? seatColor = seat.Type switch
             {
                 "love_seat" => ConsoleColor.Yellow,
@@ -114,7 +126,7 @@ public class SeatSelection
                 Console.BackgroundColor = ConsoleColor.Green;
                 seatColor = ConsoleColor.Magenta;
             }
-                
+
             if (seatColor != null)
             {
                 Console.ForegroundColor = seatColor.Value;
@@ -127,11 +139,11 @@ public class SeatSelection
             Console.Write(seat.Active == 1 ? $"[{seatContent}]" : "   ");
             Console.ResetColor();
             Console.Write(" ");
-                
+
             PrintWalkingPath(seat);
         }
     }
-    
+
     private void PrintSeatSelectionContent()
     {
         Console.Clear();
@@ -143,7 +155,7 @@ public class SeatSelection
         Console.WriteLine("╔═════╗");
         Console.WriteLine("║  C  ║  Press c to confirm seats and proceed to payment");
         Console.WriteLine("╚═════╝");
-        
+
         Console.WriteLine("╔═════════════╗");
         Console.WriteLine("║  Backspace  ║  Press Backspace to go back");
         Console.WriteLine("╚═════════════╝");
@@ -151,7 +163,7 @@ public class SeatSelection
         Console.WriteLine("╔═════════╗");
         Console.WriteLine("║  Enter  ║  Press Enter to select a seat");
         Console.WriteLine("╚═════════╝");
-        
+
         Console.WriteLine();
 
         Console.WriteLine("[ ] - Available (free)");
@@ -159,19 +171,17 @@ public class SeatSelection
         Console.WriteLine("[X] - Reserved (already taken)");
 
         Console.WriteLine();
-        
+
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("[ ] - Normal seat");
-        
+
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("[ ] - Love seat");
-        
+
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("[ ] - VIP seat");
-        
+        Console.WriteLine("[ ] - VIP seat\n");
+
         Console.ResetColor();
-        
-        interactiveStartLine = Console.CursorTop + 1;
     }
 
     private Seat Move(ConsoleKeyInfo pressedKey)
@@ -183,22 +193,22 @@ public class SeatSelection
             (ConsoleKey.DownArrow or ConsoleKey.S) => -1,
             _ => 0
         };
-        
+
         int number = pressedKey.Key switch
         {
             (ConsoleKey.D or ConsoleKey.RightArrow) => 1,
             (ConsoleKey.LeftArrow or ConsoleKey.A) => -1,
             _ => 0
         };
-        
+
         // search for matching seat
         var nextSeat = Seats.FirstOrDefault(
-            s => 
-                s.Row == SelectedSeat.Row + row && 
-                s.Number == SelectedSeat.Number + number && 
+            s =>
+                s.Row == SelectedSeat.Row + row &&
+                s.Number == SelectedSeat.Number + number &&
                 s.Active == 1
         );
-        
+
         // if seat not found return current seat. otherwise return found seat
         return nextSeat == null ? SelectedSeat : nextSeat;
     }
@@ -210,18 +220,18 @@ public class SeatSelection
         for (int i = 1; i <= MaxNumber; i++)
         {
             string adding = "";
-            if ((SelectedShowtime.AuditoriumId == 2 && (i == 6 || i == 12)) || (SelectedShowtime.AuditoriumId == 3 && (i == 11 || i == 19)))
+            if ((SelectedShowtime.AuditoriumId == 2 && (i == 6 || i == 12)) ||
+                (SelectedShowtime.AuditoriumId == 3 && (i == 11 || i == 19)))
             {
                 adding = "   ";
                 line += "══";
             }
-            
+
             numbers += $"{i:D3} {adding}";
             line += "════";
         }
-        
+
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine();
         Console.WriteLine(numbers);
         Console.WriteLine(line);
         Console.WriteLine("   ║       ");
@@ -230,11 +240,12 @@ public class SeatSelection
 
     private void PrintWalkingPath(Seat seat)
     {
-        if (((seat.Number == 6 || seat.Number == 12) && seat.AuditoriumId == 2) || (seat.AuditoriumId == 3 && (seat.Number == 11 || seat.Number == 19)))
+        if (((seat.Number == 6 || seat.Number == 12) && seat.AuditoriumId == 2) ||
+            (seat.AuditoriumId == 3 && (seat.Number == 11 || seat.Number == 19)))
         {
             Console.BackgroundColor = ConsoleColor.White;
             Console.Write("  ");
-                    
+
             Console.ResetColor();
             Console.Write(" ");
         }
@@ -257,7 +268,7 @@ public class SeatSelection
                     {
                         line += "    ";
                     }
-                            
+
                     Console.BackgroundColor = ConsoleColor.White;
                     Console.Write(line);
                     Console.ResetColor();
