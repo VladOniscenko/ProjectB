@@ -179,8 +179,8 @@ Use Up & Down keys to select an option.
 
         static void MenuActionSelectSeats()
         {
-            SeatSelection seatSelection = new(1);
-            seatSelection.SelectSeats();
+            SeatSelection seatSelection = new(15);
+            seatSelection.Run();
         }
 
         static void NotImplemented()
