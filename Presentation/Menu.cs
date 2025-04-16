@@ -180,7 +180,7 @@ Use Up & Down keys to select an option.
         static void MenuActionSelectSeats()
         {
             SeatSelection seatSelection = new(1);
-            seatSelection.SelectSeats(1);
+            seatSelection.SelectSeats();
         }
 
         static void NotImplemented()
