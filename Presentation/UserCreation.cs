@@ -7,7 +7,7 @@ public static class UserCreation
 {
     // needs to check if account was already made and all fields are according to standards
     const int BoxX = 20;
-    const int Width = 30;
+    const int Width = 35;
 
     public static void CreateUser(User? user = null)
     {
@@ -68,7 +68,7 @@ public static class UserCreation
 
         while (!UserLogic.IsPasswordValid(newUser.Password))
         {
-            BaseUI.ShowErrorMessage("Please enter a valid password (must contain an uppercase letter, a number and symbol)",
+            BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
                                     11);
             newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
         }
