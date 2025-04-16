@@ -90,7 +90,7 @@ public static class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            // UserLogic.CreateUser(newUser);
+            UserLogic.CreateUser(newUser);
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
         }
