@@ -16,6 +16,10 @@ public static class UserLogic{
         !password.Any(char.IsUpper) || !password.Any(char.IsDigit));
     }
 
+    public static bool IsPasswordIdentical(string passwordEntry1, string passwordEntry2){
+        return passwordEntry1 == passwordEntry2;
+    }
+
     public static bool IsEmailValid(string newEmail){
         return email.IsValid(newEmail);
     }
