@@ -8,4 +8,5 @@ public class Seat
     public int Number { get; set; }
     public int Active { get; set; }
     public string Type { get; set; }
+    public int Taken { get; set; } = 0;
 }
