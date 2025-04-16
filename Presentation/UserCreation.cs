@@ -6,7 +6,7 @@ namespace ProjectB.Presentation;
 public static class UserCreation
 {
     // needs to check if account was already made and all fields are according to standards
-    const int BoxX = 15;
+    const int BoxX = 20;
     const int Width = 30;
 
     public static void CreateUser(User? user = null)
@@ -60,13 +60,32 @@ public static class UserCreation
 
         Console.SetCursorPosition(0, 9);
         Console.Write("                                                                  ");
+        string secondPassword = "-";
+
+        while(!UserLogic.IsPasswordIdentical(newUser.Password, secondPassword)){
 
         newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
+
         while (!UserLogic.IsPasswordValid(newUser.Password))
         {
             BaseUI.ShowErrorMessage("Please enter a valid password (must contain an uppercase letter, a number and symbol)",
                                     11);
             newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
+        }
+
+        Console.SetCursorPosition(0, 11);
+        Console.Write("                                                                                                   ");
+
+        secondPassword = BaseUI.DrawInputBox("Re-enter password", BoxX, Width, 0, 12, newUser.Password, true);
+        if(!UserLogic.IsPasswordIdentical(newUser.Password, secondPassword)){
+            BaseUI.ShowErrorMessage("Passwords are not identical",
+                                    13);
+            Console.SetCursorPosition(BoxX, 12);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.WriteLine(new string(' ', Width));
+            Console.ResetColor();
+        }
+
         }
 
         if (CheckIfDataCorrect(newUser))
