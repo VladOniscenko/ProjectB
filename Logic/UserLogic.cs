@@ -12,8 +12,9 @@ public static class UserLogic{
     }
 
     public static bool IsPasswordValid(string password){
-        return !(password.Length < 4 || !password.Any(c => !char.IsLetterOrDigit(c)) ||
-        !password.Any(char.IsUpper) || !password.Any(char.IsDigit));
+        return !(password.Length < 8); 
+        // return !(password.Length < 4 || !password.Any(c => !char.IsLetterOrDigit(c)) ||
+        // !password.Any(char.IsUpper) || !password.Any(char.IsDigit));
     }
 
     public static bool IsPasswordIdentical(string passwordEntry1, string passwordEntry2){
