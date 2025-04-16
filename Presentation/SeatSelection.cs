@@ -9,8 +9,7 @@ public class SeatSelection
     public readonly Movie? SelectedMovie;
     public readonly IEnumerable<Seat>? Seats;
     public Seat? SelectedSeat {get; private set;} = null;
-
-
+    
     public SeatSelection(int showtimeId)
     {
         SelectedShowtime = ShowtimeLogic.Find(showtimeId);
@@ -27,7 +26,8 @@ public class SeatSelection
             ConsoleMethods.Error("Something went wrong! Get in touch with our Customer service!");
             return;
         }
-
+        
+        // get first active seat
         SelectedSeat = Seats.FirstOrDefault(s => s.Active == 1);
     }
     public void SelectSeats()
@@ -36,10 +36,12 @@ public class SeatSelection
         {
             Console.Clear();
             PrintSeatSelectionContent();
-
+            
+            // display all seats in the console
             int? currentRow = null;
             foreach (var seat in Seats)
             {
+                // draw row number if not the same as seat row
                 if (currentRow != seat.Row)
                 {
                     if (currentRow != null)
@@ -52,7 +54,7 @@ public class SeatSelection
                     Console.Write($"{seat.Row:D2} |     ");
                     Console.ResetColor();
                 }
-
+                
                 ConsoleColor? seatColor = seat.Type switch
                 {
                     "love_seat" => ConsoleColor.Yellow,
@@ -66,11 +68,14 @@ public class SeatSelection
                     Console.ForegroundColor = seatColor.Value;
                 }
 
+                // highlight the seat that is currently selected
                 if (SelectedSeat.Id == seat.Id)
                 {
                     Console.BackgroundColor = ConsoleColor.White;
                 }
 
+                // set content of the chair
+                // [ ] = available and [X] is taken
                 string seatContent = seat.Taken == 1 ? "X" : " ";
                 Console.Write(seat.Active == 1 ? $"[{seatContent}]" : "   ");
                 Console.ResetColor();
