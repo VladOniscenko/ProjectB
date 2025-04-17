@@ -12,6 +12,7 @@ public class Movie
     public int AgeRestriction { get; set; }
     public DateTime ReleaseDate { get; set; }
     public string Country { get; set; }
+    public int Length { get; internal set; }
 
     public override string ToString()
     {

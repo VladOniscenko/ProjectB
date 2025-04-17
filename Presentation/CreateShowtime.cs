@@ -19,20 +19,22 @@ public static class CreateMovieShowtime
 
         Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
         string movieName = Console.ReadLine().Trim();
+        Console.Clear();
 
         MovieRepository movieRepository = new MovieRepository();
         List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
+        int selectedMovieIndex = ShowtimeLogic.ShowMenu($"(Page {page + 1}/{TotalPages})\n\nFound the following movie(s):\n\nID ║ Title ║ Year ║ Genres ║ Rating", movies);
 
-        int index = 1;
-        Console.WriteLine();
-        foreach (Movie movie in movies)
-        {
-            Console.WriteLine($"[{index}] {movie.Title}");
-            index++;
-        }
+        // int index = 1;
+        // Console.WriteLine();
+        // foreach (Movie movie in movies)
+        // {
+        //     Console.WriteLine($"[{index}] {movie.Title}");
+        //     index++;
+        // }
 
         Console.ReadLine().Trim();
 
-        // int selectedMovieIndex = ShowtimeLogic.ShowMenu($"Showing movies (Page {page + 1}/{TotalPages})", movieOptions);
+        
     }
 }    

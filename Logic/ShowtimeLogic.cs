@@ -17,7 +17,7 @@ public static class ShowtimeLogic
     }
 
      // create method to use keyboard arrows instead of console input 
-    public static int ShowMenu(string title, List<string> options )
+    public static int ShowMenu(string title, List<Movie> options )
     {
         int selected = 0;
         ConsoleKey key;
@@ -27,7 +27,7 @@ public static class ShowtimeLogic
         {
             Console.SetCursorPosition(0,0);
             Console.WriteLine(title);
-            Console.WriteLine(new string('=', title.Length));
+            Console.WriteLine(new string('═', title.Length));
 
             for (int i = 0; i < options.Count; i++)
             {
@@ -35,14 +35,15 @@ public static class ShowtimeLogic
                 {
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($"> {options[i]}");
+                    Console.WriteLine($">> {options[i]}");
                     Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine($"  {options[i]}");
+                    Console.WriteLine($"   {options[i]}");
                 }
-                Console.WriteLine(new string('-', options[i].Length));
+                // Spaces between titles looks ugly tbh.
+                // Console.WriteLine(new string('-', options[i].Length));
             }
 
             key = Console.ReadKey(true).Key;
