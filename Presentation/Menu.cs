@@ -114,7 +114,7 @@ Use Up & Down keys to select an option.
                     Login();
                     break;
                 case 2:
-                    Movies();
+                    MenuActionMovies();
                     break;
                 case 3:
                     AboutUs();
@@ -134,12 +134,10 @@ Use Up & Down keys to select an option.
             NotImplemented();
         }
 
-        static void Movies()
-        {    
-            var movieRepo = new MovieRepository();
-            
-            MovieList movieList = new MovieList(movieRepo);
-            movieList.OpenUserMenu();
+        static void MenuActionMovies()
+        {
+            MovieList movieList = new MovieList();
+            movieList.Run();
         }
 
         static void AboutUs()
