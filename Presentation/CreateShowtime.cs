@@ -1,7 +1,12 @@
 using ProjectB.DataAccess;
+using ProjectB.Logic;
+using ProjectB.Models;
 
 public static class CreateMovieShowtime
 {
+    const int page = 0;
+    const int TotalPages = 3;
+
     public static void Run()
     {
         Console.ResetColor();
@@ -12,12 +17,22 @@ public static class CreateMovieShowtime
         Console.WriteLine("║    Create Movie Showtime    ║");
         Console.WriteLine("╚═════════════════════════════╝");
 
-        Console.WriteLine("\nEnter the name or a keyword of the movie you want to create a showtime for.");
+        Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
         string movieName = Console.ReadLine().Trim();
 
-        // Print list of movies with that name/keyword.
-        MovieRepository movieRepo = new MovieRepository();
-        Console.WriteLine(movieRepo.GetMoviesByTitle(movieName, 6));
-        Console.ReadLine();
+        MovieRepository movieRepository = new MovieRepository();
+        List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
+
+        int index = 1;
+        Console.WriteLine();
+        foreach (Movie movie in movies)
+        {
+            Console.WriteLine($"[{index}] {movie.Title}");
+            index++;
+        }
+
+        Console.ReadLine().Trim();
+
+        // int selectedMovieIndex = ShowtimeLogic.ShowMenu($"Showing movies (Page {page + 1}/{TotalPages})", movieOptions);
     }
 }    
