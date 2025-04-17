@@ -128,9 +128,6 @@ Use Up & Down keys to select an option.
                     return;
                 case "CM":
                     MenuActionCreateMovie();
-                    break;                
-                case "SEL":
-                    MenuActionSelectSeats();
                     break;
             }
 
