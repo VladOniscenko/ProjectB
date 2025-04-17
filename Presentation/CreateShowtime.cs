@@ -23,17 +23,24 @@ public static class CreateMovieShowtime
 
         MovieRepository movieRepository = new MovieRepository();
         List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
-        int selectedMovieIndex = ShowtimeLogic.ShowMenu($"(Page {page + 1}/{TotalPages})\n\nFound the following movie(s):\n\nID ║ Title ║ Year ║ Genres ║ Rating", movies);
+        
+        // Still need to make it so you got multiple pages
+        while (!(ShowtimeLogic.IsMovieIDValid(movieName)))
+        {
+            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
+            movieName = Console.ReadLine().Trim();
+        }
 
-        // int index = 1;
-        // Console.WriteLine();
-        // foreach (Movie movie in movies)
-        // {
-        //     Console.WriteLine($"[{index}] {movie.Title}");
-        //     index++;
-        // }
+        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies($"(Page {page + 1}/{TotalPages})\n\nFound the following movie(s):\n\nID ║ Title ║ Year ║ Genres ║ Rating", movies);
+        Movie selectedMovie = movies[selectedMovieIndex];
+        Console.Clear();
 
-        Console.ReadLine().Trim();
+        AuditoriumRepository auditoriumRepository = new AuditoriumRepository();
+        List<Auditorium> auditoriums = auditoriumRepository.GetAllAuditoriums().ToList();
+
+        int selectedIndex = ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.", auditoriums);
+        Auditorium selectedAuditorium = auditoriums[selectedIndex];
+        Console.Clear();
 
         
     }

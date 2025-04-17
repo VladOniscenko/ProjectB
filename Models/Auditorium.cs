@@ -14,4 +14,10 @@ public class Auditorium
         TotalSeats = totalSeats;
         CinemaId = cinemaId;
     }
+
+    // Dude on Reddit told me to add this cuz I really couldn't figure ts out.
+    public override string ToString()
+    {
+        return $"{Name} | {TotalSeats} seats | ID: {Id}";
+    }
 }
