@@ -4,34 +4,50 @@ namespace ProjectB.Logic;
 
 public class ReservationLogic
 {
-    private static List<Seat> SelectedSeats { get; set; } = new();
+    private Showtime SelectedShowtime;
+    private Movie SelectedMovie;
+    private List<Seat> SelectedSeats { get; set; } = new();
 
-    private static void AddSeat(Seat seat)
+    public ReservationLogic(Movie movie)
     {
-        if (seat.Taken == 0)
-        {
-            seat.Selected = true;
-            SelectedSeats.Add(seat);
-        }
+        SelectedMovie = movie;
     }
+    
+    
+    // private void AddSeat(Seat seat)
+    // {
+    //     // todo check if seat is not taken
+    //     if (seat.Taken == 0)
+    //     {
+    //         seat.Selected = true;
+    //         SelectedSeats.Add(seat);
+    //     }
+    // }
+    //
+    // private void RemoveSeat(Seat seat)
+    // {
+    //     if (SelectedSeats.Contains(seat))
+    //     {
+    //         seat.Selected = false;
+    //         SelectedSeats.Remove(seat);   
+    //     }
+    // }
+    //
+    // public void AddOrRemoveSeat(Seat seat)
+    // {
+    //     if (seat.Selected)
+    //     {
+    //         RemoveSeat(seat);
+    //         return;
+    //     }
+    //     AddSeat(seat);
+    // }
 
-    private static void RemoveSeat(Seat seat)
-    {
-        if (SelectedSeats.Contains(seat))
-        {
-            seat.Selected = false;
-            SelectedSeats.Remove(seat);   
-        }
-    }
-
-    public static void AddOrRemoveSeat(Seat seat)
-    {
-        if (seat.Selected)
-        {
-            RemoveSeat(seat);
-            return;
-        }
-        
-        AddSeat(seat);
-    }
+    
+    
+    
+    
+    
+    
+    
 }

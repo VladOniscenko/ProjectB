@@ -80,7 +80,7 @@ public class MovieList
                     int movieId = int.Parse(selectedOption);
                     // show the movie details
                     ShowMovieDetails(moviesToShow.Find(m => m.Id == movieId));
-                    ShowPurchaseMenu();
+                    ShowPurchaseMenu(movieId);
                     continue;
             }
 
@@ -106,21 +106,18 @@ public class MovieList
     }
 
     /// Shows a menu with options to purchase the selected movie.
-    private void ShowPurchaseMenu()
+    private void ShowPurchaseMenu(int movieId)
     {
         int startingRow = Console.CursorTop;
 
-        List<string> options = new() { "Buy Ticket", "Back to Movie List" };
-
+        List<string> options = new() { "Check availability", "Back to Movie List" };
         int selected = AddMenuFromStartRow("Choose an option:", options, startingRow);
 
         if (selected == 0)
         {
-            Console.WriteLine("Ticket purchased successfully!");
-            Console.WriteLine("\nPress any key to return to the movie list...");
-            Console.ReadKey();
-            // Start ticket buying function here
-            Menu.RunMenu();
+
+            Menu.MenuActionRunReservationFlow(movieId);
+            Running = false;
             return;
         }
         else if (selected == 1)

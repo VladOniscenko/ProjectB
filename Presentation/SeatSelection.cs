@@ -67,7 +67,7 @@ public class SeatSelection
     {
         if (pressedKey.Key == ConsoleKey.Enter)
         {
-            ReservationLogic.AddOrRemoveSeat(SelectedSeat);
+            // ReservationLogic.AddOrRemoveSeat(SelectedSeat);
             return;
         }
 
