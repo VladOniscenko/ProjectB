@@ -99,7 +99,7 @@ namespace ProjectB
 Welcome customer!
 Use Up & Down keys to select an option.
                 ";
-            string[] options = { "Register", "Login", "Movies", "About us", "Exit", "Create Movie (admin only)" };
+            string[] options = { "Register", "Login", "Movies", "About us", "Exit", "Create Movie (admin only)", "Create Showtime (admin only)" };
             Menu menu = new Menu(prompt, options);
             int SelectedIndex = menu.Run();
 
@@ -123,6 +123,9 @@ Use Up & Down keys to select an option.
                     return;
                 case 5:
                     MenuActionCreateMovie();
+                    break;
+                case 6:
+                    MenuActionCreateShowtime();
                     break;
             }
 
@@ -180,6 +183,11 @@ Use Up & Down keys to select an option.
             Console.WriteLine("Not implemented yet");
             Console.ResetColor();
             Console.ReadKey();
+        }
+
+        static void MenuActionCreateShowtime()
+        {
+            CreateMovieShowtime.Run();
         }
     }
 }
