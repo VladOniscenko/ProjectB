@@ -132,6 +132,16 @@ public class MovieRepository
             new { Count = limit, Title = title }
         ).ToList();
     }
+
+    public List<Movie> GetMoviesWithShowtimeInNextDays(int days)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies as m LEFT JOIN Showtimes as s ON s.MovieId = m.Id WHERE s.StartTime BETWEEN DATETIME('now') AND DATETIME('now', '+7 days') GROUP BY m.Id LIMIT 24"
+        ).ToList();
+    }
     
     public Movie? Find(int id)
     {

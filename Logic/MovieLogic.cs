@@ -12,6 +12,12 @@ public static class MovieLogic
 
         return true;
     }
+
+    public static IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7)
+    {
+        MovieRepository movieRepository = new MovieRepository();
+        return movieRepository.GetMoviesWithShowtimeInNextDays(days);
+    }
     
     public static Movie? Find(int id)
     {
