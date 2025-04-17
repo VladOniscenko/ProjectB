@@ -138,8 +138,6 @@ public class SeatSelection
 
     private void PrintSeatSelectionContent()
     {
-        Console.Clear();
-
         Console.WriteLine("Selected movie:");
         Console.WriteLine(SelectedMovie);
         Console.WriteLine();
@@ -252,7 +250,7 @@ public class SeatSelection
                 if (seat.Number == maxNum)
                 {
                     Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write("\n   ║       ");
+                    Console.Write("\n   ║     ");
                     Console.ResetColor();
 
                     string line = "     ";
