@@ -1,3 +1,4 @@
+using ProjectB.Models;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -130,15 +131,13 @@ Use Up & Down keys to select an option.
                 case "CM":
                     CreateMovie.Create();
                     break;
-                default:
-                    RunMenu();
-                    break;
             }
+            RunMenu();
         }
 
-        public static void MenuActionRunReservationFlow(int movieId)
+        public static void MenuActionRunReservationFlow(Movie movie)
         {
-            ReservationFlow reservationFlow = new ReservationFlow(movieId);
+            ReservationFlow reservationFlow = new ReservationFlow(movie);
             reservationFlow.Run();
         }
 
@@ -148,6 +147,53 @@ Use Up & Down keys to select an option.
             Console.WriteLine("Not implemented yet");
             Console.ResetColor();
             Console.ReadKey();
+        }
+        
+        // create method to use keyboard arrows instead of console input 
+        public static string SelectMenu(string title, Dictionary<string, string> options)
+        {
+            int selectedIndex = 0;
+            ConsoleKey key;
+            List<string> optionKeys = options.Keys.ToList();
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(title);
+                Console.WriteLine(new string('=', title.Length));
+
+                for (int i = 0; i < optionKeys.Count; i++)
+                {
+                    var value = options[optionKeys[i]];
+                    if (i == selectedIndex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.WriteLine($"> {value}");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {value}");
+                    }
+                    Console.WriteLine(new string('-', value.Length));
+                }
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedIndex = (selectedIndex + 1) % optionKeys.Count;
+                        break;
+                }
+
+            } while (key != ConsoleKey.Enter);
+
+            return optionKeys[selectedIndex];
         }
     }
 }
