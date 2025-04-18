@@ -16,15 +16,17 @@ public class SeatSelection
 
     public Seat? SelectedSeat { get; private set; } = null;
 
-    public SeatSelection(int showtimeId)
+    public SeatSelection(int showtimeId) : this(ShowtimeLogic.Find(showtimeId)){ }
+    public SeatSelection(Showtime showtime)
     {
-        SelectedShowtime = ShowtimeLogic.Find(showtimeId);
-        if (SelectedShowtime == null)
+        
+        if (showtime == null)
         {
             ConsoleMethods.Error("Showtime was not found!");
             return;
         }
 
+        SelectedShowtime = showtime;
         SelectedMovie = MovieLogic.Find(SelectedShowtime.MovieId);
         Seats = SeatLogic.GetSeatsByShowtime(SelectedShowtime.Id);
         SelectedAuditorium = AuditoriumLogic.Find(SelectedShowtime.AuditoriumId);
@@ -41,7 +43,7 @@ public class SeatSelection
         MaxRow = Seats.Max(s => s.Row);
     }
 
-    public void Run()
+    public IEnumerable<Seat>? Run()
     {
         Running = true;
         while (Running)
@@ -54,6 +56,8 @@ public class SeatSelection
             ConsoleKeyInfo pressedKey = Console.ReadKey();
             HandledEvent(pressedKey);
         }
+
+        return null;
     }
 
     public void RedrawSeatGrid()

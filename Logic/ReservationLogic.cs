@@ -13,6 +13,16 @@ public class ReservationLogic
         SelectedMovie = movie;
     }
     
+    public bool SelectShowtime(Showtime? showtime)
+    {
+        if (showtime == null || showtime.StartTime < DateTime.Now)
+        {
+            return false;
+        }
+
+        SelectedShowtime = showtime;
+        return true;
+    }
     
     // private void AddSeat(Seat seat)
     // {

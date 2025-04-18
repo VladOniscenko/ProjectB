@@ -8,7 +8,8 @@ public class ReservationFlow
     private ReservationLogic Reservation;
     private Showtime SelectedShowtime;
     private Movie SelectedMovie;
-
+    
+    public ReservationFlow(int movieId) : this(MovieLogic.Find(movieId)) { }
     public ReservationFlow(Movie movie)
     {
         
@@ -22,25 +23,26 @@ public class ReservationFlow
         Reservation = new ReservationLogic(movie);
     }
     
-    public ReservationFlow(int movieId) : this(MovieLogic.Find(movieId)) { }
 
     public void Run()
     {
         // 1. select showtime
         SelectShowtime selectShowtime = new SelectShowtime(SelectedMovie);
-        int? showtimeId = selectShowtime.Run();
-
-        if (showtimeId < 0)
+        Showtime? showtime = selectShowtime.Run();
+        if (showtime == null)
         {
             return;
         }
-
-        // Reservation.SelectShowtime(showtimeId);
         
-        Console.WriteLine(showtimeId);
+        if (!Reservation.SelectShowtime(showtime))
+        {
+            ConsoleMethods.Error("Show time is not available");
+            return;
+        }
 
         // 2. select seats
-        // SeatSelection seatSelection = new SeatSelection();
+        SeatSelection seatSelection = new SeatSelection(showtime);
+        IEnumerable<Seat>? seats = seatSelection.Run();
         
         // 3. select tickets type
 

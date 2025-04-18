@@ -6,6 +6,7 @@ namespace ProjectB.Presentation;
 
 public class Cinema
 {
+    public static User? CurrentUser = null;
     // private readonly BusinessLogic.CinemaService _service;
     private Dictionary<string, string> MenuOptions;
     private Menu SelectMenu;
@@ -29,6 +30,10 @@ Use Up & Down keys to select an option.
     {
         // _service = new BusinessLogic.CinemaService();
         DbFactory.InitializeDatabase();
+    }
+
+    public void Run()
+    {
         MenuOptions = new()
         {
             { "UP", "Upcoming Movies" },
@@ -36,14 +41,19 @@ Use Up & Down keys to select an option.
             { "LI", "Login" },
             { "RE", "Register" },
             { "EX", "Exit" },
-            { "CM", "Create Movie (admins)" },
         };
+
+        if (CurrentUser != null)
+        {
+            MenuOptions.Add("LO", "Log out");
+
+            if (CurrentUser.IsAdmin)
+            {
+                MenuOptions.Add("CM", "Create Movie");
+            }
+        }
         
         SelectMenu = new Menu(Logo, MenuOptions);
-    }
-
-    public void Run()
-    {
         string selectedOption = SelectMenu.Run();
         
         // Code block for keyPressed cases
@@ -69,6 +79,11 @@ Use Up & Down keys to select an option.
             case "CM":
                 CreateMovie.Create();
                 break;
+            case "LO":
+                CurrentUser = null;
+                break;
         }
+
+        Run();
     }
 }

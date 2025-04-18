@@ -6,34 +6,28 @@ namespace ProjectB.Presentation;
 public class MovieList
 {
     private bool Running;
+    private const int MaxMoviesPerPage = 5;
+
     public MovieList()
     {
         Running = false;
     }
 
-    public void Run()
-    {
-        ViewMoviesInRepo();
-    }
-
     // Takes from the Repo and makes a list of movies
-    private void ViewMoviesInRepo()
+    public void Run()
     {
         IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays();
 
         if (movies.Count() == 0)
         {
-            Console.WriteLine("No movies available this week.");
-            Console.WriteLine("Press any key to go back to the main menu...");
-            Console.ReadKey();
+            ConsoleMethods.Error("No movies available this week.\nPress any key to go back to the main menu...");
             return;
         }
 
-        const int maxMoviesToShow = 5;
         int page = 0;
 
         // calculate total pages based on total movies and max movies to show
-        int totalPages = (int)Math.Ceiling((double)movies.Count() / maxMoviesToShow);
+        int totalPages = (int)Math.Ceiling((double)movies.Count() / MaxMoviesPerPage);
 
         Running = true;
         while (Running)
@@ -43,7 +37,7 @@ public class MovieList
             Console.WriteLine("===========");
 
             // get movies and show them in the console
-            var moviesToShow = movies.Skip(page * maxMoviesToShow).Take(maxMoviesToShow).ToList();
+            var moviesToShow = movies.Skip(page * MaxMoviesPerPage).Take(MaxMoviesPerPage).ToList();
 
             // convert movies to string options to choose from in the menu
             var movieOptions = moviesToShow.ToDictionary(
@@ -114,15 +108,15 @@ public class MovieList
         List<string> options = new() { "Check availability", "Back to Movie List" };
         int selected = AddMenuFromStartRow("Choose an option:", options, startingRow);
 
-        if (selected == 0)
-        {
-            ReservationFlow reservationFlow = new ReservationFlow(movie);
-            reservationFlow.Run();
-        }
-        else if (selected == 1)
+        if (selected == 1)
         {
             Console.Clear();
+            return;
         }
+        
+        // start reservation process
+        ReservationFlow reservationFlow = new ReservationFlow(movie);
+        reservationFlow.Run();
     }
 
     /// <summary>

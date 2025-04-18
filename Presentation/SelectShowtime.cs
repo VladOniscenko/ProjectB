@@ -23,9 +23,15 @@ public class SelectShowtime
         AvailableShowtimes = ShowtimeLogic.GetShowtimesByMovieId(SelectedMovie.Id);
     }
 
-    public int Run()
+    public Showtime? Run()
     {
         Console.Clear();
+
+        if (AvailableShowtimes.Count() == 0)
+        {
+            ConsoleMethods.Error("No availability found");
+            return null;
+        }
         
         var showtimeOptions = AvailableShowtimes.ToDictionary(
             s => s.Id.ToString(),
@@ -36,14 +42,11 @@ public class SelectShowtime
         
         // show the movies in the menu
         var selectedOption = Menu.SelectMenu($"Select a movie show time", showtimeOptions);
-        switch (selectedOption)
+        if (selectedOption == "S")
         {
-            case "S":
-                return -1;
-            default:
-                Showtime? showtime = AvailableShowtimes.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
-
-                return (showtime == null) ? -1 : showtime.Id;
+            return null;
         }
+        
+        return AvailableShowtimes.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
     }
 }
