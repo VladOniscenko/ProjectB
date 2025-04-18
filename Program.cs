@@ -1,11 +1,9 @@
-using ProjectB.Database;
 namespace ProjectB;
-
 class Program
 {
     static void Main()
     {
-        DbFactory.InitializeDatabase();
-        Menu.RunMenu();
+        var cinema = new Presentation.Cinema();
+        cinema.Run();
     }
 }

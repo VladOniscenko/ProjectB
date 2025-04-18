@@ -116,8 +116,8 @@ public class MovieList
 
         if (selected == 0)
         {
-
-            Menu.MenuActionRunReservationFlow(movie);
+            ReservationFlow reservationFlow = new ReservationFlow(movie);
+            reservationFlow.Run();
         }
         else if (selected == 1)
         {
