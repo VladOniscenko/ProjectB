@@ -19,7 +19,7 @@ public class MovieList
     // Takes from the Repo and makes a list of movies
     private void ViewMoviesInRepo()
     {
-        IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays(7);
+        IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays();
 
         if (movies.Count() == 0)
         {
@@ -64,7 +64,7 @@ public class MovieList
 
             movieOptions.Add("M", "Back to Main Menu");
             // show the movies in the menu
-            var selectedOption = ShowMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
+            var selectedOption = Menu.SelectMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
             switch (selectedOption)
             {
                 case "N":
@@ -77,10 +77,11 @@ public class MovieList
                     Running = false;
                     break;
                 default:
-                    int movieId = int.Parse(selectedOption);
+                    Movie movie = moviesToShow.Find(m => m.Id == int.Parse(selectedOption));
+                    
                     // show the movie details
-                    ShowMovieDetails(moviesToShow.Find(m => m.Id == movieId));
-                    ShowPurchaseMenu(movieId);
+                    ShowMovieDetails(movie);
+                    ShowPurchaseMenu(movie);
                     continue;
             }
 
@@ -106,7 +107,7 @@ public class MovieList
     }
 
     /// Shows a menu with options to purchase the selected movie.
-    private void ShowPurchaseMenu(int movieId)
+    private void ShowPurchaseMenu(Movie movie)
     {
         int startingRow = Console.CursorTop;
 
@@ -116,7 +117,7 @@ public class MovieList
         if (selected == 0)
         {
 
-            Menu.MenuActionRunReservationFlow(movieId);
+            Menu.MenuActionRunReservationFlow(movie);
             Running = false;
             return;
         }
@@ -125,53 +126,6 @@ public class MovieList
             Console.Clear();
             return;
         }
-    }
-
-    // create method to use keyboard arrows instead of console input 
-    private string ShowMenu(string title, Dictionary<string, string> options)
-    {
-        int selectedIndex = 0;
-        ConsoleKey key;
-        List<string> optionKeys = options.Keys.ToList();
-
-        do
-        {
-            Console.Clear();
-            Console.WriteLine(title);
-            Console.WriteLine(new string('=', title.Length));
-
-            for (int i = 0; i < optionKeys.Count; i++)
-            {
-                var value = options[optionKeys[i]];
-                if (i == selectedIndex)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($"> {value}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"  {value}");
-                }
-                Console.WriteLine(new string('-', value.Length));
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selectedIndex = (selectedIndex + 1) % optionKeys.Count;
-                    break;
-            }
-
-        } while (key != ConsoleKey.Enter);
-
-        return optionKeys[selectedIndex];
     }
 
     /// <summary>
