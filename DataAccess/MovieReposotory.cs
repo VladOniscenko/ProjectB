@@ -139,7 +139,8 @@ public class MovieRepository
         connection.Open();
 
         return connection.Query<Movie>(
-            "SELECT * FROM Movies as m LEFT JOIN Showtimes as s ON s.MovieId = m.Id WHERE s.StartTime BETWEEN DATETIME('now') AND DATETIME('now', '+7 days') GROUP BY m.Id LIMIT 24"
+            "SELECT * FROM Movies as m LEFT JOIN Showtimes as s ON s.MovieId = m.Id WHERE s.StartTime BETWEEN DATETIME('now') AND DATETIME('now', @Days) GROUP BY m.Id",
+            new {Days = $"+{days} days"}
         ).ToList();
     }
     
