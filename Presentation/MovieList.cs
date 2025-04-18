@@ -118,13 +118,10 @@ public class MovieList
         {
 
             Menu.MenuActionRunReservationFlow(movie);
-            Running = false;
-            return;
         }
         else if (selected == 1)
         {
             Console.Clear();
-            return;
         }
     }
 

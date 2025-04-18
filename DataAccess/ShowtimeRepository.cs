@@ -119,4 +119,15 @@ public class ShowtimeRepository
             new { Id = id }
         );
     }
+
+    public IEnumerable<Showtime> GetShowtimesByMovieId(int id, int limit)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.Query<Showtime>(
+            "SELECT * FROM Showtimes WHERE MovieId = @Id LIMIT @Limit",
+            new { Id = id, Limit = limit }
+        );
+    }
 }
