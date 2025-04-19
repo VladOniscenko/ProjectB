@@ -1,4 +1,4 @@
-namespace ProjectB.Logic;
+namespace ProjectB.Presentation;
 
 public static class ConsoleMethods
 {

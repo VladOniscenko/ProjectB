@@ -31,7 +31,7 @@ public class UserRepository
             var userRepo = new UserRepository();
 
             // Check if an admin with the specific email exists
-            if (CheckIfUserExistByEmail("admin@admin.com"))
+            if (userRepo.CheckIfUserExistByEmail("admin@admin.com"))
             {
                 var adminUser = new User
                 {
@@ -81,7 +81,7 @@ public class UserRepository
         return connection.Query<User>("SELECT * FROM Users");
     }
 
-    public static bool CheckIfUserExistByEmail(string email)
+    public bool CheckIfUserExistByEmail(string email)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

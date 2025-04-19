@@ -1,11 +1,17 @@
-using ProjectB.Logic;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
-public static class CreateMovie
+public class CreateMovieFlow
 {
-    public static T GetAndValidateInput<T>(string prompt, int min = 0, int max = 100)
+    private IMovieService _movieLogic;
+    public CreateMovieFlow(IMovieService movieLogic)
+    {
+        _movieLogic = movieLogic;
+    }
+    
+    public T GetAndValidateInput<T>(string prompt, int min = 0, int max = 100)
     {
         Console.Clear();
         Console.WriteLine($"{prompt}:");
@@ -45,7 +51,7 @@ public static class CreateMovie
         return GetAndValidateInput<T>(prompt, min, max);
     }
 
-    public static void Create()
+    public void Run()
     {
         bool completed = false;
         string currentState = "title";
@@ -210,7 +216,7 @@ public static class CreateMovie
                         string addInput = Console.ReadLine();
                         if (addInput == "y")
                         {
-                            MovieLogic.CreateMovie(new Movie
+                            _movieLogic.CreateMovie(new Movie
                             {
                                 Title = movieTitle,
                                 Description = movieDescription,
@@ -241,7 +247,7 @@ public static class CreateMovie
                         }
                         else if (addInput == "n")
                         {
-                            MovieLogic.CreateMovie(new Movie
+                            _movieLogic.CreateMovie(new Movie
                             {
                                 Title = movieTitle,
                                 Description = movieDescription,
