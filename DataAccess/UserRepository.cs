@@ -87,4 +87,38 @@ public class UserRepository
         connection.Open();
         return !(connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new { email }).Count() == 0);
     }
+
+    public static string GetUserEmail(string email)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        var result = connection.Query<User>("SELECT Email FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
+        
+        if (result != null)
+        {
+            return result.Email;
+        }
+        else
+        {
+            return "";
+        }
+        
+    }
+
+    public static string GetUserPassword(string email)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        var passwordHash = connection.Query<User>("SELECT Password FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
+        
+        if (passwordHash != null)
+        {
+            return passwordHash.Password;
+        }
+        else
+        {
+            return "";
+        }
+        
+    }
 }

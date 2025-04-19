@@ -131,7 +131,7 @@ Use Up & Down keys to select an option.
 
         static void Login()
         {
-            NotImplemented();
+            UserLogin.Login();
         }
 
         static void Movies()

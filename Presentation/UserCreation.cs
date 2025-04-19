@@ -1,4 +1,5 @@
 using ProjectB.DataAccess;
+using ProjectB.Logic;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
@@ -71,8 +72,8 @@ public static class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            // UserLogic.CreateUser(newUser);
-            Console.WriteLine("\nYour account has been made!");
+            //UserLogic.CreateUser(newUser);
+            BaseUI.ConfirmingMessage("Your account has been made!",9);
             Thread.Sleep(1000);
         }
         else

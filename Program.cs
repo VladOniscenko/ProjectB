@@ -14,8 +14,7 @@ class Program
         var movieRepo = new MovieRepository();
         MovieList movieList = new MovieList(movieRepo);
 
-        // call the method to view movies
-        movieList.OpenUserMenu();
+        Menu.RunMenu();
         
     }
 }

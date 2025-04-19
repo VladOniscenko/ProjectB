@@ -80,6 +80,16 @@ public static class BaseUI{
         Console.ResetColor();
     }
 
+    public static void ConfirmingMessage(string confirmingMessage, int? yAxis = null)
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        if(yAxis is int Y){
+            Console.SetCursorPosition(0, Y);
+        }
+        Console.Write("    " + confirmingMessage);
+        Console.ResetColor();
+    }
+
     public static bool BasicYesOrNo(){
         bool isAccepted = true;
 

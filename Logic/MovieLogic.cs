@@ -9,7 +9,6 @@ public static class MovieLogic
     {
         MovieRepository movieRepository = new MovieRepository();
         movieRepository.AddMovie(movie);
-
         return true;
     }
 }

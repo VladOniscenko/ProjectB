@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using ProjectB.DataAccess;
 using ProjectB.Models;
 
-
-public static class UserLogic{
-
+namespace ProjectB.Logic;
+public static class UserLogic
+{
     private static EmailAddressAttribute email = new EmailAddressAttribute();
 
     public static bool IsNameValid(string name){
@@ -28,5 +28,24 @@ public static class UserLogic{
     {
         UserRepository userRepository = new UserRepository();
         userRepository.AddUser(user);
+    }
+
+    public static bool IsEmailFoundAndCorrect(string Email)
+    {
+        return !(UserRepository.GetUserEmail(Email).Length > 1);
+    }
+    public static bool IsPasswordFoundAndCorrect(string email, string password)
+    {
+
+        var HashPassword = UserRepository.GetUserPassword(email);
+
+        if (HashPassword != "" && BCrypt.Net.BCrypt.Verify(password,HashPassword))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
