@@ -1,13 +1,20 @@
 using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Logic;
 
-public class AuditoriumLogic
+public class AuditoriumLogic : IAuditoriumService
 {
-    public static Auditorium? Find(int id)
+    private AuditoriumRepository _auditoriumRepository;
+
+    public AuditoriumLogic(AuditoriumRepository auditoriumRepository)
     {
-        AuditoriumRepository auditoriumRepository = new();
-        return auditoriumRepository.Find(id);
+        _auditoriumRepository = auditoriumRepository;
+    }
+    
+    public Auditorium? Find(int id)
+    {
+        return _auditoriumRepository.Find(id);
     }
 }
