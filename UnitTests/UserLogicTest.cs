@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace UnitTests;
@@ -43,6 +44,38 @@ public class UserLogicTest
         {
             bool actual = UserLogic.IsNameValid(name);
 
-            Assert.AreEqual(false, false);
+            Assert.AreEqual(false, actual);
         }
+
+    [DataTestMethod]
+    [DataRow("Notanemail")]
+    [DataRow("Notanemail@")]
+    [DataRow("@Notanemail")]
+
+
+    public void IsEmailValid_InvalidEmail_false(string email){
+        bool actual = UserLogic.IsEmailValid(email);
+
+        Assert.AreEqual(false, actual);
+    }
+
+    [TestMethod]
+    public void IsEmailValid_ValidEmail_True(){
+        string email = "valid@email.com";
+
+        bool actual = UserLogic.IsEmailValid(email);
+
+        Assert.AreEqual(false, actual);
+    }
+
+    [TestMethod]
+    public void DoesUserExist_ExistingUser_False(){
+        string email = "admin@admin.com";
+
+        bool actual = UserLogic.DoesUserExist(email);
+
+        Assert.AreEqual(false, actual);
+    }
+
+
         }
