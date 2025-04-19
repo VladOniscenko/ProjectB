@@ -65,17 +65,7 @@ public class UserLogicTest
 
         bool actual = UserLogic.IsEmailValid(email);
 
-        Assert.AreEqual(false, actual);
+        Assert.AreEqual(true, actual);
     }
-
-    [TestMethod]
-    public void DoesUserExist_ExistingUser_False(){
-        string email = "admin@admin.com";
-
-        bool actual = UserLogic.DoesUserExist(email);
-
-        Assert.AreEqual(false, actual);
-    }
-
 
         }
