@@ -11,4 +11,10 @@ public static class MovieLogic
         movieRepository.AddMovie(movie);
         return true;
     }
+
+    public static IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7)
+    {
+        MovieRepository movieRepository = new MovieRepository();
+        return movieRepository.GetMoviesWithShowtimeInNextDays(days);
+    }
 }

@@ -1,99 +1,88 @@
-using ProjectB.Database;
 using ProjectB.Models;
-using ProjectB.DataAccess;
-using System.Runtime.InteropServices;
-using System.Collections;
+using ProjectB.Logic;
+
 namespace ProjectB.Presentation;
 
 public class MovieList
 {
-    private MovieRepository movieRepo;
-    public MovieList(MovieRepository movieRepo)
+    private bool Running;
+    public MovieList()
     {
-        this.movieRepo = movieRepo;
+        Running = false;
     }
 
-    public void OpenUserMenu()
+    public void Run()
     {
-        ViewMoviesInRepo(movieRepo);
+        ViewMoviesInRepo();
     }
 
     // Takes from the Repo and makes a list of movies
-    private void ViewMoviesInRepo(MovieRepository movieRepo)
+    private void ViewMoviesInRepo()
     {
-        List<Movie> movies = movieRepo.GetAllMovies()
-            .Where(m => m.ReleaseDate >= DateTime.Today.AddDays(-60) && m.ReleaseDate <= DateTime.Today.AddDays(14))
-            .ToList();
+        IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays(7);
 
-        if (movies.Count == 0)
+        if (movies.Count() == 0)
         {
             Console.WriteLine("No movies available this week.");
             Console.WriteLine("Press any key to go back to the main menu...");
-            Console.ReadKey(); 
+            Console.ReadKey();
             return;
         }
-        
+
         const int maxMoviesToShow = 5;
         int page = 0;
 
-        while (true)
+        // calculate total pages based on total movies and max movies to show
+        int totalPages = (int)Math.Ceiling((double)movies.Count() / maxMoviesToShow);
+
+        Running = true;
+        while (Running)
         {
-            Console.SetCursorPosition(0,0);
+            Console.Clear();
             Console.WriteLine("Movie List");
             Console.WriteLine("===========");
 
-            // calculate total pages based on total movies and max movies to show
-            var TotalPages = (int)Math.Ceiling((double)movies.Count / maxMoviesToShow);
-            // Console.WriteLine($"Showing movies {page * maxMoviesToShow + 1} to {(page + 1) * maxMoviesToShow} of {movies.Count}");
-            
             // get movies and show them in the console
             var moviesToShow = movies.Skip(page * maxMoviesToShow).Take(maxMoviesToShow).ToList();
-            
+
             // convert movies to string options to choose from in the menu
-            List<string> movieOptions = moviesToShow.Select(m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}").ToList();
+            var movieOptions = moviesToShow.ToDictionary(
+                m => m.Id.ToString(),
+                m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}"
+            );
 
             // make optiions for the previous and next pagge
-            if (page > 0){
-                Console.WriteLine("===========");
-                movieOptions.Add("Previous Page");
+            if (page < totalPages - 1)
+            {
+                movieOptions.Add("N", "Next Page");
             }
-            if ((page + 1) * maxMoviesToShow < movies.Count){
-                Console.WriteLine("===========");
-                movieOptions.Add("Next Page");
+
+            if (page > 0)
+            {
+                movieOptions.Add("P", "Previous Page");
             }
-            movieOptions.Add("Back to Main Menu");
+
+            movieOptions.Add("M", "Back to Main Menu");
             // show the movies in the menu
-            int selectedMovieIndex = ShowMenu($"Showing movies (Page {page + 1}/{TotalPages})", movieOptions);
-
-            if (selectedMovieIndex <moviesToShow.Count)
+            var selectedOption = ShowMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
+            switch (selectedOption)
             {
-                // show the movie details
-                ShowMovieDetails(moviesToShow[selectedMovieIndex]);
-                ShowPurchaseMenu();
-            }
-            else
-            {
-                int offset = moviesToShow.Count;
-                bool hasPrev = page > 0;
-                bool hasNext = (page + 1) * maxMoviesToShow < movies.Count;
-                if (hasPrev && selectedMovieIndex == offset)
-                {
-                    page--;
-                }
-                else if (hasNext && selectedMovieIndex == offset)
-                {
+                case "N":
                     page++;
-                }
-                else if (
-                    (!hasNext && selectedMovieIndex == offset) ||
-                    (hasPrev && hasNext && selectedMovieIndex == offset + 2) ||
-                    (!hasPrev && hasNext && selectedMovieIndex == offset +1)
-                )
-                {
                     break;
-                }
+                case "P":
+                    page--;
+                    break;
+                case "M":
+                    Running = false;
+                    break;
+                default:
+                    int movieId = int.Parse(selectedOption);
+                    // show the movie details
+                    ShowMovieDetails(moviesToShow.Find(m => m.Id == movieId));
+                    ShowPurchaseMenu();
+                    continue;
             }
-
 
         }
     }
@@ -135,39 +124,40 @@ public class MovieList
             return;
         }
         else if (selected == 1)
-        {                        
+        {
             Console.Clear();
             return;
         }
     }
 
     // create method to use keyboard arrows instead of console input 
-    private int ShowMenu(string title, List<string> options )
+    private string ShowMenu(string title, Dictionary<string, string> options)
     {
-        int selected = 0;
+        int selectedIndex = 0;
         ConsoleKey key;
-        List<string> writtenLines = new();
- 
+        List<string> optionKeys = options.Keys.ToList();
+
         do
         {
-            Console.SetCursorPosition(0,0);
+            Console.Clear();
             Console.WriteLine(title);
             Console.WriteLine(new string('=', title.Length));
 
-            for (int i = 0; i < options.Count; i++)
+            for (int i = 0; i < optionKeys.Count; i++)
             {
-                if (i == selected)
+                var value = options[optionKeys[i]];
+                if (i == selectedIndex)
                 {
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($"> {options[i]}");
+                    Console.WriteLine($"> {value}");
                     Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine($"  {options[i]}");
+                    Console.WriteLine($"  {value}");
                 }
-                Console.WriteLine(new string('-', options[i].Length));
+                Console.WriteLine(new string('-', value.Length));
             }
 
             key = Console.ReadKey(true).Key;
@@ -175,16 +165,16 @@ public class MovieList
             switch (key)
             {
                 case ConsoleKey.UpArrow:
-                    selected = (selected == 0) ? options.Count - 1 : selected - 1;
+                    selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
                     break;
                 case ConsoleKey.DownArrow:
-                    selected = (selected == options.Count - 1) ? 0 : selected + 1;
+                    selectedIndex = (selectedIndex + 1) % optionKeys.Count;
                     break;
             }
 
         } while (key != ConsoleKey.Enter);
 
-        return selected;
+        return optionKeys[selectedIndex];
     }
 
     /// <summary>
@@ -203,10 +193,10 @@ public class MovieList
         do
         {   
             // Clear all lines below our starting row. 
-            ClearAllLinesDownFrom(startRow - (rowBuffer +1));
+            ClearAllLinesDownFrom(startRow - (rowBuffer + 1));
 
             // Set the cursor in the console to our starting row.
-            Console.SetCursorPosition(0, startRow - (rowBuffer +1));
+            Console.SetCursorPosition(0, startRow - (rowBuffer + 1));
 
             // Empty line for spacing.
             Console.WriteLine();
@@ -270,20 +260,20 @@ public class MovieList
         switch(StarsNumber)
         {
             case 1:
-            StarString = "[*    ]";
-            break;
+                StarString = "[*    ]";
+                break;
             case 2:
-            StarString = "[**   ]";
-            break;
+                StarString = "[**   ]";
+                break;
             case 3:
-            StarString = "[***  ]";
-            break;
+                StarString = "[***  ]";
+                break;
             case 4:
-            StarString = "[**** ]";
-            break;
+                StarString = "[**** ]";
+                break;
             case 5:
-            StarString = "[*****]";
-            break;
+                StarString = "[*****]";
+                break;
         }
 
         return StarString;

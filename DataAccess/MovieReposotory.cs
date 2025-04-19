@@ -133,13 +133,13 @@ public class MovieRepository
         ).ToList();
     }
 
-    public List<Movie> GetMoviesWithShowtimeInNextWeek()
+    public List<Movie> GetMoviesWithShowtimeInNextDays(int days)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
 
         return connection.Query<Movie>(
-            "SELECT * FROM Movies WHERE ReleaseDate >= DATE('now') AND ReleaseDate < DATE('now', '+7 days')"
+            "SELECT * FROM Movies as m LEFT JOIN Showtimes as s ON s.MovieId = m.Id WHERE s.StartTime BETWEEN DATETIME('now') AND DATETIME('now', '+7 days') GROUP BY m.Id LIMIT 24"
         ).ToList();
     }
 }

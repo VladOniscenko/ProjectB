@@ -1,7 +1,3 @@
-using static System.Console;
-using ProjectB.Database;
-using ProjectB.Models;
-using ProjectB.DataAccess;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -12,10 +8,10 @@ namespace ProjectB
     class Menu
     {
         private int SelectedIndex = 0;
-        private string[] Options;
+        private Dictionary<string, string> Options;
         private string Prompt;
 
-        public Menu(string prompt, string[] options)
+        public Menu(string prompt, Dictionary<string, string> options)
         {
             Prompt = prompt;
             Options = options;
@@ -23,64 +19,63 @@ namespace ProjectB
 
         public static string CenterText(string text, int boxWidth, bool isActive = false)
         {
-          int spaces = boxWidth - text.Length;
-          if (isActive)
-          {
-            spaces -= 6;
-            text = $">> {text} <<";
-          }
-          int padleft = spaces / 2;
-          int padright = spaces - padleft;
-          return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
+            int spaces = boxWidth - text.Length;
+            if (isActive)
+            {
+                spaces -= 6;
+                text = $">> {text} <<";
+            }
+            int padleft = spaces / 2;
+            int padright = spaces - padleft;
+            return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
         }
-        
+
         public void DisplayOptions()
         {
-            Clear();
-            WriteLine(Prompt);
+            Console.Clear();
+            Console.WriteLine(Prompt);
             
-            WriteLine("╔══════════════════════════════════════╗");
-            for (int i = 0; i < Options.Length; i++)
-            {
-                string currentOption = Options[i];
+            Console.WriteLine("╔══════════════════════════════════════╗");
 
-                if (i == SelectedIndex)
-                {   
-                    WriteLine($"║{CenterText(currentOption, 38, true)}║"); 
-                }
-                else
-                {
-                    WriteLine($"║{CenterText(currentOption, 38)}║"); 
-                } 
+            var optionLabels = Options.Values.ToList();
+            for (int i = 0; i < optionLabels.Count; i++)
+            {
+                string currentOption = optionLabels[i];
+
+                bool isSelected = i == SelectedIndex;
+                Console.WriteLine($"║{CenterText(currentOption, 38, isSelected)}║");
             }
-            WriteLine("╚══════════════════════════════════════╝");
+            Console.WriteLine("╚══════════════════════════════════════╝");
         }
 
-        public int Run()
+        public string Run()
         {
             ConsoleKey keyPressed;
+            List<string> optionKeys = Options.Keys.ToList();
+            List<string> optionLabels = Options.Values.ToList();
+
             do
             {
+                Console.Clear();
                 Console.CursorVisible = false;
-                Console.SetCursorPosition(0, 0);
                 DisplayOptions();
 
-                ConsoleKeyInfo keyInfo = ReadKey(true);
+                ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
                 keyPressed = keyInfo.Key;
 
-                // Code block to update SelectedIndex
-                if (keyPressed == ConsoleKey.UpArrow)
+                switch (keyPressed)
                 {
-                    SelectedIndex = (SelectedIndex - 1 + Options.Length) % Options.Length;
+                    case ConsoleKey.UpArrow:
+                        SelectedIndex = (SelectedIndex - 1 + optionLabels.Count) % optionLabels.Count;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        SelectedIndex = (SelectedIndex + 1) % optionLabels.Count;
+                        break;
                 }
-                else if (keyPressed == ConsoleKey.DownArrow)
-                {
-                    SelectedIndex = (SelectedIndex + 1) % Options.Length;
-                }
-            }
-            while (keyPressed != ConsoleKey.Enter);
- 
-            return SelectedIndex;
+
+            } while (keyPressed != ConsoleKey.Enter);
+
+            return optionKeys[SelectedIndex];
         }
 
         static public void RunMenu()
@@ -99,29 +94,39 @@ namespace ProjectB
 Welcome customer!
 Use Up & Down keys to select an option.
                 ";
-            string[] options = { "Register", "Login", "Movies", "About us", "Exit", "Create Movie (admin only)" };
-            Menu menu = new Menu(prompt, options);
-            int SelectedIndex = menu.Run();
 
+            Dictionary<string, string> options = new()
+            {
+                { "UP", "Upcoming Movies" },
+                { "AU", "About us" },
+                { "LI", "Login" },
+                { "RE", "Register" },
+                { "EX", "Exit" },
+                { "CM", "Create Movie (admins)" },
+            };
+
+            Menu menu = new Menu(prompt, options);
+
+            string selectedOption = menu.Run();
             // Code block for keyPressed cases
             Console.Clear();
-            switch(SelectedIndex)
+            switch (selectedOption)
             {
-                case 0:
+                case "RE":
                     MenuActionRegister();
                     break;
-                case 1:
+                case "LI":
                     Login();
                     break;
-                case 2:
-                    Movies();
+                case "UP":
+                    MenuActionUpcomingMovies();
                     break;
-                case 3:
+                case "AU":
                     AboutUs();
                     break;
-                case 4:
+                case "EX":
                     return;
-                case 5:
+                case "CM":
                     MenuActionCreateMovie();
                     break;
             }
@@ -134,19 +139,14 @@ Use Up & Down keys to select an option.
             UserLogin.Login();
         }
 
-        static void Movies()
-        {    
-            var movieRepo = new MovieRepository();
-            
-            MovieList movieList = new MovieList(movieRepo);
-            movieList.OpenUserMenu();
+        static void MenuActionUpcomingMovies()
+        {
+            MovieList movieList = new MovieList();
+            movieList.Run();
         }
 
         static void AboutUs()
         {
-            // NotImplemented();
-            
-            // todo this is temporary for the presentation
             Console.WriteLine("=== Welcome to Byte Cinema ===");
             Console.WriteLine("Where storytelling meets cutting-edge technology.");
             Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");
