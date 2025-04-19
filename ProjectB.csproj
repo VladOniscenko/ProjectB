@@ -1,27 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <PropertyGroup>
-  <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-</PropertyGroup>
+    <PropertyGroup>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BCrypt.Net" Version="0.1.0" />
-    <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0-preview.2.25163.8" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.8.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
-    <PackageReference Include="SQLite" Version="3.13.0" />
-    <None Update="Database/movies.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <PropertyGroup>
+        <GenerateProgramFile>false</GenerateProgramFile>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="BCrypt.Net" Version="0.1.0"/>
+        <PackageReference Include="Dapper" Version="2.1.66"/>
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0-preview.3.25171.6"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0-preview-25107-01"/>
+        <PackageReference Include="MSTest.TestAdapter" Version="3.9.0-preview.25167.10"/>
+        <PackageReference Include="MSTest.TestFramework" Version="3.9.0-preview.25167.10"/>
+        <PackageReference Include="SQLite" Version="3.13.0"/>
+        <None Update="Database/movies.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
 
