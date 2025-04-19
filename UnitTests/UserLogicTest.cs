@@ -51,8 +51,6 @@ public class UserLogicTest
     [DataRow("Notanemail")]
     [DataRow("Notanemail@")]
     [DataRow("@Notanemail")]
-
-
     public void IsEmailValid_InvalidEmail_false(string email){
         bool actual = UserLogic.IsEmailValid(email);
 
