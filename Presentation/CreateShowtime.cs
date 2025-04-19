@@ -24,10 +24,10 @@ public static class CreateMovieShowtime
         MovieRepository movieRepository = new MovieRepository();
         List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
         
-        // Still need to make it so you got multiple pages
+        // Dunno how to make it so it has multiple pages.
         while (!(ShowtimeLogic.IsMovieIDValid(movieName)))
         {
-            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
+            Console.WriteLine("Enter the name/keyword of the movie you want to create a showtime for.");
             movieName = Console.ReadLine().Trim();
         }
 
@@ -38,10 +38,32 @@ public static class CreateMovieShowtime
         AuditoriumRepository auditoriumRepository = new AuditoriumRepository();
         List<Auditorium> auditoriums = auditoriumRepository.GetAllAuditoriums().ToList();
 
-        int selectedIndex = ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.", auditoriums);
-        Auditorium selectedAuditorium = auditoriums[selectedIndex];
+        int selectedAuditoriumIndex = ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", auditoriums);
+        Auditorium selectedAuditorium = auditoriums[selectedAuditoriumIndex];
         Console.Clear();
 
+        // If Yes
+        if (ShowtimeLogic.CheckIfDataCorrect(selectedMovie, selectedAuditorium))
+        {
+            // Query to add showtime to database
+            Console.Clear();
+            Console.WriteLine("New showtime has been created!");
+            Thread.Sleep(1000);
+            Console.WriteLine("Would you like to add another showtime?");
+
+            // Issue: BaseicYesOrNo menu is glitched when used twice in a row.
+            if (BaseUI.BasicYesOrNo())
+            {
+                Run();
+            }
+        }
+        // If No
+        else
+        {
+            Run();
+        }
         
     }
 }    
+
+// Only thing left: How to add begin showtime and end showtime?

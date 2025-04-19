@@ -10,12 +10,23 @@ public static class ShowtimeLogic
     {   
         if (string.IsNullOrWhiteSpace(movie))
         {
-            BaseUI.ShowErrorMessage("\nNo input given. Please try again.", 0);
+            BaseUI.ShowErrorMessage("\nNo input given. Please try again.\n", 0);
             return false;
         }
 
     Console.Clear();
     return true;
+    }
+
+    public static bool CheckIfDataCorrect(Movie movie, Auditorium auditorium)
+    {
+        Console.Clear();
+        Console.WriteLine("You have entered the following information:");
+        Console.WriteLine(
+            $"    Movie details:        {movie}\n    Auditorium details:   {auditorium} \n    Begin time:           Placeholder\n    End time:             Placeholder");
+        Console.WriteLine("\n   Is this correct?");
+        Console.Write("    ");
+        return BaseUI.BasicYesOrNo();
     }
 
      // create method to use keyboard arrows instead of console input 

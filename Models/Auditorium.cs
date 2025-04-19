@@ -15,9 +15,9 @@ public class Auditorium
         CinemaId = cinemaId;
     }
 
-    // Dude on Reddit told me to add this cuz I really couldn't figure ts out.
+    // Nevermind, I know what this does.
     public override string ToString()
     {
-        return $"{Name} | {TotalSeats} seats | ID: {Id}";
+        return $"{Name} | {TotalSeats}    | {Id}";
     }
 }
