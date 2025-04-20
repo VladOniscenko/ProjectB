@@ -90,9 +90,11 @@ public static class BaseUI{
         Console.ResetColor();
     }
 
-    public static bool BasicYesOrNo(){
+    public static bool BasicYesOrNo(int y){
         bool isAccepted = true;
 
+        Console.SetCursorPosition(0, y);
+        Console.Write("    ");
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
         Console.Write(" Yes ");
@@ -105,7 +107,7 @@ public static class BaseUI{
             if (key.Key == ConsoleKey.LeftArrow)
             {
                 isAccepted = true;
-                Console.SetCursorPosition(0, 7);
+                Console.SetCursorPosition(0, y);
                 Console.Write("    ");
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
@@ -117,7 +119,7 @@ public static class BaseUI{
             if (key.Key == ConsoleKey.RightArrow)
             {
                 isAccepted = false;
-                Console.SetCursorPosition(0, 7);
+                Console.SetCursorPosition(0, y);
                 Console.Write("    ");
                 Console.Write(" Yes    ");
                 Console.BackgroundColor = ConsoleColor.White;
@@ -131,5 +133,10 @@ public static class BaseUI{
                 return isAccepted;
             }
     }
+    }
+
+    public static bool BasicYesOrNo(){
+        int y = Console.CursorTop;
+        return BasicYesOrNo(y + 1);
     }
 }
