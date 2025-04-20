@@ -103,6 +103,7 @@ Use Up & Down keys to select an option.
                 { "RE", "Register" },
                 { "EX", "Exit" },
                 { "CM", "Create Movie (admins)" },
+                { "CS", "Create Showtime (admins)" },
             };
 
             Menu menu = new Menu(prompt, options);
@@ -128,6 +129,9 @@ Use Up & Down keys to select an option.
                     return;
                 case "CM":
                     MenuActionCreateMovie();
+                    break;
+                case "CS":
+                    MenuActionCreateShowtime();
                     break;
             }
 
@@ -164,6 +168,11 @@ Use Up & Down keys to select an option.
         static void MenuActionRegister()
         {
             UserCreation.CreateUser();
+        }
+
+        static void MenuActionCreateShowtime()
+        {
+            CreateShowtime.Run();
         }
 
         static void NotImplemented()
