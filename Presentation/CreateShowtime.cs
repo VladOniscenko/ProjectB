@@ -21,6 +21,7 @@ public static class CreateShowtime
 
         Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
         string movieName = Console.ReadLine().Trim();
+        
         Console.Clear();
 
         MovieRepository movieRepository = new MovieRepository();
@@ -33,14 +34,7 @@ public static class CreateShowtime
             movieName = Console.ReadLine().Trim();
         }
         
-        newShowtime.MovieId = movies[
-        ShowtimeLogic.ShowMenuMovies("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", movies)
-        ].Id;
-
-        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies(
-        "Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", 
-        movies
-        );
+        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies("Found the following movies:", movies);
 
         // Object of the selected movie
         Movie selectedMovie = movies[selectedMovieIndex];
@@ -49,14 +43,15 @@ public static class CreateShowtime
         Console.Clear();
 
         AuditoriumRepository auditoriumRepository = new AuditoriumRepository();
-        List<Auditorium> auditoriums = auditoriumRepository.GetAllAuditoriums().ToList();
+        var auditoriums = auditoriumRepository.GetAllAuditoriums().ToList();
 
         // Returns index of selected option
         // Stores selected option based on selected index into Auditorium object
         // Stores specific property from object (id) into variable
 
         newShowtime.AuditoriumId = auditoriums[
-        ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", auditoriums)
+        ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats | ID",
+        auditoriums)
         ].Id;
 
         // Create startTime + endTime here?
@@ -89,6 +84,6 @@ public static class CreateShowtime
 
     /// <summary>
     /// Things to still do:
-    /// 1) Make page functionality, well, functional.
-    /// 2) Fix second BasicYesOrNo menu 'bug'
+    /// 1) Make page function, well, functional. I've got an idea as to how but, I'm not sure. Didn't Angel already do this?
+    /// 2) Fix second BasicYesOrNo menu 'bug'. Has to do with the placement of the boxes when you use arrowkeys, but it's set in stone.
     /// </summary>
