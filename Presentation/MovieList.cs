@@ -76,7 +76,7 @@ public class MovieList
                     Running = false;
                     break;
                 default:
-                    Movie movie = moviesToShow.Find(m => m.Id == int.Parse(selectedOption));
+                    Movie movie = movies.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
                     
                     // show the movie details
                     ShowMovieDetails(movie);
@@ -91,8 +91,9 @@ public class MovieList
     static void ShowMovieDetails(Movie movie)
     {
         Console.Clear();
+        Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("=== MOVIE DETAILS ===");
-        Console.WriteLine("------------------------------");
+        Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine($"Title           : {movie.Title}");
         Console.WriteLine($"Description     : {movie.Description}");
         Console.WriteLine($"Runtime         : {movie.Runtime} minutes");
@@ -102,16 +103,14 @@ public class MovieList
         Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
         Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
         Console.WriteLine($"Country         : {movie.Country}");
-        Console.WriteLine("------------------------------");
     }
 
     /// Shows a menu with options to purchase the selected movie.
     private void ShowPurchaseMenu(Movie movie)
     {
-        int startingRow = Console.CursorTop;
-
+        int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Check availability", "Back to Movie List" };
-        int selected = AddMenuFromStartRow("Choose an option:", options, startingRow);
+        int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
         if (selected == 1)
         {
@@ -148,8 +147,9 @@ public class MovieList
             Console.WriteLine();
 
             // Write the menu itself
+            Console.WriteLine(new string('-', Console.WindowWidth));
             Console.WriteLine(title);
-            Console.WriteLine(new string('=', title.Length));
+            Console.WriteLine(new string('-', Console.WindowWidth));
 
             for (int i = 0; i < options.Count; i++)
             {

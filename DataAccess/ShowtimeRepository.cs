@@ -120,7 +120,7 @@ public class ShowtimeRepository
         );
     }
 
-    public IEnumerable<Showtime> GetShowtimesByMovieId(int id, int limit)
+    public IEnumerable<Showtime> GetShowtimesByMovieId(int id, int limit = 10)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();

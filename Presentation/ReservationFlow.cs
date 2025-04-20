@@ -22,7 +22,8 @@ public class ReservationFlow
     public void Run()
     {
         // 1. select showtime
-        Showtime? showtime = GetShowtime();
+        SelectShowtime selectShowtime = new SelectShowtime(_services, _movie);
+        Showtime? showtime = selectShowtime.Run();
         if (showtime == null)
         {
             return;
@@ -53,12 +54,4 @@ public class ReservationFlow
 
         // 7. pay
     }
-
-    public Showtime? GetShowtime()
-    {
-        // 1. select showtime
-        SelectShowtime selectShowtime = new SelectShowtime(_services, _movie);
-        return selectShowtime.Run();
-    }
-    
 }

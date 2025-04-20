@@ -18,7 +18,7 @@ public class ShowtimeLogic : IShowtimeService
         return showtimeRepository.Find(id);
     }
 
-    public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 5)
+    public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 10)
     {
         ShowtimeRepository showtimeRepository = new();
         return showtimeRepository.GetShowtimesByMovieId(movieId, limit);

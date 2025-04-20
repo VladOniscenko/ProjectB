@@ -89,7 +89,7 @@ namespace ProjectB
             {
                 Console.Clear();
                 Console.WriteLine(title);
-                Console.WriteLine(new string('=', title.Length));
+                Console.WriteLine(new string('=', Console.WindowWidth));
 
                 for (int i = 0; i < optionKeys.Count; i++)
                 {
@@ -98,14 +98,14 @@ namespace ProjectB
                     {
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.White;
-                        Console.WriteLine($"> {value}");
+                        Console.WriteLine($"> {value} ");
                         Console.ResetColor();
                     }
                     else
                     {
                         Console.WriteLine($"  {value}");
                     }
-                    Console.WriteLine(new string('-', value.Length));
+                    Console.WriteLine(new string('-', Console.WindowWidth));
                 }
 
                 key = Console.ReadKey(true).Key;

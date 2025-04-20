@@ -36,7 +36,7 @@ public class SelectShowtime
             s => $"{s.StartTime}"
         );
 
-        showtimeOptions.Add("S", "Stop");
+        showtimeOptions.Add("S", "Return to movie selection");
         
         // show the movies in the menu
         var selectedOption = Menu.SelectMenu($"Select a movie show time", showtimeOptions);
