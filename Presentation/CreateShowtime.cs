@@ -5,7 +5,7 @@ using ProjectB.Models;
 public static class CreateMovieShowtime
 {
     const int page = 0;
-    const int TotalPages = 3;
+    const int TotalPages = 1;
 
     public static void Run()
     {
@@ -16,6 +16,8 @@ public static class CreateMovieShowtime
         Console.WriteLine("╔═════════════════════════════╗");
         Console.WriteLine("║    Create Movie Showtime    ║");
         Console.WriteLine("╚═════════════════════════════╝");
+
+        Showtime newShowtime = new Showtime();
 
         Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
         string movieName = Console.ReadLine().Trim();
@@ -30,28 +32,47 @@ public static class CreateMovieShowtime
             Console.WriteLine("Enter the name/keyword of the movie you want to create a showtime for.");
             movieName = Console.ReadLine().Trim();
         }
+        
+        newShowtime.MovieId = movies[
+        ShowtimeLogic.ShowMenuMovies("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", movies)
+        ].Id;
 
-        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies($"(Page {page + 1}/{TotalPages})\n\nFound the following movie(s):\n\nID ║ Title ║ Year ║ Genres ║ Rating", movies);
+        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies(
+        "Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", 
+        movies
+        );
+
+        // Object of the selected movie
         Movie selectedMovie = movies[selectedMovieIndex];
+        newShowtime.MovieId = selectedMovie.Id;
+
         Console.Clear();
 
         AuditoriumRepository auditoriumRepository = new AuditoriumRepository();
         List<Auditorium> auditoriums = auditoriumRepository.GetAllAuditoriums().ToList();
 
-        int selectedAuditoriumIndex = ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", auditoriums);
-        Auditorium selectedAuditorium = auditoriums[selectedAuditoriumIndex];
+        // Returns index of selected option
+        // Stores selected option based on selected index into Auditorium object
+        // Stores specific property from object (id) into variable
+
+        newShowtime.AuditoriumId = auditoriums[
+        ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats  | ID", auditoriums)
+        ].Id;
+
+        // Create startTime + endTime here?
+
         Console.Clear();
 
         // If Yes
-        if (ShowtimeLogic.CheckIfDataCorrect(selectedMovie, selectedAuditorium))
+        if (ShowtimeLogic.CheckIfDataCorrect(selectedMovie.Title, newShowtime.AuditoriumId))
         {
-            // Query to add showtime to database
+            ShowtimeLogic.CreateShowtime(newShowtime);
             Console.Clear();
             Console.WriteLine("New showtime has been created!");
             Thread.Sleep(1000);
             Console.WriteLine("Would you like to add another showtime?");
 
-            // Issue: BaseicYesOrNo menu is glitched when used twice in a row.
+            // Issue: BasicYesOrNo menu is glitched when used a second time for some reason.
             if (BaseUI.BasicYesOrNo())
             {
                 Run();
@@ -66,4 +87,8 @@ public static class CreateMovieShowtime
     }
 }    
 
-// Only thing left: How to add begin showtime and end showtime?
+    /// <summary>
+    /// Things to still do:
+    /// 1) Make page functionality, well, functional.
+    /// 2) Fix second BasicYesOrNo menu 'bug'
+    /// </summary>

@@ -18,15 +18,21 @@ public static class ShowtimeLogic
     return true;
     }
 
-    public static bool CheckIfDataCorrect(Movie movie, Auditorium auditorium)
+    public static bool CheckIfDataCorrect(string movie, int auditorium)
     {
         Console.Clear();
         Console.WriteLine("You have entered the following information:");
         Console.WriteLine(
-            $"    Movie details:        {movie}\n    Auditorium details:   {auditorium} \n    Begin time:           Placeholder\n    End time:             Placeholder");
+            $"    Movie:                {movie}\n    Auditorium:           {auditorium} \n    Begin time:           Placeholder\n    End time:             Placeholder");
         Console.WriteLine("\n   Is this correct?");
         Console.Write("    ");
         return BaseUI.BasicYesOrNo();
+    }
+
+    public static void CreateShowtime(Showtime showtime)
+    {
+        ShowtimeRepository showtimeRepository = new ShowtimeRepository();
+        showtimeRepository.AddShowtime(showtime);
     }
 
      // create method to use keyboard arrows instead of console input 
