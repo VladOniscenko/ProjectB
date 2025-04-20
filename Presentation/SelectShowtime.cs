@@ -1,39 +1,37 @@
-using ProjectB.Logic;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
 public class SelectShowtime
 {
-    private Movie SelectedMovie;
-    private IEnumerable<Showtime> AvailableShowtimes;
-    
-    public SelectShowtime(int movieId) : this(MovieLogic.Find(movieId)){ }
+    private Movie _movie;
+    private IEnumerable<Showtime> _availableShowtimes;
 
-    public SelectShowtime(Movie? movie)
+    private readonly IServiceProvider _services;
+    
+    public SelectShowtime(IServiceProvider services, Movie? movie)
     {
-        if (movie == null)
-        {
-            ConsoleMethods.Error("Movie not found");
-            return;
-        }
-        SelectedMovie = movie;
+        _services = services;
+        _movie = movie;
         
         // get show times of the movie
-        AvailableShowtimes = ShowtimeLogic.GetShowtimesByMovieId(SelectedMovie.Id);
+        var showtimeService = _services.GetRequiredService<IShowtimeService>();
+        _availableShowtimes = showtimeService.GetShowtimesByMovieId(_movie.Id);
     }
 
     public Showtime? Run()
     {
         Console.Clear();
 
-        if (AvailableShowtimes.Count() == 0)
+        if (_availableShowtimes == null || _availableShowtimes.Count() == 0)
         {
             ConsoleMethods.Error("No availability found");
             return null;
         }
         
-        var showtimeOptions = AvailableShowtimes.ToDictionary(
+        var showtimeOptions = _availableShowtimes.ToDictionary(
             s => s.Id.ToString(),
             s => $"{s.StartTime}"
         );
@@ -47,6 +45,6 @@ public class SelectShowtime
             return null;
         }
         
-        return AvailableShowtimes.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
+        return _availableShowtimes.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB;
 using ProjectB.DataAccess;
 using ProjectB.Database;
@@ -8,13 +9,8 @@ using ProjectB.Presentation;
 
 class Program
 {
-    private static IUserService _userService;
-    private static IMovieService _movieService;
-    private static IShowtimeService _showtimeService;
-    private static ISeatService _seatService;
-    private static IReservationService _reservationService;
-
-    public static User? CurrentUser = null;
+    private static ServiceProvider Services;
+    public static User? CurrentUser { get; private set; } = null;
 
     public static string Logo = @"
  ____             __               ____                                              __             
@@ -42,15 +38,15 @@ Use Up & Down keys to select an option.
             switch (GetMainMenuSelection())
             {
                 case "RE":
-                    var userCreation = new UserCreation(_userService);
+                    var userCreation = new UserCreation(Services);
                     userCreation.CreateUser();
                     break;
-                case "RF":
-                    var reservationFlow = new ReservationFlow(_movieService, _showtimeService, _seatService, _reservationService);
-                    reservationFlow.Run();
+                case "UM":
+                    MovieList movieList = new MovieList(Services);
+                    movieList.Run();
                     break;
                 case "CM":
-                    var createMovieFlow = new CreateMovieFlow(_movieService);
+                    var createMovieFlow = new CreateMovieFlow(Services);
                     createMovieFlow.Run();
                     break;
                 case "AU":
@@ -69,24 +65,30 @@ Use Up & Down keys to select an option.
     {
         DbFactory.InitializeDatabase();
 
-        var userRepository = new UserRepository();
-        var movieRepository = new MovieRepository();
-        var showtimeRepository = new ShowtimeRepository();
-        var seatRepository = new SeatRepository();
-        var reservationRepository = new ReservationRepository();
+        var services = new ServiceCollection();
+        
+        services.AddSingleton<UserRepository>();
+        services.AddSingleton<MovieRepository>();
+        services.AddSingleton<ShowtimeRepository>();
+        services.AddSingleton<SeatRepository>();
+        services.AddSingleton<ReservationRepository>();
+        services.AddSingleton<AuditoriumRepository>();
 
-        _userService = new UserLogic(userRepository);
-        _movieService = new MovieLogic(movieRepository);
-        _showtimeService = new ShowtimeLogic(showtimeRepository);
-        _seatService = new SeatLogic(seatRepository);
-        _reservationService = new ReservationLogic(reservationRepository);
+        services.AddSingleton<IUserService, UserLogic>();
+        services.AddSingleton<IMovieService, MovieLogic>();
+        services.AddSingleton<IShowtimeService, ShowtimeLogic>();
+        services.AddSingleton<ISeatService, SeatLogic>();
+        services.AddSingleton<IReservationService, ReservationLogic>();
+        services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
+
+        Services = services.BuildServiceProvider();
     }
 
     private static string GetMainMenuSelection()
     {
         Dictionary<string, string> menuOptions = new()
         {
-            { "RF", "Upcoming Movies" },
+            { "UM", "Upcoming Movies" },
             { "AU", "About us" },
             { "LI", "Login" },
             { "RE", "Register" },
@@ -105,5 +107,15 @@ Use Up & Down keys to select an option.
         
         Menu selectMenu = new Menu(Logo, menuOptions);
         return selectMenu.Run();
+    }
+
+    public static void StartReservation(Movie movie)
+    {
+        var reservationFlow = new ReservationFlow(
+            Services,
+            movie
+        );
+        
+        reservationFlow.Run();
     }
 }

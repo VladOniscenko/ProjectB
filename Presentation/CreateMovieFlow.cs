@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
@@ -5,10 +6,10 @@ namespace ProjectB.Presentation;
 
 public class CreateMovieFlow
 {
-    private IMovieService _movieLogic;
-    public CreateMovieFlow(IMovieService movieLogic)
+    private readonly IServiceProvider _services;
+    public CreateMovieFlow(IServiceProvider services)
     {
-        _movieLogic = movieLogic;
+        _services = services;
     }
     
     public T GetAndValidateInput<T>(string prompt, int min = 0, int max = 100)
@@ -53,6 +54,7 @@ public class CreateMovieFlow
 
     public void Run()
     {
+        var _movieLogic = _services.GetRequiredService<IMovieService>();
         bool completed = false;
         string currentState = "title";
 

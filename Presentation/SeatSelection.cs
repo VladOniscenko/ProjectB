@@ -1,52 +1,52 @@
-using ProjectB.Logic;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
 public class SeatSelection
 {
-    public readonly Showtime? SelectedShowtime;
-    public readonly Movie? SelectedMovie;
-    public readonly Auditorium? SelectedAuditorium;
-    public readonly IEnumerable<Seat>? Seats;
-    private readonly int MaxNumber;
-    private readonly int MaxRow;
-    private bool Running = false;
-    private int interactiveStartLine;
+    private readonly Showtime? _showtime;
+    private readonly Movie? _movie;
+    private readonly Auditorium? _selectedAuditorium;
+    private readonly IEnumerable<Seat>? _seats;
+    private readonly List<Seat>? _selectedSeats;
+    
+    private readonly int _maxNumber;
+    private readonly int _maxRow;
 
-    public Seat? SelectedSeat { get; private set; } = null;
+    private readonly IServiceProvider _services;
+    private Seat? _selectedSeat;
+    
 
-    public SeatSelection(int showtimeId) : this(ShowtimeLogic.Find(showtimeId)){ }
-    public SeatSelection(Showtime showtime)
+    public SeatSelection(IServiceProvider services, Movie movie, Showtime showtime)
     {
+        _services = services;
+        _showtime = showtime;
+        _movie = movie;
         
-        if (showtime == null)
-        {
-            ConsoleMethods.Error("Showtime was not found!");
-            return;
-        }
+        var seatService = _services.GetRequiredService<ISeatService>();
+        var auditoriumService = _services.GetRequiredService<IAuditoriumService>();
 
-        SelectedShowtime = showtime;
-        SelectedMovie = MovieLogic.Find(SelectedShowtime.MovieId);
-        Seats = SeatLogic.GetSeatsByShowtime(SelectedShowtime.Id);
-        SelectedAuditorium = AuditoriumLogic.Find(SelectedShowtime.AuditoriumId);
-        if (SelectedMovie == null || Seats == null || Seats.Count() <= 0)
+        _seats = seatService.GetSeatsByShowtime(_showtime.Id);
+        _selectedAuditorium = auditoriumService.Find(_showtime.AuditoriumId);
+        if (_movie == null || _seats == null || _seats.Count() <= 0)
         {
             ConsoleMethods.Error("Something went wrong! Get in touch with our Customer service!");
             return;
         }
 
         // get first active seat
-        SelectedSeat = Seats.FirstOrDefault(s => s.Active == 1);
+        _selectedSeat = _seats.FirstOrDefault(s => s.Active == 1);
 
-        MaxNumber = Seats.Max(s => s.Number);
-        MaxRow = Seats.Max(s => s.Row);
+        _maxNumber = _seats.Max(s => s.Number);
+        _maxRow = _seats.Max(s => s.Row);
+        _selectedSeats = new List<Seat>();
     }
 
-    public IEnumerable<Seat>? Run()
+    public List<Seat>? Run()
     {
-        Running = true;
-        while (Running)
+        while (true)
         {
             Console.Clear();
             PrintSeatSelectionContent();
@@ -54,10 +54,25 @@ public class SeatSelection
             RedrawSeatGrid();
 
             ConsoleKeyInfo pressedKey = Console.ReadKey();
-            HandledEvent(pressedKey);
-        }
+            if (pressedKey.Key == ConsoleKey.Enter)
+            {
+                AddOrRemoveSeat(_selectedSeat);
+                continue;
+            }
 
-        return null;
+            if (pressedKey.Key == ConsoleKey.Backspace)
+            {
+                return null;
+            }
+
+            if (pressedKey.Key == ConsoleKey.C)
+            {
+                Console.Clear();
+                return _selectedSeats;
+            }
+
+            _selectedSeat = Move(pressedKey);
+        }
     }
 
     public void RedrawSeatGrid()
@@ -67,28 +82,11 @@ public class SeatSelection
         PrintSeats();
     }
 
-    private void HandledEvent(ConsoleKeyInfo pressedKey)
-    {
-        if (pressedKey.Key == ConsoleKey.Enter)
-        {
-            // ReservationLogic.AddOrRemoveSeat(SelectedSeat);
-            return;
-        }
-
-        if (pressedKey.Key == ConsoleKey.Backspace)
-        {
-            Running = false;
-            return;
-        }
-
-        SelectedSeat = Move(pressedKey);
-    }
-
     private void PrintSeats()
     {
         // display all seats in the console
         int? currentRow = null;
-        foreach (var seat in Seats)
+        foreach (var seat in _seats)
         {
             // draw row number if not the same as seat row
             if (currentRow != seat.Row)
@@ -113,7 +111,7 @@ public class SeatSelection
             };
 
             // highlight the seat that is currently selected
-            if (SelectedSeat.Id == seat.Id)
+            if (_selectedSeat.Id == seat.Id)
             {
                 Console.BackgroundColor = ConsoleColor.Magenta;
             }
@@ -143,7 +141,7 @@ public class SeatSelection
     private void PrintSeatSelectionContent()
     {
         Console.WriteLine("Selected movie:");
-        Console.WriteLine(SelectedMovie);
+        Console.WriteLine(_movie);
         Console.WriteLine();
 
         Console.WriteLine("╔═════╗");
@@ -196,26 +194,26 @@ public class SeatSelection
         };
 
         // search for matching seat
-        var nextSeat = Seats.FirstOrDefault(
+        var nextSeat = _seats.FirstOrDefault(
             s =>
-                s.Row == SelectedSeat.Row + row &&
-                s.Number == SelectedSeat.Number + number &&
+                s.Row == _selectedSeat.Row + row &&
+                s.Number == _selectedSeat.Number + number &&
                 s.Active == 1
         );
 
         // if seat not found return current seat. otherwise return found seat
-        return nextSeat == null ? SelectedSeat : nextSeat;
+        return nextSeat == null ? _selectedSeat : nextSeat;
     }
 
     private void PrintSeatNumbers()
     {
         string numbers = "         ";
         string line = "   ╔══════";
-        for (int i = 1; i <= MaxNumber; i++)
+        for (int i = 1; i <= _maxNumber; i++)
         {
             string adding = "";
-            if ((SelectedShowtime.AuditoriumId == 2 && (i == 6 || i == 12)) ||
-                (SelectedShowtime.AuditoriumId == 3 && (i == 11 || i == 19)))
+            if ((_showtime.AuditoriumId == 2 && (i == 6 || i == 12)) ||
+                (_showtime.AuditoriumId == 3 && (i == 11 || i == 19)))
             {
                 adding = "   ";
                 line += "══";
@@ -248,7 +246,7 @@ public class SeatSelection
         {
             if (seat.Row == 10 || seat.Row == 15)
             {
-                IEnumerable<Seat> targetedSeats = Seats.Where(s => s.Row == seat.Row);
+                IEnumerable<Seat> targetedSeats = _seats.Where(s => s.Row == seat.Row);
                 int maxNum = targetedSeats.Max(s => s.Number);
 
                 if (seat.Number == maxNum)
@@ -269,5 +267,33 @@ public class SeatSelection
                 }
             }
         }
+    }
+    
+    private void AddSeat(Seat seat)
+    {
+        if (seat.Taken == 0)
+        {
+            seat.Selected = true;
+            _selectedSeats.Add(seat);
+        }
+    }
+    
+    private void RemoveSeat(Seat seat)
+    {
+        if (_selectedSeats.Contains(seat))
+        {
+            seat.Selected = false;
+            _selectedSeats.Remove(seat);
+        }
+    }
+    
+    public void AddOrRemoveSeat(Seat seat)
+    {
+        if (seat.Selected)
+        {
+            RemoveSeat(seat);
+            return;
+        }
+        AddSeat(seat);
     }
 }

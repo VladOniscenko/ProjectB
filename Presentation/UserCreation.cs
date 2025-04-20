@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
@@ -9,10 +10,10 @@ public class UserCreation
     // needs to check if account was already made and all fields are according to standards
     const int BoxX = 15;
     const int Width = 30;
-    private readonly IUserService _userService;
-    public UserCreation(IUserService userService)
+    private readonly IServiceProvider _services;
+    public UserCreation(IServiceProvider services)
     {
-        _userService = userService;
+        _services = services;
     }
     public void CreateUser(User? user = null)
     {
@@ -22,6 +23,8 @@ public class UserCreation
         Console.WriteLine("╔══════════════════════╗");
         Console.WriteLine("║   Create New User    ║");
         Console.WriteLine("╚══════════════════════╝");
+        
+        var _userService = _services.GetRequiredService<IUserService>();
 
         User newUser = new User();
         if (user is not null)
@@ -76,7 +79,7 @@ public class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            // _userService.CreateUser(newUser);
+            _userService.CreateUser(newUser);
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
         }

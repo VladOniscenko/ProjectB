@@ -1,5 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.Models;
 using ProjectB.Logic;
+using ProjectB.Logic.Interfaces;
 
 namespace ProjectB.Presentation;
 
@@ -7,16 +9,19 @@ public class MovieList
 {
     private bool Running;
     private const int MaxMoviesPerPage = 5;
+    private readonly IServiceProvider _services;
 
-    public MovieList()
+    public MovieList(IServiceProvider services)
     {
+        _services = services;
         Running = false;
     }
 
     // Takes from the Repo and makes a list of movies
     public void Run()
     {
-        IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays();
+        var _movieLogic = _services.GetRequiredService<IMovieService>();
+        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays();
 
         if (movies.Count() == 0)
         {
@@ -115,8 +120,7 @@ public class MovieList
         }
         
         // start reservation process
-        ReservationFlow reservationFlow = new ReservationFlow(movie);
-        reservationFlow.Run();
+        Program.StartReservation(movie);
     }
 
     /// <summary>

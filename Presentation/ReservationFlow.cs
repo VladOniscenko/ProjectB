@@ -7,54 +7,58 @@ public class ReservationFlow
 {
     private ReservationLogic Reservation;
     private Showtime SelectedShowtime;
-    private Movie SelectedMovie;
     
-    public ReservationFlow(int movieId) : this(MovieLogic.Find(movieId)) { }
-    public ReservationFlow(Movie movie)
+    private readonly IServiceProvider _services;
+    
+    private readonly Movie _movie;
+    
+    public ReservationFlow(IServiceProvider services, Movie movie)
     {
-        
-        if (movie == null)
-        {
-            ConsoleMethods.Error("Movie not found");
-            return;
-        }
-        
-        SelectedMovie = movie;
-        Reservation = new ReservationLogic(movie);
+        _services = services;
+        _movie = movie;
     }
     
 
     public void Run()
     {
         // 1. select showtime
-        SelectShowtime selectShowtime = new SelectShowtime(SelectedMovie);
-        Showtime? showtime = selectShowtime.Run();
+        Showtime? showtime = GetShowtime();
         if (showtime == null)
         {
             return;
         }
         
-        if (!Reservation.SelectShowtime(showtime))
+        // 2. select seats
+        SeatSelection? seatSelection = new SeatSelection(_services, _movie, showtime);
+        IEnumerable<Seat>? seats = seatSelection.Run();
+        if (seats == null || seats.Count() == 0)
         {
-            ConsoleMethods.Error("Show time is not available");
             return;
         }
-
-        // 2. select seats
-        SeatSelection seatSelection = new SeatSelection(showtime);
-        IEnumerable<Seat>? seats = seatSelection.Run();
         
-        // 3. select tickets type
+        Console.WriteLine("Selected seats:");
+        foreach (var seat in seats)
+        {
+            Console.WriteLine($"Row: {seat.Row}, Seat: {seat.Number}");
+        }
+        Console.ReadKey();
 
-        // 4. logged in? go to step 9
+        // 3. select tickets type (childrent, adults, seniors)
+
+        // 4. logged in? go to step 6
 
         // 5. Ask to login or to register
 
         // 6. confirmation (total price seats etc.)
 
         // 7. pay
-
     }
 
+    public Showtime? GetShowtime()
+    {
+        // 1. select showtime
+        SelectShowtime selectShowtime = new SelectShowtime(_services, _movie);
+        return selectShowtime.Run();
+    }
     
 }

@@ -1,57 +1,16 @@
-using ProjectB.Models;
+using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 
 namespace ProjectB.Logic;
 
-public class ReservationLogic
+public class ReservationLogic : IReservationService
 {
-    private Showtime SelectedShowtime;
-    private Movie SelectedMovie;
-    private List<Seat> SelectedSeats { get; set; } = new();
 
-    public ReservationLogic(Movie movie)
+    private readonly ReservationRepository _reservationRepository;
+    public ReservationLogic(ReservationRepository reservationRepository)
     {
-        SelectedMovie = movie;
+        _reservationRepository = reservationRepository;
     }
-    
-    public bool SelectShowtime(Showtime? showtime)
-    {
-        if (showtime == null || showtime.StartTime < DateTime.Now)
-        {
-            return false;
-        }
-
-        SelectedShowtime = showtime;
-        return true;
-    }
-    
-    // private void AddSeat(Seat seat)
-    // {
-    //     // todo check if seat is not taken
-    //     if (seat.Taken == 0)
-    //     {
-    //         seat.Selected = true;
-    //         SelectedSeats.Add(seat);
-    //     }
-    // }
-    //
-    // private void RemoveSeat(Seat seat)
-    // {
-    //     if (SelectedSeats.Contains(seat))
-    //     {
-    //         seat.Selected = false;
-    //         SelectedSeats.Remove(seat);   
-    //     }
-    // }
-    //
-    // public void AddOrRemoveSeat(Seat seat)
-    // {
-    //     if (seat.Selected)
-    //     {
-    //         RemoveSeat(seat);
-    //         return;
-    //     }
-    //     AddSeat(seat);
-    // }
 
     
     
