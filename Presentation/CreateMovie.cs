@@ -1,3 +1,4 @@
+using ProjectB.DataAccess;
 using ProjectB.Logic;
 using ProjectB.Models;
 
@@ -5,270 +6,165 @@ namespace ProjectB.Presentation;
 
 public static class CreateMovie
 {
-    public static T GetAndValidateInput<T>(string prompt, int min = 0, int max = 100)
-    {
-        Console.Clear();
-        Console.WriteLine($"{prompt}:");
-        string input = Console.ReadLine();
-
-        if (typeof(T) == typeof(int))
-        {
-            if (int.TryParse(input, out int value) && value >= min && value <= max)
-            {
-                return (T)(object)value!;
-            }
-        }
-        else if (typeof(T) == typeof(string))
-        {
-            if (!string.IsNullOrEmpty(input) && input.Length >= min && input.Length <= max)
-            {
-                return (T)(object)input!;
-            }
-        }
-        else if (typeof(T) == typeof(double))
-        {
-            if (double.TryParse(input, out double value))
-            {
-                return (T)(object)value;
-            }
-        }
-        else if (typeof(T) == typeof(DateTime))
-        {
-            if (DateTime.TryParse(input, out DateTime value))
-            {
-                return (T)(object)value;
-            }
-        }
-
-        Console.WriteLine("Invalid input");
-        Thread.Sleep(1000);
-        return GetAndValidateInput<T>(prompt, min, max);
-    }
-
     public static void Create()
+{
+    Console.Clear();
+    Console.WriteLine("╔══════════════════════╗");
+    Console.WriteLine("║     Create movie     ║");
+    Console.WriteLine("╚══════════════════════╝");
+
+    bool completed = false;
+
+    string movieTitle = "";
+    string movieDescription = "";
+    string? runtime = null;
+    string actorsInput = "";
+    string? rating = null;
+    string genreInput = "";
+    string? ageInput = null;
+    string? releaseDate = null;
+    string countryInput = "";
+
+    while (!completed)
     {
-        bool completed = false;
-        string currentState = "title";
-
-        string movieTitle = "";
-        string movieDescription = "";
-        int? runtime = null;
-        string actorsInput = "";
-        double? rating = null;
-        string genreInput = "";
-        int? ageInput = null;
-        DateTime? releaseDate = null;
-        string countryInput = "";
-
-
-        while (!completed)
+        // Title
+        movieTitle = BaseUI.DrawInputBox("Enter movie title", 20, 30, 0, 4, movieTitle);
+        while (!MovieLogic.ValidateInput<string>(3, 50, movieTitle))
         {
-            switch (currentState)
-            {
-                case "title":
-                    if (!string.IsNullOrEmpty(movieTitle))
-                    {
-                        movieTitle = GetAndValidateInput<string>($"Enter movie title(Currently: {movieTitle})", 3, 50);
-                    }
-                    else
-                    {
-                        movieTitle = GetAndValidateInput<string>($"Enter movie title", 3, 50);
-                    }
-
-                    currentState = "description";
-                    break;
-
-                case "description":
-                    if (!string.IsNullOrEmpty(movieDescription))
-                    {
-                        movieDescription =
-                            GetAndValidateInput<string>($"Enter movie description(Currently: {movieDescription})", 20,
-                                500);
-                    }
-                    else
-                    {
-                        movieDescription = GetAndValidateInput<string>("Enter movie description", 20, 500);
-                    }
-
-                    currentState = "Runtime";
-                    break;
-
-                case "Runtime":
-                    if (runtime != null)
-                    {
-                        runtime = GetAndValidateInput<int>(
-                            $"Enter the runtime of the movie in minutes(Currently: {runtime})", 1, 240);
-                    }
-                    else
-                    {
-                        runtime = GetAndValidateInput<int>("Enter the runtime of the movie in minutes", 1, 240);
-                    }
-
-                    currentState = "Actors";
-                    break;
-
-                case "Actors":
-                    if (!string.IsNullOrEmpty(actorsInput))
-                    {
-                        actorsInput = GetAndValidateInput<string>($"Enter actors featuring(Currently: {actorsInput})",
-                            3, 50);
-                    }
-                    else
-                    {
-                        actorsInput = GetAndValidateInput<string>("Enter actors featuring", 3, 50);
-                    }
-
-                    currentState = "Rating";
-                    break;
-
-                case "Rating":
-                    if (rating != null)
-                    {
-                        rating = GetAndValidateInput<double>($"Enter the movie rating(Currently {rating})", 1, 10);
-                    }
-                    else
-                    {
-                        rating = GetAndValidateInput<double>("Enter the movie rating", 1, 10);
-                    }
-
-                    currentState = "Genre";
-                    break;
-
-                case "Genre":
-                    if (!string.IsNullOrEmpty(genreInput))
-                    {
-                        genreInput = GetAndValidateInput<string>($"Enter the movie's genre(s) (Currently {genreInput})",
-                            3, 50);
-                    }
-                    else
-                    {
-                        genreInput = GetAndValidateInput<string>("Enter the movie's genre(s)", 3, 50);
-                    }
-
-                    currentState = "Age";
-                    break;
-
-                case "Age":
-                    if (ageInput != null)
-                    {
-                        ageInput = GetAndValidateInput<int>($"Enter the movie's age restriction (Currently {ageInput})",
-                            1, 99);
-                    }
-                    else
-                    {
-                        ageInput = GetAndValidateInput<int>("Enter the movie's age restriction", 1, 99);
-                    }
-
-                    currentState = "Release";
-                    break;
-
-                case "Release":
-                    if (releaseDate.HasValue)
-                    {
-                        releaseDate = GetAndValidateInput<DateTime>($"Enter release date (Currently{releaseDate})");
-                    }
-                    else
-                    {
-                        releaseDate = GetAndValidateInput<DateTime>("Enter release date");
-                    }
-
-                    currentState = "Country";
-                    break;
-
-                case "Country":
-                    if (!string.IsNullOrEmpty(countryInput))
-                    {
-                        countryInput =
-                            GetAndValidateInput<string>($"Enter country of origin (Currently {countryInput})", 4, 56);
-                    }
-                    else
-                    {
-                        countryInput = GetAndValidateInput<string>("Enter country of origin", 4, 56);
-                    }
-
-                    currentState = "Finish";
-                    break;
-
-                case "Finish":
-                    Console.Clear();
-                    Console.WriteLine(@$"
-                        Movie title: {movieTitle}
-                        Movie despriction: {movieDescription}
-                        Runtime: {runtime} minutes
-                        Featuring: {actorsInput}
-                        Rating: {rating}/10
-                        Genre: {genreInput}
-                        Agerestriction: {ageInput}
-                        Release: {releaseDate}
-                        Country: {countryInput}
-                        ");
-                    Console.WriteLine("Do you confirm this movie? (y/n)");
-                    string confirmInput = Console.ReadLine();
-                    if (confirmInput == "y")
-                    {
-                        Console.WriteLine("Would you like to add another movie? (y/n)");
-                        string addInput = Console.ReadLine();
-                        if (addInput == "y")
-                        {
-                            MovieLogic.CreateMovie(new Movie
-                            {
-                                Title = movieTitle,
-                                Description = movieDescription,
-                                Runtime = (int)runtime,
-                                Actors = actorsInput,
-                                Rating = (double)rating,
-                                Genre = genreInput,
-                                AgeRestriction = (int)ageInput,
-                                ReleaseDate = (DateTime)releaseDate,
-                                Country = countryInput
-                            });
-
-                            completed = false;
-                            currentState = "title";
-
-                            movieTitle = "";
-                            movieDescription = "";
-                            runtime = null;
-                            actorsInput = "";
-                            rating = null;
-                            genreInput = "";
-                            ageInput = null;
-                            releaseDate = null;
-                            countryInput = "";
-
-                            Console.WriteLine("Comfirmed and next will be made.");
-                            Thread.Sleep(1000);
-                        }
-                        else if (addInput == "n")
-                        {
-                            MovieLogic.CreateMovie(new Movie
-                            {
-                                Title = movieTitle,
-                                Description = movieDescription,
-                                Runtime = (int)runtime,
-                                Actors = actorsInput,
-                                Rating = (double)rating,
-                                Genre = genreInput,
-                                AgeRestriction = (int)ageInput,
-                                ReleaseDate = (DateTime)releaseDate,
-                            });
-
-                            completed = true;
-                        }
-                    }
-                    else if (confirmInput == "n")
-                    {
-                        Console.WriteLine("Movie confirmation canceled.");
-                        Thread.Sleep(1000);
-                        currentState = "title";
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input try again");
-                    }
-
-                    break;
-            }
+            BaseUI.ShowErrorMessage("Your input has to be between 3 and 50 characters.", 5);
+            movieTitle = BaseUI.DrawInputBox("Enter movie title", 20, 30, 0, 4, movieTitle);
         }
+
+        Console.SetCursorPosition(0, 5);
+        Console.Write("                                                                                     ");
+
+        // Description
+        movieDescription = BaseUI.DrawInputBox("Enter movie description", 25, 30, 0, 6, movieDescription);
+        while (!MovieLogic.ValidateInput<string>(20, 100, movieDescription))
+        {
+            BaseUI.ShowErrorMessage("Your input has to be between 20 and 100 characters.", 7);
+            movieDescription = BaseUI.DrawInputBox("Enter movie description", 25, 30, 0, 6, movieDescription);
+        }
+
+        Console.SetCursorPosition(0, 7);
+        Console.Write("                                                                                     ");
+
+        // Runtime
+        runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 8, runtime);
+        while (!MovieLogic.ValidateInput<int>(60, 240, runtime.ToString()))
+        {
+            BaseUI.ShowErrorMessage("Please enter a number in between 60 and 240 minutes.", 9);
+            runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 8, runtime);
+        }
+
+        Console.SetCursorPosition(0, 9);
+        Console.Write("                                                                                     ");
+        // Actors
+        actorsInput = BaseUI.DrawInputBox("Enter actor names (comma separated)", 40, 30, 0, 10, actorsInput);
+        while (!MovieLogic.ValidateInput<string>(5, 200, actorsInput))
+        {
+            BaseUI.ShowErrorMessage("Your input has to be between 5 and 200 characters.", 11);
+            actorsInput = BaseUI.DrawInputBox("Enter actor names (comma separated)", 40, 30, 0, 10, actorsInput);
+        }
+
+        Console.SetCursorPosition(0, 11);
+        Console.Write("                                                                                     ");
+
+        // Rating
+        rating = BaseUI.DrawInputBox("Enter rating", 20, 30, 0, 12, rating);
+        while (!MovieLogic.ValidateInput<double>(0, 10, rating))
+        {
+            BaseUI.ShowErrorMessage("Please enter a valid rating between 0.0 and 10.0.", 13);
+            rating = BaseUI.DrawInputBox("Enter rating", 20, 30, 0, 12, rating);
+        }
+
+        Console.SetCursorPosition(0, 13);
+        Console.Write("                                                                                     ");
+
+
+        // Genre
+        genreInput = BaseUI.DrawInputBox("Enter genre", 20, 30, 0, 14, genreInput);
+        while (!MovieLogic.ValidateInput<string>(3, 50, genreInput))
+        {
+            BaseUI.ShowErrorMessage("Your input has to be between 3 and 50 characters.", 15);
+            genreInput = BaseUI.DrawInputBox("Enter genre", 20, 30, 0, 14, genreInput);
+        }
+
+        Console.SetCursorPosition(0, 15);
+        Console.Write("                                                                                     ");
+
+        // Age Restriction
+        ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 16, ageInput);
+        while (!MovieLogic.ValidateInput<int>(0, 99, ageInput))
+        {
+            BaseUI.ShowErrorMessage("Please enter a valid non-negative integer for age restriction.", 17);
+            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 16, ageInput);
+        }
+
+        Console.SetCursorPosition(0, 17);
+        Console.Write("                                                                                     ");
+
+        // Release Date
+        releaseDate = BaseUI.DrawInputBox("Enter release date", 30, 30, 0, 18, releaseDate);
+        while (!MovieLogic.ValidateInput<DateTime>(0,100,releaseDate))
+        {
+            BaseUI.ShowErrorMessage("Please enter a valid date in the format yyyy-MM-dd.", 19);
+            releaseDate = BaseUI.DrawInputBox("Enter release date", 30, 30, 0, 18, releaseDate);
+        }
+
+        Console.SetCursorPosition(0, 19);
+        Console.Write("                                                                                     ");
+        // Country
+        countryInput = BaseUI.DrawInputBox("Enter country", 25, 30, 0, 20, countryInput);
+        while (!MovieLogic.ValidateInput<string>(2, 50, countryInput))
+        {
+            BaseUI.ShowErrorMessage("Your input has to be between 2 and 50 characters.", 21);
+            countryInput = BaseUI.DrawInputBox("Enter country", 25, 30, 0, 20, countryInput);
+        }
+
+        Console.Clear();
+        Console.SetCursorPosition(0,0);
+        Console.WriteLine(@$"
+            Movie title: {movieTitle}
+            Movie despriction: {movieDescription}
+            Runtime: {runtime} minutes
+            Featuring: {actorsInput}
+            Rating: {rating}/10
+            Genre: {genreInput}
+            Agerestriction: {ageInput}
+            Release: {releaseDate}
+            Country: {countryInput}
+            ");
+        Console.WriteLine("Do you confirm this movie?");
+
+        if(BaseUI.BasicYesOrNo())
+        {
+            BaseUI.ConfirmingMessage("You succesfully created a movie",21);
+            Console.ReadKey();
+            
+            Console.Clear();
+            Console.WriteLine("Would you like to create another?");
+            if(BaseUI.BasicYesOrNo())
+            {
+                    MovieLogic.CreateMovie(new Movie
+                    {
+                    Title = movieTitle,
+                    Description = movieDescription,
+                    Runtime = int.Parse(runtime),
+                    Actors = actorsInput,
+                    Rating = double.Parse(rating),
+                    Genre = genreInput,
+                    AgeRestriction = int.Parse(ageInput),
+                    ReleaseDate = DateTime.Parse(releaseDate),
+                    Country = countryInput
+                });
+                Create();
+            }
+            completed = true;
+        }
+        Console.Clear();
+        continue;
+        
     }
+        }
 }

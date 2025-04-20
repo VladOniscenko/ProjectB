@@ -7,6 +7,5 @@ class Program
     {
         DbFactory.InitializeDatabase();
         Menu.RunMenu();
-
     }
 }
