@@ -7,7 +7,7 @@ namespace ProjectB.Presentation;
 
 public static class UserLogin
 {
-    public static void Login()
+    public static User Login()
     {
         Console.WriteLine("╔══════════════════════════╗");
         Console.WriteLine("║ Enter your login details ║");
@@ -34,14 +34,12 @@ public static class UserLogin
 
             Console.SetCursorPosition(0,7);
             Console.Write("                                                                                     ");
-
+                
             BaseUI.ConfirmingMessage("You succesfully logged in(press any key to continue)",9);
             Console.ReadKey();
-            succesLog = true;
-
-            
+            return UserLogic.IsUserValid(UserEmail);
         }
-        return;
+        return null;
     }
         
 }

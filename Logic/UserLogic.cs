@@ -30,6 +30,14 @@ public static class UserLogic
         userRepository.AddUser(user);
     }
 
+    public static User IsUserValid(string user)
+    {
+        if (UserRepository.GetUserWithEmail(user) is User);
+        {
+            return UserRepository.GetUserWithEmail(user);
+        }
+    }
+
     public static bool IsEmailFoundAndCorrect(string Email)
     {
         return !(UserRepository.GetUserEmail(Email).Length > 1);

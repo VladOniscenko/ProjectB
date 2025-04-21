@@ -1,4 +1,5 @@
 ﻿using ProjectB.Database;
+using ProjectB.Models;
 namespace ProjectB;
 
 class Program

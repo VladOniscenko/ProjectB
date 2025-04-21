@@ -101,8 +101,23 @@ public class UserRepository
         else
         {
             return "";
-        }
+        }  
+    }
+
+    public static User GetUserWithEmail(string email)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        var result = connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
         
+        if (result != null)
+        {
+            return result;
+        }
+        else
+        {
+            return null;
+        }  
     }
 
     public static string GetUserPassword(string email)

@@ -137,7 +137,7 @@ public static class CreateMovie
             ");
         Console.WriteLine("Do you confirm this movie?");
 
-        if(BaseUI.BasicYesOrNo())
+        if(BaseUI.BasicYesOrNo(12))
         {
             BaseUI.ConfirmingMessage("You succesfully created a movie",21);
             Console.ReadKey();

@@ -1,3 +1,4 @@
+using ProjectB.Models;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -11,7 +12,9 @@ namespace ProjectB
         private Dictionary<string, string> Options;
         private string Prompt;
 
-        public Menu(string prompt, Dictionary<string, string> options)
+        
+
+        public Menu(string prompt, Dictionary<string, string> options, User currentUser)
         {
             Prompt = prompt;
             Options = options;
@@ -79,8 +82,12 @@ namespace ProjectB
         }
 
         static public void RunMenu()
-        {
-            string prompt = @"
+{
+    User? user = null;
+
+    while (true)
+    {
+        string prompt = @$"
  ____             __               ____                                              __             
 /\  _`\          /\ \__           /\  _`\    __                                     /\ \            
 \ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
@@ -88,55 +95,67 @@ namespace ProjectB
   \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
    \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
     \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
-               /\___/                                                                               
-               \/__/                                                                                       
+           /\___/                                                                                   
+           \/__/                                                                                       
 
 Welcome customer!
 Use Up & Down keys to select an option.
                 ";
 
-            Dictionary<string, string> options = new()
-            {
-                { "UP", "Upcoming Movies" },
-                { "AU", "About us" },
-                { "LI", "Login" },
-                { "RE", "Register" },
-                { "EX", "Exit" },
-                { "CM", "Create Movie (admins)" },
-            };
-
-            Menu menu = new Menu(prompt, options);
-
-            string selectedOption = menu.Run();
-            // Code block for keyPressed cases
-            Console.Clear();
-            switch (selectedOption)
-            {
-                case "RE":
-                    MenuActionRegister();
-                    break;
-                case "LI":
-                    Login();
-                    break;
-                case "UP":
-                    MenuActionUpcomingMovies();
-                    break;
-                case "AU":
-                    AboutUs();
-                    break;
-                case "EX":
-                    return;
-                case "CM":
-                    MenuActionCreateMovie();
-                    break;
-            }
-
-            RunMenu();
+        if (user != null)
+        {
+            prompt += $"\nWelcome back:{user.FirstName}";
         }
 
-        static void Login()
+        Dictionary<string, string> options = new()
         {
-            UserLogin.Login();
+            { "UP", "Upcoming Movies" },
+            { "AU", "About us" },
+            { "LI", "Login" },
+            { "RE", "Register" },
+            { "EX", "Exit" },
+            { "CM", "Create Movie (admins)" },
+        };
+
+        Menu menu = new Menu(prompt, options, user);
+
+        string selectedOption = menu.Run();
+        Console.Clear();
+
+        switch (selectedOption)
+        {
+            case "RE":
+                MenuActionRegister();
+                break;
+            case "LI":
+                Console.Clear();
+                if (user != null)
+                {
+                    Console.WriteLine("Already logged in!");
+                    Thread.Sleep(1000);
+                    break;
+                }
+                user = Login();
+                break;
+            case "UP":
+                MenuActionUpcomingMovies();
+                break;
+            case "AU":
+                AboutUs();
+                break;
+            case "EX":
+                return;
+            case "CM":
+                MenuActionCreateMovie();
+                break;
+        }
+    }
+}
+            
+
+        static User Login()
+        {
+            return UserLogin.Login();
         }
 
         static void MenuActionUpcomingMovies()
