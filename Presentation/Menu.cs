@@ -1,3 +1,6 @@
+using ProjectB.DataAccess;
+using ProjectB.Logic;
+using ProjectB.Models;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -34,6 +37,8 @@ namespace ProjectB
         {
             Console.Clear();
             Console.WriteLine(Prompt);
+
+            
             
             Console.WriteLine("╔══════════════════════════════════════╗");
 
@@ -46,6 +51,10 @@ namespace ProjectB
                 Console.WriteLine($"║{CenterText(currentOption, 38, isSelected)}║");
             }
             Console.WriteLine("╚══════════════════════════════════════╝");
+
+            List<Movie> Promotedmovie = new MovieLogic(new MovieRepository()).GetPromotedMovies();
+            Console.WriteLine($"\nThis Week’s Top 3 Movies — Pick Your Favorite and Enjoy the Show!\n1: {Promotedmovie[0]}\n2: {Promotedmovie[1]}\n3: {Promotedmovie[2]}");
+
         }
 
         public string Run()

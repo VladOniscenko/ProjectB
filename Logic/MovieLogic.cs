@@ -33,6 +33,11 @@ public class MovieLogic : IMovieService
     {
         return _movieRepository.GetAllMovies();
     }
+
+    public List<Movie> GetPromotedMovies()
+    {
+        return _movieRepository.GetBestAndNewestMovies(3);
+    }
     
     public bool ValidateInput<T>(int min = 0, int max = 100, string input = null)
     { 
