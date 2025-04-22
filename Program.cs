@@ -99,23 +99,28 @@ Use Up & Down keys to select an option.
             { "AU", "About us" },
         };
         
+        // if (CurrentUser != null)
+        // {
+        //     menuOptions.Add("LO", "Log out");
+        //
+        //     if (CurrentUser.IsAdmin)
+        //     {
+        //         menuOptions.Add("CM", "Create Movie");
+        //         menuOptions.Add("CS", "Create Showtime");
+        //     }
+        // }
+        // else
+        // {
+        //     menuOptions.Add("RE", "Register");
+        //     menuOptions.Add("LI", "Log in");
+        // }
         
-        // todo remove true
-        if (true || CurrentUser != null)
-        {
-            menuOptions.Add("LO", "Log out");
-
-            if (true || CurrentUser.IsAdmin)
-            {
-                menuOptions.Add("CM", "Create Movie");
-                menuOptions.Add("CS", "Create Showtime");
-            }
-        }
-        else
-        {
-            menuOptions.Add("RE", "Register");
-            menuOptions.Add("LO", "Log in");
-        }
+        //todo remove this and enable top ^        
+        menuOptions.Add("CM", "Create Movie");
+        menuOptions.Add("CS", "Create Showtime");
+        menuOptions.Add("RE", "Register");
+        menuOptions.Add("LI", "Log in");
+        menuOptions.Add("LO", "Log out");
         
         
         menuOptions.Add( "EX", "Exit" );

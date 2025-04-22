@@ -18,7 +18,7 @@ public class UserCreation
         _services = services;
     }
 
-    public static void CreateUser(User? user = null)
+    public void CreateUser(User? user = null)
     {
         Console.ResetColor();
         Console.CursorVisible = false;
