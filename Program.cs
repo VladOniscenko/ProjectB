@@ -22,9 +22,6 @@ class Program
     \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
                /\___/                                                                               
                \/__/                                                                                       
-
-Welcome customer!
-Use Up & Down keys to select an option.
                 ";
 
 
@@ -120,7 +117,18 @@ Use Up & Down keys to select an option.
         }
 
         menuOptions.Add("EX", "Exit");
-        Menu selectMenu = new Menu(Logo, menuOptions);
+        
+        var customerName = CurrentUser is not null ? $"back {CurrentUser.FirstName}" : "";
+
+        var heading = $"""
+                       {Logo}
+                       Welcome {customerName}to the Byte Cinema!
+                       Use Up & Down keys to select an option.
+                       
+                       """;
+
+        var selectMenu = new Menu(heading, menuOptions);
+
         return selectMenu.Run();
     }
 
