@@ -19,9 +19,9 @@ public class MovieLogic : IMovieService
         return true;
     }
 
-    public IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7)
+    public IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7, int limit = 50)
     {
-        return _movieRepository.GetMoviesWithShowtimeInNextDays(days);
+        return _movieRepository.GetMoviesWithShowtimeInNextDays(days, limit);
     }
     
     public Movie? Find(int id)

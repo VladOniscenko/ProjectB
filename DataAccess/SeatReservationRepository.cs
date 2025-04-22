@@ -14,6 +14,7 @@ public class SeatReservationRepository
             CREATE TABLE IF NOT EXISTS SeatReservations (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 SeatId INTEGER NOT NULL,
+                TicketType TEXT NOT NULL,
                 ReservationId INTEGER NOT NULL,
                 ShowtimeId INTEGER NOT NULL,
                 FOREIGN KEY (SeatId) REFERENCES Seats(Id)
@@ -26,8 +27,8 @@ public class SeatReservationRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute(@"
-            INSERT INTO SeatReservations (SeatId, ReservationId, ShowtimeId) 
-            VALUES (@SeatId, @ReservationId, @ShowtimeId)", seatReservation);
+            INSERT INTO SeatReservations (SeatId, ReservationId, ShowtimeId, TicketType) 
+            VALUES (@SeatId, @ReservationId, @ShowtimeId, @TicketType)", seatReservation);
     }
 
     public IEnumerable<SeatReservation> GetAllSeatReservations()

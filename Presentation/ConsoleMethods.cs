@@ -8,19 +8,21 @@ public static class ConsoleMethods
         Console.ReadLine();
     }
     
-    public static void Warning(string message) => WriteToConsole("Warning", message, ConsoleColor.Yellow);
-    public static void Error(string message) => WriteToConsole("Error", message, ConsoleColor.Red);
-    public static void Success(string message) => WriteToConsole("Success", message, ConsoleColor.Green);
-    public static void WriteToConsole(string type, string message, ConsoleColor color)
+    public static void Warning(string message) => WriteToConsole(message, ConsoleColor.Yellow);
+    public static void Error(string message) => WriteToConsole(message, ConsoleColor.Red);
+    public static void Success(string message) => WriteToConsole(message, ConsoleColor.Green);
+    public static void WriteToConsole(string message, ConsoleColor color)
     {
         Console.ForegroundColor = color;
-        Console.WriteLine($"[{type.ToUpper()}] {message}");
+        Console.WriteLine($"{message}");
         Console.ResetColor();
         AwaitUser();
     }
     
-    public static void AnimateLoadingText(string text, int dotCount = 3, int totalDurationMs = 2000)
+    public static void AnimateLoadingText(string text, int totalDurationMs = 2000)
     {
+        int dotCount = 3;
+        
         Console.Clear();
         int originalLeft = Console.CursorLeft;
         int originalTop = Console.CursorTop;

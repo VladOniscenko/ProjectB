@@ -20,12 +20,13 @@ public class MovieList
     // Takes from the Repo and makes a list of movies
     public void Run()
     {
+        Console.Clear();
         var _movieLogic = _services.GetRequiredService<IMovieService>();
-        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays();
+        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
 
         if (movies.Count() == 0)
         {
-            ConsoleMethods.Error("No movies available this week.\nPress any key to go back to the main menu...");
+            ConsoleMethods.Error("No movies available this week.");
             return;
         }
 

@@ -5,7 +5,7 @@ namespace ProjectB.Logic.Interfaces;
 public interface IMovieService
 {
     bool CreateMovie(Movie movie);
-    IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7);
+    IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7, int limit = 50);
     Movie? Find(int id);
     IEnumerable<Movie> All();
 

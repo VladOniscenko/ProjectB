@@ -10,4 +10,5 @@ public class Seat
     public string Type { get; set; }
     public int Taken { get; set; } = 0;
     public bool Selected { get; set; }
+    public string TicketType { get; set; }
 }
