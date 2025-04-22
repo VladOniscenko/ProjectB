@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
-using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
@@ -119,7 +117,7 @@ public class CreateMovieFlow
             while (!_movieService.ValidateInput<DateTime>(0, 100, releaseDate))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid date in the format yyyy-MM-dd.", 19);
-                releaseDate = BaseUI.DrawInputBox("Enter release date", 30, 30, 0, 18, releaseDate);
+                releaseDate = BaseUI.DrawInputBox("Enter release date (yyyy-MM-dd)", 30, 30, 0, 18, releaseDate);
             }
 
             Console.SetCursorPosition(0, 19);
@@ -136,12 +134,12 @@ public class CreateMovieFlow
             Console.SetCursorPosition(0, 0);
             Console.WriteLine(@$"
             Movie title: {movieTitle}
-            Movie despriction: {movieDescription}
+            Movie description: {movieDescription}
             Runtime: {runtime} minutes
             Featuring: {actorsInput}
             Rating: {rating}/10
             Genre: {genreInput}
-            Agerestriction: {ageInput}
+            Age restriction: {ageInput}
             Release: {releaseDate}
             Country: {countryInput}
             ");
@@ -149,25 +147,25 @@ public class CreateMovieFlow
 
             if (BaseUI.BasicYesOrNo(12))
             {
-                BaseUI.ConfirmingMessage("You succesfully created a movie", 21);
+                BaseUI.ConfirmingMessage("You successfully created a movie", 21);
                 Console.ReadKey();
+                
+                _movieService.CreateMovie(
+                    movieTitle,
+                    movieDescription,
+                    int.Parse(runtime),
+                    actorsInput,
+                    double.Parse(rating),
+                    genreInput,
+                    int.Parse(ageInput),
+                    DateTime.Parse(releaseDate),
+                    countryInput
+                );
 
                 Console.Clear();
                 Console.WriteLine("Would you like to create another?");
                 if (BaseUI.BasicYesOrNo())
                 {
-                    _movieService.CreateMovie(new Movie
-                    {
-                        Title = movieTitle,
-                        Description = movieDescription,
-                        Runtime = int.Parse(runtime),
-                        Actors = actorsInput,
-                        Rating = double.Parse(rating),
-                        Genre = genreInput,
-                        AgeRestriction = int.Parse(ageInput),
-                        ReleaseDate = DateTime.Parse(releaseDate),
-                        Country = countryInput
-                    });
                     Run();
                 }
 

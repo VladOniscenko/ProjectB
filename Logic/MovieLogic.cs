@@ -13,8 +13,22 @@ public class MovieLogic : IMovieService
         _movieRepository = movieRepo;
     }
     
-    public bool CreateMovie(Movie movie)
+    public bool CreateMovie(string title, string description, int runtime, string actors, 
+        double rating, string genre, int ageRestriction, DateTime releaseDate, string country)
     {
+        var movie = new Movie
+        {
+            Title = title,
+            Description = description,
+            Runtime = runtime,
+            Actors = actors,
+            Rating = rating,
+            Genre = genre,
+            AgeRestriction = ageRestriction,
+            ReleaseDate = releaseDate,
+            Country = country
+        };
+    
         _movieRepository.AddMovie(movie);
         return true;
     }
