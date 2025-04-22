@@ -102,10 +102,7 @@ Welcome customer!
 Use Up & Down keys to select an option.
                 ";
 
-        if (user != null)
-        {
-            prompt += $"\nWelcome back:{user.FirstName}";
-        }
+        
 
         Dictionary<string, string> options = new()
         {
@@ -114,8 +111,21 @@ Use Up & Down keys to select an option.
             { "LI", "Login" },
             { "RE", "Register" },
             { "EX", "Exit" },
-            { "CM", "Create Movie (admins)" },
         };
+
+        if (user != null)
+        {
+            prompt += $"\nWelcome back:{user.FirstName}";
+
+            options = new()
+            {
+            { "UP", "Upcoming Movies" },
+            { "AU", "About us" },
+            { "AD", "View account details"},
+            { "EX", "Exit" },
+            { "CM", "Create Movie (admins)" },
+            };
+        }
 
         Menu menu = new Menu(prompt, options, user);
 
@@ -125,7 +135,7 @@ Use Up & Down keys to select an option.
         switch (selectedOption)
         {
             case "RE":
-                MenuActionRegister();
+               user = MenuActionRegister();
                 break;
             case "LI":
                 Console.Clear();
@@ -180,9 +190,9 @@ Use Up & Down keys to select an option.
             CreateMovie.Create();
         }
         
-        static void MenuActionRegister()
+        static User MenuActionRegister()
         {
-            UserCreation.CreateUser();
+            return UserCreation.CreateUser();
         }
 
         static void NotImplemented()

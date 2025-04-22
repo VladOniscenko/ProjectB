@@ -37,7 +37,7 @@ public static class UserLogin
                 
             BaseUI.ConfirmingMessage("You succesfully logged in(press any key to continue)",9);
             Console.ReadKey();
-            return UserLogic.IsUserValid(UserEmail);
+            return UserLogic.IsUserValidWithEmail(UserEmail);
         }
         return null;
     }

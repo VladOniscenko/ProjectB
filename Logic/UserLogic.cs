@@ -30,7 +30,7 @@ public static class UserLogic
         userRepository.AddUser(user);
     }
 
-    public static User IsUserValid(string user)
+    public static User IsUserValidWithEmail(string user)
     {
         if (UserRepository.GetUserWithEmail(user) is User);
         {

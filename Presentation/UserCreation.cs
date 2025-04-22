@@ -10,7 +10,7 @@ public static class UserCreation
     const int BoxX = 15;
     const int Width = 30;
 
-    public static void CreateUser(User? user = null)
+    public static User CreateUser(User? user = null)
     {
         Console.ResetColor();
         Console.CursorVisible = false;
@@ -72,14 +72,16 @@ public static class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            //UserLogic.CreateUser(newUser);
+            UserLogic.CreateUser(newUser);
             BaseUI.ConfirmingMessage("Your account has been made!",9);
-            Thread.Sleep(1000);
+            Console.ReadKey();
+            return UserLogic.IsUserValidWithEmail(newUser.Email);
         }
         else
         {
             CreateUser(newUser);
         }
+        return null;
     }
 
     public static bool CheckIfDataCorrect(User user)
