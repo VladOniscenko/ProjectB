@@ -11,14 +11,14 @@ public class UserCreation
 
     const int BoxX = 20;
     const int Width = 35;
-  
+
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
+
     public UserCreation(IServiceProvider services)
     {
         _services = services;
         _userService = _services.GetRequiredService<IUserService>();
-
     }
 
     public void CreateUser(User? user = null)
@@ -35,6 +35,7 @@ public class UserCreation
         {
             newUser = user;
         }
+
         newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
         while (!_userService.IsNameValid(newUser.FirstName))
         {
@@ -48,7 +49,7 @@ public class UserCreation
         newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
         while (!_userService.IsNameValid(newUser.LastName))
         {
-            BaseUI.ShowErrorMessage( "Name must be longer than 3 characters and can only contain letters", 7);
+            BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 7);
             newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
         }
 
@@ -74,30 +75,31 @@ public class UserCreation
         Console.Write("                                                                  ");
         string secondPassword = "-";
 
-        while(!_userService.IsPasswordIdentical(newUser.Password, secondPassword)){
-
-        newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
-
-        while (!_userService.IsPasswordValid(newUser.Password))
+        while (!_userService.IsPasswordIdentical(newUser.Password, secondPassword))
         {
-            BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
-                                    11);
             newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
-        }
 
-        Console.SetCursorPosition(0, 11);
-        Console.Write("                                                                                                   ");
+            while (!_userService.IsPasswordValid(newUser.Password))
+            {
+                BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
+                    11);
+                newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
+            }
 
-        secondPassword = BaseUI.DrawInputBox("Re-enter password", BoxX, Width, 0, 12, newUser.Password, true);
-        if(!_userService.IsPasswordIdentical(newUser.Password, secondPassword)){
-            BaseUI.ShowErrorMessage("Passwords are not identical",
-                                    13);
-            Console.SetCursorPosition(BoxX, 12);
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.WriteLine(new string(' ', Width));
-            Console.ResetColor();
-        }
+            Console.SetCursorPosition(0, 11);
+            Console.Write(
+                "                                                                                                   ");
 
+            secondPassword = BaseUI.DrawInputBox("Re-enter password", BoxX, Width, 0, 12, newUser.Password, true);
+            if (!_userService.IsPasswordIdentical(newUser.Password, secondPassword))
+            {
+                BaseUI.ShowErrorMessage("Passwords are not identical",
+                    13);
+                Console.SetCursorPosition(BoxX, 12);
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine(new string(' ', Width));
+                Console.ResetColor();
+            }
         }
 
         if (CheckIfDataCorrect(newUser))

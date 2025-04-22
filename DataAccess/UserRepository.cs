@@ -31,13 +31,13 @@ public class UserRepository
             var userRepo = new UserRepository();
 
             // Check if an admin with the specific email exists
-            if (userRepo.CheckIfUserExistByEmail("admin@admin.com"))
+            if (!userRepo.CheckIfUserExistByEmail("admin"))
             {
                 var adminUser = new User
                 {
                     FirstName = "Admin",
                     LastName = "User",
-                    Email = "admin@admin.com",
+                    Email = "admin",
                     Password = "admin",
                     IsAdmin = true
                 };
@@ -87,6 +87,6 @@ public class UserRepository
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email", new { email });
+        return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email LIMIT 1", new { email });
     }
 }
