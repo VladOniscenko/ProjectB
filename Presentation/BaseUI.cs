@@ -76,7 +76,7 @@ public static class BaseUI{
         if(yAxis is int Y){
             Console.SetCursorPosition(0, Y);
         }
-        Console.Write("    " + errorMessage);
+        Console.Write("" + errorMessage);
         Console.ResetColor();
     }
 
