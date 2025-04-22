@@ -1,13 +1,23 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.DataAccess;
-using ProjectB.Logic;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
-public static class CreateShowtime
+public class CreateShowtime
 {
     const int page = 0;
     const int TotalPages = 1;
 
-    public static void Run()
+    private readonly IServiceProvider _services;
+    private readonly IShowtimeService _showtimeLogic;
+
+    public CreateShowtime(IServiceProvider services)
+    {
+        _services = services;
+        _showtimeLogic = _services.GetRequiredService<IShowtimeService>();
+    }
+
+    public void Run()
     {
         Console.ResetColor();
         Console.CursorVisible = false;
@@ -21,20 +31,20 @@ public static class CreateShowtime
 
         Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
         string movieName = Console.ReadLine().Trim();
-        
+
         Console.Clear();
 
         MovieRepository movieRepository = new MovieRepository();
         List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
-        
+
         // Dunno how to make it so it has multiple pages.
-        while (!(ShowtimeLogic.IsMovieIDValid(movieName)))
+        while (!_showtimeLogic.IsMovieIDValid(movieName))
         {
             Console.WriteLine("Enter the name/keyword of the movie you want to create a showtime for.");
             movieName = Console.ReadLine().Trim();
         }
-        
-        int selectedMovieIndex = ShowtimeLogic.ShowMenuMovies("Found the following movies:", movies);
+
+        int selectedMovieIndex = _showtimeLogic.ShowMenuMovies("Found the following movies:", movies);
 
         // Object of the selected movie
         Movie selectedMovie = movies[selectedMovieIndex];
@@ -50,8 +60,9 @@ public static class CreateShowtime
         // Stores specific property from object (id) into variable
 
         newShowtime.AuditoriumId = auditoriums[
-        ShowtimeLogic.ShowMenuAuditoriums("Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats | ID",
-        auditoriums)
+            _showtimeLogic.ShowMenuAuditoriums(
+                "Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats | ID",
+                auditoriums)
         ].Id;
 
         // Create startTime + endTime here?
@@ -59,9 +70,9 @@ public static class CreateShowtime
         Console.Clear();
 
         // If Yes
-        if (ShowtimeLogic.CheckIfDataCorrect(selectedMovie.Title, newShowtime.AuditoriumId))
+        if (_showtimeLogic.CheckIfDataCorrect(selectedMovie.Title, newShowtime.AuditoriumId))
         {
-            ShowtimeLogic.CreateShowtime(newShowtime);
+            _showtimeLogic.CreateShowtime(newShowtime);
             Console.Clear();
             Console.WriteLine("New showtime has been created!");
             Thread.Sleep(1000);
@@ -78,12 +89,11 @@ public static class CreateShowtime
         {
             Run();
         }
-        
     }
-}    
+}
 
-    /// <summary>
-    /// Things to still do:
-    /// 1) Make page function, well, functional. I've got an idea as to how but, I'm not sure. Didn't Angel already do this?
-    /// 2) Fix second BasicYesOrNo menu 'bug'. Has to do with the placement of the boxes when you use arrowkeys, but it's set in stone.
-    /// </summary>
+/// <summary>
+/// Things to still do:
+/// 1) Make page function, well, functional. I've got an idea as to how but, I'm not sure. Didn't Angel already do this?
+/// 2) Fix second BasicYesOrNo menu 'bug'. Has to do with the placement of the boxes when you use arrowkeys, but it's set in stone.
+/// </summary>

@@ -14,18 +14,16 @@ public class ShowtimeLogic : IShowtimeService
     
     public Showtime? Find(int id)
     {
-        ShowtimeRepository showtimeRepository = new();
-        return showtimeRepository.Find(id);
+        return _showtimeRepository.Find(id);
     }
 
     public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 10)
     {
-        ShowtimeRepository showtimeRepository = new();
-        return showtimeRepository.GetShowtimesByMovieId(movieId, limit);
+        return _showtimeRepository.GetShowtimesByMovieId(movieId, limit);
     }
     
        // No logic needed, but just in case.
-    public static bool IsMovieIDValid(string movie)
+    public bool IsMovieIDValid(string movie)
     {   
         if (string.IsNullOrWhiteSpace(movie))
         {
@@ -33,11 +31,11 @@ public class ShowtimeLogic : IShowtimeService
             return false;
         }
 
-    Console.Clear();
-    return true;
+        Console.Clear();
+        return true;
     }
 
-    public static bool CheckIfDataCorrect(string movie, int auditorium)
+    public bool CheckIfDataCorrect(string movie, int auditorium)
     {
         Console.Clear();
         Console.WriteLine("You have entered the following information:");
@@ -48,14 +46,13 @@ public class ShowtimeLogic : IShowtimeService
         return BaseUI.BasicYesOrNo();
     }
 
-    public static void CreateShowtime(Showtime showtime)
+    public void CreateShowtime(Showtime showtime)
     {
-        ShowtimeRepository showtimeRepository = new ShowtimeRepository();
-        showtimeRepository.AddShowtime(showtime);
+        _showtimeRepository.AddShowtime(showtime);
     }
 
      // create method to use keyboard arrows instead of console input 
-    public static int ShowMenuMovies(string title, List<Movie> options )
+    public int ShowMenuMovies(string title, List<Movie> options )
     {
         int selected = 0;
         ConsoleKey key;
@@ -106,7 +103,7 @@ public class ShowtimeLogic : IShowtimeService
         return selected;
     }
 
-    public static int ShowMenuAuditoriums(string title, List<Auditorium> options )
+    public int ShowMenuAuditoriums(string title, List<Auditorium> options )
     {
         int selected = 0;
         ConsoleKey key;

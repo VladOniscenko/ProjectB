@@ -10,7 +10,7 @@ using ProjectB.Presentation;
 class Program
 {
     private static ServiceProvider Services;
-    public static User? CurrentUser { get; private set; } = new User();
+    public static User? CurrentUser { get; private set; } = null;
 
     public static string Logo = @"
  ____             __               ____                                              __             
@@ -57,6 +57,10 @@ Use Up & Down keys to select an option.
                 case "LO":
                     Logout();
                     break;
+                case "CS":
+                    var createShowtime = new CreateShowtime(Services);
+                    createShowtime.Run();
+                    break;
                 default:
                     ConsoleMethods.Error("Invalid option.");
                     break;
@@ -94,14 +98,17 @@ Use Up & Down keys to select an option.
             { "UM", "Upcoming Movies" },
             { "AU", "About us" },
         };
-
-        if (CurrentUser != null)
+        
+        
+        // todo remove true
+        if (true || CurrentUser != null)
         {
             menuOptions.Add("LO", "Log out");
 
-            if (CurrentUser.IsAdmin)
+            if (true || CurrentUser.IsAdmin)
             {
                 menuOptions.Add("CM", "Create Movie");
+                menuOptions.Add("CS", "Create Showtime");
             }
         }
         else
