@@ -1,3 +1,4 @@
+using ProjectB.Models;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -72,115 +73,56 @@ namespace ProjectB
                         SelectedIndex = (SelectedIndex + 1) % optionLabels.Count;
                         break;
                 }
-
             } while (keyPressed != ConsoleKey.Enter);
 
             return optionKeys[SelectedIndex];
         }
-
-        static public void RunMenu()
-        {
-            string prompt = @"
- ____             __               ____                                              __             
-/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
-\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
- \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
-  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
-   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
-    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
-               /\___/                                                                               
-               \/__/                                                                                       
-
-Welcome customer!
-Use Up & Down keys to select an option.
-                ";
-
-            Dictionary<string, string> options = new()
-            {
-                { "UP", "Upcoming Movies" },
-                { "AU", "About us" },
-                { "LI", "Login" },
-                { "RE", "Register" },
-                { "EX", "Exit" },
-                { "CM", "Create Movie (admins)" },
-                { "CS", "Create Showtime (admins)" },
-            };
-
-            Menu menu = new Menu(prompt, options);
-
-            string selectedOption = menu.Run();
-            // Code block for keyPressed cases
-            Console.Clear();
-            switch (selectedOption)
-            {
-                case "RE":
-                    MenuActionRegister();
-                    break;
-                case "LI":
-                    Login();
-                    break;
-                case "UP":
-                    MenuActionUpcomingMovies();
-                    break;
-                case "AU":
-                    AboutUs();
-                    break;
-                case "EX":
-                    return;
-                case "CM":
-                    MenuActionCreateMovie();
-                    break;
-                case "CS":
-                    MenuActionCreateShowtime();
-                    break;
-            }
-
-            RunMenu();
-        }
-
-        static void Login()
-        {
-            NotImplemented();
-        }
-
-        static void MenuActionUpcomingMovies()
-        {
-            MovieList movieList = new MovieList();
-            movieList.Run();
-        }
-
-        static void AboutUs()
-        {
-            Console.WriteLine("=== Welcome to Byte Cinema ===");
-            Console.WriteLine("Where storytelling meets cutting-edge technology.");
-            Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");
-            Console.WriteLine("From blockbusters to indie films – we bring stories to life, byte by byte.");
-            Console.WriteLine("Sit back, relax, and enjoy the show.");
-            
-            Console.ReadKey();
-        }        
         
-        static void MenuActionCreateMovie()
+        // create method to use keyboard arrows instead of console input 
+        public static string SelectMenu(string title, Dictionary<string, string> options)
         {
-            CreateMovie.Create();
-        }
-        
-        static void MenuActionRegister()
-        {
-            UserCreation.CreateUser();
-        }
+            int selectedIndex = 0;
+            ConsoleKey key;
+            List<string> optionKeys = options.Keys.ToList();
 
-        static void MenuActionCreateShowtime()
-        {
-            CreateShowtime.Run();
-        }
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(title);
+                Console.WriteLine(new string('=', Console.WindowWidth));
 
-        static void NotImplemented()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Not implemented yet");
-            Console.ResetColor();
-            Console.ReadKey();
+                for (int i = 0; i < optionKeys.Count; i++)
+                {
+                    var value = options[optionKeys[i]];
+                    if (i == selectedIndex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.WriteLine($"> {value} ");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {value}");
+                    }
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedIndex = (selectedIndex + 1) % optionKeys.Count;
+                        break;
+                }
+
+            } while (key != ConsoleKey.Enter);
+
+            return optionKeys[selectedIndex];
         }
     }
 }

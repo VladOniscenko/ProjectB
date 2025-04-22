@@ -1,39 +1,38 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.Models;
 using ProjectB.Logic;
+using ProjectB.Logic.Interfaces;
 
 namespace ProjectB.Presentation;
 
 public class MovieList
 {
     private bool Running;
-    public MovieList()
+    private const int MaxMoviesPerPage = 5;
+    private readonly IServiceProvider _services;
+
+    public MovieList(IServiceProvider services)
     {
+        _services = services;
         Running = false;
     }
 
+    // Takes from the Repo and makes a list of movies
     public void Run()
     {
-        ViewMoviesInRepo();
-    }
-
-    // Takes from the Repo and makes a list of movies
-    private void ViewMoviesInRepo()
-    {
-        IEnumerable<Movie> movies = MovieLogic.GetMoviesWithShowtimeInNextDays(7);
+        var _movieLogic = _services.GetRequiredService<IMovieService>();
+        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays();
 
         if (movies.Count() == 0)
         {
-            Console.WriteLine("No movies available this week.");
-            Console.WriteLine("Press any key to go back to the main menu...");
-            Console.ReadKey();
+            ConsoleMethods.Error("No movies available this week.\nPress any key to go back to the main menu...");
             return;
         }
 
-        const int maxMoviesToShow = 5;
         int page = 0;
 
         // calculate total pages based on total movies and max movies to show
-        int totalPages = (int)Math.Ceiling((double)movies.Count() / maxMoviesToShow);
+        int totalPages = (int)Math.Ceiling((double)movies.Count() / MaxMoviesPerPage);
 
         Running = true;
         while (Running)
@@ -43,7 +42,7 @@ public class MovieList
             Console.WriteLine("===========");
 
             // get movies and show them in the console
-            var moviesToShow = movies.Skip(page * maxMoviesToShow).Take(maxMoviesToShow).ToList();
+            var moviesToShow = movies.Skip(page * MaxMoviesPerPage).Take(MaxMoviesPerPage).ToList();
 
             // convert movies to string options to choose from in the menu
             var movieOptions = moviesToShow.ToDictionary(
@@ -64,7 +63,7 @@ public class MovieList
 
             movieOptions.Add("M", "Back to Main Menu");
             // show the movies in the menu
-            var selectedOption = ShowMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
+            var selectedOption = Menu.SelectMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
             switch (selectedOption)
             {
                 case "N":
@@ -77,10 +76,11 @@ public class MovieList
                     Running = false;
                     break;
                 default:
-                    int movieId = int.Parse(selectedOption);
+                    Movie movie = movies.FirstOrDefault(m => m.Id == int.Parse(selectedOption));
+                    
                     // show the movie details
-                    ShowMovieDetails(moviesToShow.Find(m => m.Id == movieId));
-                    ShowPurchaseMenu();
+                    ShowMovieDetails(movie);
+                    ShowPurchaseMenu(movie);
                     continue;
             }
 
@@ -91,8 +91,9 @@ public class MovieList
     static void ShowMovieDetails(Movie movie)
     {
         Console.Clear();
+        Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("=== MOVIE DETAILS ===");
-        Console.WriteLine("------------------------------");
+        Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine($"Title           : {movie.Title}");
         Console.WriteLine($"Description     : {movie.Description}");
         Console.WriteLine($"Runtime         : {movie.Runtime} minutes");
@@ -102,79 +103,23 @@ public class MovieList
         Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
         Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
         Console.WriteLine($"Country         : {movie.Country}");
-        Console.WriteLine("------------------------------");
     }
 
     /// Shows a menu with options to purchase the selected movie.
-    private void ShowPurchaseMenu()
+    private void ShowPurchaseMenu(Movie movie)
     {
-        int startingRow = Console.CursorTop;
+        int startingRow = Console.CursorTop + 2;
+        List<string> options = new() { "Check availability", "Back to Movie List" };
+        int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
-        List<string> options = new() { "Buy Ticket", "Back to Movie List" };
-
-        int selected = AddMenuFromStartRow("Choose an option:", options, startingRow);
-
-        if (selected == 0)
-        {
-            Console.WriteLine("Ticket purchased successfully!");
-            Console.WriteLine("\nPress any key to return to the movie list...");
-            Console.ReadKey();
-            // Start ticket buying function here
-            Menu.RunMenu();
-            return;
-        }
-        else if (selected == 1)
+        if (selected == 1)
         {
             Console.Clear();
             return;
         }
-    }
-
-    // create method to use keyboard arrows instead of console input 
-    private string ShowMenu(string title, Dictionary<string, string> options)
-    {
-        int selectedIndex = 0;
-        ConsoleKey key;
-        List<string> optionKeys = options.Keys.ToList();
-
-        do
-        {
-            Console.Clear();
-            Console.WriteLine(title);
-            Console.WriteLine(new string('=', title.Length));
-
-            for (int i = 0; i < optionKeys.Count; i++)
-            {
-                var value = options[optionKeys[i]];
-                if (i == selectedIndex)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($"> {value}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"  {value}");
-                }
-                Console.WriteLine(new string('-', value.Length));
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selectedIndex = (selectedIndex + 1) % optionKeys.Count;
-                    break;
-            }
-
-        } while (key != ConsoleKey.Enter);
-
-        return optionKeys[selectedIndex];
+        
+        // start reservation process
+        Program.StartReservation(movie);
     }
 
     /// <summary>
@@ -202,8 +147,9 @@ public class MovieList
             Console.WriteLine();
 
             // Write the menu itself
+            Console.WriteLine(new string('-', Console.WindowWidth));
             Console.WriteLine(title);
-            Console.WriteLine(new string('=', title.Length));
+            Console.WriteLine(new string('-', Console.WindowWidth));
 
             for (int i = 0; i < options.Count; i++)
             {

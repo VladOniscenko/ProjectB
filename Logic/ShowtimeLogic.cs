@@ -1,10 +1,30 @@
 using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
+
 namespace ProjectB.Logic;
 
-public static class ShowtimeLogic
+public class ShowtimeLogic : IShowtimeService
 {
-    // No logic needed, but just in case.
+    private readonly ShowtimeRepository _showtimeRepository;
+    public ShowtimeLogic(ShowtimeRepository showtimeRepository)
+    {
+        _showtimeRepository = showtimeRepository;
+    }
+    
+    public Showtime? Find(int id)
+    {
+        ShowtimeRepository showtimeRepository = new();
+        return showtimeRepository.Find(id);
+    }
+
+    public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 10)
+    {
+        ShowtimeRepository showtimeRepository = new();
+        return showtimeRepository.GetShowtimesByMovieId(movieId, limit);
+    }
+    
+       // No logic needed, but just in case.
     public static bool IsMovieIDValid(string movie)
     {   
         if (string.IsNullOrWhiteSpace(movie))
@@ -131,13 +151,4 @@ public static class ShowtimeLogic
 
         return selected;
     }
-
-    /// <summary>
-    /// Adds a menu to the console from a specified start row.
-    /// </summary>
-    /// <param name="title"> Title of the menu </param>
-    /// <param name="options"> Options the menu provides </param>
-    /// <param name="startRow"> Row from where to start the menu </param>
-    /// <param name="rowBuffer"> Used in addition to the startRow param to maniupulate the actual start of writing the menu. </param>
-    /// <returns></returns>
 }

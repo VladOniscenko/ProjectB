@@ -18,7 +18,7 @@ public class DbFactory
     public static void InitializeDatabase(bool dropAndFill = false)
     {
         if (dropAndFill) {
-            DbFactory.DropTables();
+            DropTables();
         }
         
         // create tables
