@@ -1,11 +1,14 @@
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace ProjectB.Logic;
 
 public class ShowtimeLogic : IShowtimeService
 {
+    public DateTime parsedStartTime { get; set; }
     private readonly ShowtimeRepository _showtimeRepository;
     public ShowtimeLogic(ShowtimeRepository showtimeRepository)
     {
@@ -17,135 +20,49 @@ public class ShowtimeLogic : IShowtimeService
         return _showtimeRepository.Find(id);
     }
 
-    public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 10)
-    {
-        return _showtimeRepository.GetShowtimesByMovieId(movieId, limit);
-    }
-    
-       // No logic needed, but just in case.
     public bool IsMovieIDValid(string movie)
     {   
         if (string.IsNullOrWhiteSpace(movie))
         {
-            BaseUI.ShowErrorMessage("\nNo input given. Please try again.\n", 0);
             return false;
         }
-
-        Console.Clear();
         return true;
     }
 
-    public bool CheckIfDataCorrect(string movie, int auditorium)
+    public bool IsMovieStartTimeValid(string date)
     {
-        Console.Clear();
-        Console.WriteLine("You have entered the following information:");
-        Console.WriteLine(
-            $"    Movie:                {movie}\n    Auditorium:           {auditorium} \n    Begin time:           Placeholder\n    End time:             Placeholder");
-        Console.WriteLine("\n   Is this correct?");
-        Console.Write("    ");
-        return BaseUI.BasicYesOrNo();
+        // DateTime.TryParseExact(input, date format, ?, ?, bool output)
+        // CultureInfo uses a fixed format (so not the system's local date format)
+        // DateTimeStyles refers to different ways of parsing input. .None means parse the exact output
+        // result is the variable where the successfully parsed date gets stored
+        bool dateCheck = DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
+
+        if (string.IsNullOrWhiteSpace(date))
+        {
+            return false;
+        }
+
+        if (!dateCheck)
+        {
+            return false;
+        }
+
+        if (result < DateTime.Now)
+        {
+            return false;
+        }
+
+        parsedStartTime = result;
+        return true;
+    }
+
+    public IEnumerable<Showtime> GetShowtimesByMovieId(int movieId, int limit = 10)
+    {
+        return _showtimeRepository.GetShowtimesByMovieId(movieId, limit);
     }
 
     public void CreateShowtime(Showtime showtime)
     {
         _showtimeRepository.AddShowtime(showtime);
-    }
-
-     // create method to use keyboard arrows instead of console input 
-    public int ShowMenuMovies(string title, List<Movie> options )
-    {
-        int selected = 0;
-        ConsoleKey key;
-        List<string> writtenLines = new();
- 
-        do
-        {
-            Console.SetCursorPosition(0,0);
-            Console.WriteLine(title);
-            Console.WriteLine(new string('═', title.Length));
-
-            for (int i = 0; i < options.Count; i++)
-            {
-                if (i == selected)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($">> {options[i]}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"   {options[i]}");
-                }
-                // Spaces between titles looks ugly tbh.
-                // Console.WriteLine(new string('-', options[i].Length));
-            }
-
-            if (options.Count == 0)
-            {   Console.WriteLine();
-                BaseUI.ShowErrorMessage("\nNo movies found with this title/keyword.", 6);
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selected = (selected == 0) ? options.Count - 1 : selected - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selected = (selected == options.Count - 1) ? 0 : selected + 1;
-                    break;
-            }
-
-        } while (key != ConsoleKey.Enter);
-
-        return selected;
-    }
-
-    public int ShowMenuAuditoriums(string title, List<Auditorium> options )
-    {
-        int selected = 0;
-        ConsoleKey key;
-        List<string> writtenLines = new();
- 
-        do
-        {
-            Console.SetCursorPosition(0,0);
-            Console.WriteLine(title);
-            Console.WriteLine(new string('═', title.Length));
-
-            for (int i = 0; i < options.Count; i++)
-            {
-                if (i == selected)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($">> {options[i]}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"   {options[i]}");
-                }
-                // Spaces between titles looks ugly tbh.
-                // Console.WriteLine(new string('-', options[i].Length));
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selected = (selected == 0) ? options.Count - 1 : selected - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selected = (selected == options.Count - 1) ? 0 : selected + 1;
-                    break;
-            }
-
-        } while (key != ConsoleKey.Enter);
-
-        return selected;
     }
 }
