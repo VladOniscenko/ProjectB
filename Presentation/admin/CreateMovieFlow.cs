@@ -1,4 +1,4 @@
-using Microsoft.Testing.Platform.Services;
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
