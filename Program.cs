@@ -1,13 +1,166 @@
-﻿using ProjectB.Database;
-using ProjectB.Models;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectB;
 using ProjectB.DataAccess;
-namespace ProjectB;
+using ProjectB.Database;
+using ProjectB.Logic;
+using ProjectB.Logic.Interfaces;
+using ProjectB.Models;
+using ProjectB.Presentation;
 
 class Program
 {
-    static void Main()
+    private static ServiceProvider Services;
+    public static User? CurrentUser { get; private set; } = new User();
+
+    public static string Logo = @"
+ ____             __               ____                                              __             
+/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
+\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
+ \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
+  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
+   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
+    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
+               /\___/                                                                               
+               \/__/                                                                                       
+
+Welcome customer!
+Use Up & Down keys to select an option.
+                ";
+
+
+    static void Main(string[] args)
+    {
+        InitializeServices();
+
+        while (true)
+        {
+            Console.Clear();
+            switch (GetMainMenuSelection())
+            {
+                case "RE":
+                    var userCreation = new UserCreation(Services);
+                    userCreation.CreateUser();
+                    break;
+                case "UM":
+                    MovieList movieList = new MovieList(Services);
+                    movieList.Run();
+                    break;
+                case "CM":
+                    var createMovieFlow = new CreateMovieFlow(Services);
+                    createMovieFlow.Run();
+                    break;
+                case "AU":
+                    new AboutUs().Run();
+                    break;
+                case "EX":
+                    return;
+                case "LO":
+                    Logout();
+                    break;
+                default:
+                    ConsoleMethods.Error("Invalid option.");
+                    break;
+            }
+        }
+    }
+
+    private static void InitializeServices()
     {
         DbFactory.InitializeDatabase();
-        Menu.RunMenu();
+
+        var services = new ServiceCollection();
+        
+        services.AddSingleton<UserRepository>();
+        services.AddSingleton<MovieRepository>();
+        services.AddSingleton<ShowtimeRepository>();
+        services.AddSingleton<SeatRepository>();
+        services.AddSingleton<ReservationRepository>();
+        services.AddSingleton<AuditoriumRepository>();
+
+        services.AddSingleton<IUserService, UserLogic>();
+        services.AddSingleton<IMovieService, MovieLogic>();
+        services.AddSingleton<IShowtimeService, ShowtimeLogic>();
+        services.AddSingleton<ISeatService, SeatLogic>();
+        services.AddSingleton<IReservationService, ReservationLogic>();
+        services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
+
+        Services = services.BuildServiceProvider();
     }
+
+    private static string GetMainMenuSelection()
+    {
+        Dictionary<string, string> menuOptions = new()
+        {
+            { "UM", "Upcoming Movies" },
+            { "AU", "About us" },
+        };
+
+        if (CurrentUser != null)
+        {
+            menuOptions.Add("LO", "Log out");
+
+            if (CurrentUser.IsAdmin)
+            {
+                menuOptions.Add("CM", "Create Movie");
+            }
+        }
+        else
+        {
+            menuOptions.Add("RE", "Register");
+            menuOptions.Add("LO", "Log in");
+        }
+        
+        
+        menuOptions.Add( "EX", "Exit" );
+        Menu selectMenu = new Menu(Logo, menuOptions);
+        return selectMenu.Run();
+    }
+
+    public static void StartReservation(Movie movie)
+    {
+        var reservationFlow = new ReservationFlow(
+            Services,
+            movie
+        );
+        
+        reservationFlow.Run();
+    }
+
+    public static void Logout()
+    {
+        CurrentUser = null;
+        AnimateLoadingText("Logging out");
+        ConsoleMethods.Success("You have been logged out.");
+    }
+    
+    public static void AnimateLoadingText(string text, int dotCount = 3, int totalDurationMs = 2000)
+    {
+        Console.Clear();
+        int originalLeft = Console.CursorLeft;
+        int originalTop = Console.CursorTop;
+    
+        DateTime endTime = DateTime.Now.AddMilliseconds(totalDurationMs);
+        int currentDots = 0;
+    
+        while (DateTime.Now < endTime)
+        {
+            Console.SetCursorPosition(originalLeft, originalTop);
+            Console.Write(text);
+        
+            string dots = new string('.', currentDots);
+            dots = dots.PadRight(dotCount);
+        
+            Console.Write(dots);
+            Thread.Sleep(200);
+        
+            currentDots = (currentDots + 1) % (dotCount + 1);
+        }
+    
+        Console.SetCursorPosition(originalLeft, originalTop);
+        Console.Write(new string(' ', text.Length + dotCount));
+        Console.SetCursorPosition(originalLeft, originalTop);
+        Console.WriteLine($"{text}...");
+    }
+
+
 }

@@ -1,7 +1,4 @@
-using static System.Console;
-using ProjectB.Database;
 using ProjectB.Models;
-using ProjectB.DataAccess;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -12,10 +9,10 @@ namespace ProjectB
     class Menu
     {
         private int SelectedIndex = 0;
-        private string[] Options;
+        private Dictionary<string, string> Options;
         private string Prompt;
 
-        public Menu(string prompt, string[] options)
+        public Menu(string prompt, Dictionary<string, string> options)
         {
             Prompt = prompt;
             Options = options;
@@ -23,163 +20,109 @@ namespace ProjectB
 
         public static string CenterText(string text, int boxWidth, bool isActive = false)
         {
-          int spaces = boxWidth - text.Length;
-          if (isActive)
-          {
-            spaces -= 6;
-            text = $">> {text} <<";
-          }
-          int padleft = spaces / 2;
-          int padright = spaces - padleft;
-          return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
+            int spaces = boxWidth - text.Length;
+            if (isActive)
+            {
+                spaces -= 6;
+                text = $">> {text} <<";
+            }
+            int padleft = spaces / 2;
+            int padright = spaces - padleft;
+            return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
         }
-        
+
         public void DisplayOptions()
         {
-            Clear();
-            WriteLine(Prompt);
+            Console.Clear();
+            Console.WriteLine(Prompt);
             
-            WriteLine("╔══════════════════════════════════════╗");
-            for (int i = 0; i < Options.Length; i++)
-            {
-                string currentOption = Options[i];
+            Console.WriteLine("╔══════════════════════════════════════╗");
 
-                if (i == SelectedIndex)
-                {   
-                    WriteLine($"║{CenterText(currentOption, 38, true)}║"); 
-                }
-                else
-                {
-                    WriteLine($"║{CenterText(currentOption, 38)}║"); 
-                } 
+            var optionLabels = Options.Values.ToList();
+            for (int i = 0; i < optionLabels.Count; i++)
+            {
+                string currentOption = optionLabels[i];
+
+                bool isSelected = i == SelectedIndex;
+                Console.WriteLine($"║{CenterText(currentOption, 38, isSelected)}║");
             }
-            WriteLine("╚══════════════════════════════════════╝");
+            Console.WriteLine("╚══════════════════════════════════════╝");
         }
 
-        public int Run()
+        public string Run()
         {
             ConsoleKey keyPressed;
+            List<string> optionKeys = Options.Keys.ToList();
+            List<string> optionLabels = Options.Values.ToList();
+
             do
             {
+                Console.Clear();
                 Console.CursorVisible = false;
-                Console.SetCursorPosition(0, 0);
                 DisplayOptions();
 
-                ConsoleKeyInfo keyInfo = ReadKey(true);
+                ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
                 keyPressed = keyInfo.Key;
 
-                // Code block to update SelectedIndex
-                if (keyPressed == ConsoleKey.UpArrow)
+                switch (keyPressed)
                 {
-                    SelectedIndex = (SelectedIndex - 1 + Options.Length) % Options.Length;
+                    case ConsoleKey.UpArrow:
+                        SelectedIndex = (SelectedIndex - 1 + optionLabels.Count) % optionLabels.Count;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        SelectedIndex = (SelectedIndex + 1) % optionLabels.Count;
+                        break;
                 }
-                else if (keyPressed == ConsoleKey.DownArrow)
-                {
-                    SelectedIndex = (SelectedIndex + 1) % Options.Length;
-                }
-            }
-            while (keyPressed != ConsoleKey.Enter);
- 
-            return SelectedIndex;
-        }
+            } while (keyPressed != ConsoleKey.Enter);
 
-        static public void RunMenu()
-        {
-            string prompt = @"
- ____             __               ____                                              __             
-/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
-\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
- \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
-  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
-   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
-    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
-               /\___/                                                                               
-               \/__/                                                                                       
-
-Welcome customer!
-Use Up & Down keys to select an option.
-                ";
-            string[] options = { "Register", "Login", "Movies", "About us", "Exit", "Create Movie (admin only)" };
-            Menu menu = new Menu(prompt, options);
-            int SelectedIndex = menu.Run();
-
-            // Code block for keyPressed cases
-            Console.Clear();
-            switch(SelectedIndex)
-            {
-                case 0:
-                    MenuActionRegister();
-                    break;
-                case 1:
-                    Login();
-                    break;
-                case 2:
-                    Movies();
-                    break;
-                case 3:
-                    AboutUs();
-                    break;
-                case 4:
-                    return;
-                case 5:
-                    MenuActionCreateMovie();
-                    break;
-            }
-
-            RunMenu();
-        }
-
-        static void Login()
-        {
-            NotImplemented();
-        }
-
-        static void Movies()
-        {
-            // NotImplemented();
-            
-            // todo this is temporary for the presentation
-            Console.WriteLine("=== Newest and best rated movies ===");
-            
-            var movieRepo = new MovieRepository();
-            foreach (Movie movie in movieRepo.GetBestAndNewestMovies())
-            {
-                Console.WriteLine($"{movie}");
-            }
-            
-            Console.ReadKey();
-        }
-
-        static void AboutUs()
-        {
-            // NotImplemented();
-            
-            // todo this is temporary for the presentation
-            Console.WriteLine("=== Welcome to Byte Cinema ===");
-            Console.WriteLine("Where storytelling meets cutting-edge technology.");
-            Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");
-            Console.WriteLine("From blockbusters to indie films – we bring stories to life, byte by byte.");
-            Console.WriteLine("Sit back, relax, and enjoy the show.");
-            
-            Console.ReadKey();
-        }        
-        
-        static void MenuActionCreateMovie()
-        {
-            CreateMovie.Create();
+            return optionKeys[SelectedIndex];
         }
         
-        static void MenuActionRegister()
+        // create method to use keyboard arrows instead of console input 
+        public static string SelectMenu(string title, Dictionary<string, string> options)
         {
-            UserCreation.CreateUser();
-        }
+            int selectedIndex = 0;
+            ConsoleKey key;
+            List<string> optionKeys = options.Keys.ToList();
 
-        static void NotImplemented()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Not implemented yet");
-            Console.ResetColor();
-            Console.ReadKey();
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(title);
+                Console.WriteLine(new string('=', Console.WindowWidth));
+
+                for (int i = 0; i < optionKeys.Count; i++)
+                {
+                    var value = options[optionKeys[i]];
+                    if (i == selectedIndex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.WriteLine($"> {value} ");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {value}");
+                    }
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedIndex = (selectedIndex + 1) % optionKeys.Count;
+                        break;
+                }
+
+            } while (key != ConsoleKey.Enter);
+
+            return optionKeys[selectedIndex];
         }
     }
 }

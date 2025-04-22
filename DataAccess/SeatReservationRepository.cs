@@ -15,6 +15,7 @@ public class SeatReservationRepository
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 SeatId INTEGER NOT NULL,
                 ReservationId INTEGER NOT NULL,
+                ShowtimeId INTEGER NOT NULL,
                 FOREIGN KEY (SeatId) REFERENCES Seats(Id)
             );
         ");
@@ -25,8 +26,8 @@ public class SeatReservationRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         connection.Execute(@"
-            INSERT INTO SeatReservations (SeatId, ReservationId) 
-            VALUES (@SeatId, @ReservationId)", seatReservation);
+            INSERT INTO SeatReservations (SeatId, ReservationId, ShowtimeId) 
+            VALUES (@SeatId, @ReservationId, @ShowtimeId)", seatReservation);
     }
 
     public IEnumerable<SeatReservation> GetAllSeatReservations()
@@ -34,5 +35,13 @@ public class SeatReservationRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<SeatReservation>("SELECT * FROM SeatReservations");
+    }
+    
+    public IEnumerable<SeatReservation> GetReservedSeatsByShowtimeId(int id)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<SeatReservation>(@"SELECT * FROM SeatReservations WHERE ShowtimeId = @Id",
+            new { Id = id });
     }
 }

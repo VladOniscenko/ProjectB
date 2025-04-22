@@ -1,13 +1,22 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
-public static class UserCreation
+public class UserCreation
 {
     // needs to check if account was already made and all fields are according to standards
+
     const int BoxX = 20;
     const int Width = 35;
+  
+    private readonly IServiceProvider _services;
+    public UserCreation(IServiceProvider services)
+    {
+        _services = services;
+    }
 
     public static void CreateUser(User? user = null)
     {
@@ -17,6 +26,8 @@ public static class UserCreation
         Console.WriteLine("╔══════════════════════╗");
         Console.WriteLine("║   Create New User    ║");
         Console.WriteLine("╚══════════════════════╝");
+        
+        var _userService = _services.GetRequiredService<IUserService>();
 
         User newUser = new User();
         if (user is not null)
@@ -24,7 +35,7 @@ public static class UserCreation
             newUser = user;
         }
         newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
-        while (!UserLogic.IsNameValid(newUser.FirstName))
+        while (!_userService.IsNameValid(newUser.FirstName))
         {
             BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 5);
             newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
@@ -34,7 +45,7 @@ public static class UserCreation
         Console.Write("                                                                                     ");
 
         newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
-        while (!UserLogic.IsNameValid(newUser.LastName))
+        while (!_userService.IsNameValid(newUser.LastName))
         {
             BaseUI.ShowErrorMessage( "Name must be longer than 3 characters and can only contain letters", 7);
             newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
@@ -44,9 +55,9 @@ public static class UserCreation
         Console.Write("                                                                                     ");
 
         newUser.Email = BaseUI.DrawInputBox("Email", BoxX, Width, 0, 8, newUser.Email);
-        while (!UserLogic.IsEmailValid(newUser.Email) || UserLogic.DoesUserExist(newUser.Email))
+        while (!_userService.IsEmailValid(newUser.Email) || _userService.DoesUserExist(newUser.Email))
         {
-            if (!UserLogic.IsEmailValid(newUser.Email))
+            if (!_userService.IsEmailValid(newUser.Email))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid email address", 9);
             }
@@ -66,7 +77,7 @@ public static class UserCreation
 
         newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
 
-        while (!UserLogic.IsPasswordValid(newUser.Password))
+        while (!_userService.IsPasswordValid(newUser.Password))
         {
             BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
                                     11);
@@ -90,7 +101,7 @@ public static class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            UserLogic.CreateUser(newUser);
+            _userService.CreateUser(newUser);
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
         }
@@ -100,7 +111,7 @@ public static class UserCreation
         }
     }
 
-    public static bool CheckIfDataCorrect(User user)
+    public bool CheckIfDataCorrect(User user)
     {
         Console.Clear();
         Console.WriteLine("You have entered the following information:");
