@@ -1,4 +1,3 @@
-using ProjectB.Models;
 using ProjectB.Presentation;
 
 // Used this video to help me out
@@ -12,9 +11,7 @@ namespace ProjectB
         private Dictionary<string, string> Options;
         private string Prompt;
 
-        
-
-        public Menu(string prompt, Dictionary<string, string> options, User currentUser)
+        public Menu(string prompt, Dictionary<string, string> options)
         {
             Prompt = prompt;
             Options = options;
@@ -75,132 +72,56 @@ namespace ProjectB
                         SelectedIndex = (SelectedIndex + 1) % optionLabels.Count;
                         break;
                 }
-
             } while (keyPressed != ConsoleKey.Enter);
 
             return optionKeys[SelectedIndex];
         }
-
-        static public void RunMenu()
-{
-    User? user = null;
-
-    while (true)
-    {
-        string prompt = @$"
- ____             __               ____                                              __             
-/\  _`\          /\ \__           /\  _`\    __                                     /\ \            
-\ \ \L\ \  __  __\ \ ,_\    __    \ \ \/\_\ /\_\    ___      __    ___ ___      __  \ \/      ____  
- \ \  _ <'/\ \/\ \\ \ \/  /'__`\   \ \ \/_/_\/\ \ /' _ `\  /'__`\/' __` __`\  /'__`\ \/      /',__\ 
-  \ \ \L\ \ \ \_\ \\ \ \_/\  __/    \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \/\ \/\ \/\ \L\.\_      /\__, `\
-   \ \____/\/`____ \\ \__\ \____\    \ \____/ \ \_\ \_\ \_\ \____\ \_\ \_\ \_\ \__/.\_\     \/\____/
-    \/___/  `/___/> \\/__/\/____/     \/___/   \/_/\/_/\/_/\/____/\/_/\/_/\/_/\/__/\/_/      \/___/ 
-           /\___/                                                                                   
-           \/__/                                                                                       
-
-Welcome customer!
-Use Up & Down keys to select an option.
-                ";
-
         
-
-        Dictionary<string, string> options = new()
+        // create method to use keyboard arrows instead of console input 
+        public static string SelectMenu(string title, Dictionary<string, string> options)
         {
-            { "UP", "Upcoming Movies" },
-            { "AU", "About us" },
-            { "LI", "Login" },
-            { "RE", "Register" },
-            { "EX", "Exit" },
-        };
+            int selectedIndex = 0;
+            ConsoleKey key;
+            List<string> optionKeys = options.Keys.ToList();
 
-        if (user != null)
-        {
-            prompt += $"\nWelcome back:{user.FirstName}";
-
-            options = new()
+            do
             {
-            { "UP", "Upcoming Movies" },
-            { "AU", "About us" },
-            { "AD", "View account details"},
-            { "EX", "Exit" },
-            { "CM", "Create Movie (admins)" },
-            };
-        }
-
-        Menu menu = new Menu(prompt, options, user);
-
-        string selectedOption = menu.Run();
-        Console.Clear();
-
-        switch (selectedOption)
-        {
-            case "RE":
-               user = MenuActionRegister();
-                break;
-            case "LI":
                 Console.Clear();
-                if (user != null)
+                Console.WriteLine(title);
+                Console.WriteLine(new string('=', Console.WindowWidth));
+
+                for (int i = 0; i < optionKeys.Count; i++)
                 {
-                    Console.WriteLine("Already logged in!");
-                    Thread.Sleep(1000);
-                    break;
+                    var value = options[optionKeys[i]];
+                    if (i == selectedIndex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.WriteLine($"> {value} ");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {value}");
+                    }
+                    Console.WriteLine(new string('-', Console.WindowWidth));
                 }
-                user = Login();
-                break;
-            case "UP":
-                MenuActionUpcomingMovies();
-                break;
-            case "AU":
-                AboutUs();
-                break;
-            case "EX":
-                return;
-            case "CM":
-                MenuActionCreateMovie();
-                break;
-        }
-    }
-}
-            
 
-        static User Login()
-        {
-            return UserLogin.Login();
-        }
+                key = Console.ReadKey(true).Key;
 
-        static void MenuActionUpcomingMovies()
-        {
-            MovieList movieList = new MovieList();
-            movieList.Run();
-        }
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex == 0) ? optionKeys.Count - 1 : selectedIndex - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedIndex = (selectedIndex + 1) % optionKeys.Count;
+                        break;
+                }
 
-        static void AboutUs()
-        {
-            Console.WriteLine("=== Welcome to Byte Cinema ===");
-            Console.WriteLine("Where storytelling meets cutting-edge technology.");
-            Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");
-            Console.WriteLine("From blockbusters to indie films – we bring stories to life, byte by byte.");
-            Console.WriteLine("Sit back, relax, and enjoy the show.");
-            
-            Console.ReadKey();
-        }        
-        
-        static void MenuActionCreateMovie()
-        {
-            CreateMovie.Create();
-        }
-        
-        static User MenuActionRegister()
-        {
-            return UserCreation.CreateUser();
-        }
+            } while (key != ConsoleKey.Enter);
 
-        static void NotImplemented()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Not implemented yet");
-            Console.ResetColor();
-            Console.ReadKey();
+            return optionKeys[selectedIndex];
         }
     }
 }

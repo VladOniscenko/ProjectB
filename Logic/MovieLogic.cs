@@ -1,20 +1,41 @@
 using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Logic;
 
-public static class MovieLogic
+public class MovieLogic : IMovieService
 {
-    public static bool CreateMovie(Movie movie)
+    private readonly MovieRepository _movieRepository;
+
+    public MovieLogic(MovieRepository movieRepo)
     {
-        MovieRepository movieRepository = new MovieRepository();
-        movieRepository.AddMovie(movie);
+        _movieRepository = movieRepo;
+    }
+    
+    public bool CreateMovie(Movie movie)
+    {
+        _movieRepository.AddMovie(movie);
         return true;
     }
 
-    public static bool ValidateInput<T>(int min = 0, int max = 100, string input = null)
-    { 
+    public IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7)
+    {
+        return _movieRepository.GetMoviesWithShowtimeInNextDays(days);
+    }
+    
+    public Movie? Find(int id)
+    {
+        return _movieRepository.Find(id);
+    }
 
+    public IEnumerable<Movie> All()
+    {
+        return _movieRepository.GetAllMovies();
+    }
+    
+    public bool ValidateInput<T>(int min = 0, int max = 100, string input = null)
+    { 
         if (typeof(T) == typeof(int))
         {
             if (int.TryParse(input, out int value) && value >= min && value <= max)
@@ -44,12 +65,5 @@ public static class MovieLogic
             }
         }
         return false;
-    }
-
-
-    public static IEnumerable<Movie> GetMoviesWithShowtimeInNextDays(int days = 7)
-    {
-        MovieRepository movieRepository = new MovieRepository();
-        return movieRepository.GetMoviesWithShowtimeInNextDays(days);
     }
 }

@@ -31,7 +31,7 @@ public class UserRepository
             var userRepo = new UserRepository();
 
             // Check if an admin with the specific email exists
-            if (CheckIfUserExistByEmail("admin@admin.com"))
+            if (userRepo.CheckIfUserExistByEmail("admin@admin.com"))
             {
                 var adminUser = new User
                 {
@@ -69,11 +69,6 @@ public class UserRepository
         VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
 
-    public bool VerifyPassword(string enteredPassword, string storedHash)
-    {
-        return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
-    }
-
     public IEnumerable<User> GetAllUsers()
     {
         using var connection = DbFactory.CreateConnection();
@@ -81,59 +76,17 @@ public class UserRepository
         return connection.Query<User>("SELECT * FROM Users");
     }
 
-    public static bool CheckIfUserExistByEmail(string email)
+    public bool CheckIfUserExistByEmail(string email)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return !(connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new { email }).Count() == 0);
     }
 
-    public static string GetUserEmail(string email)
+    public User? GetUserByEmail(string email)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        var result = connection.Query<User>("SELECT Email FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
-        
-        if (result != null)
-        {
-            return result.Email;
-        }
-        else
-        {
-            return "";
-        }  
-    }
-
-    public static User GetUserWithEmail(string email)
-    {
-        using var connection = DbFactory.CreateConnection();
-        connection.Open();
-        var result = connection.Query<User>("SELECT * FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
-        
-        if (result != null)
-        {
-            return result;
-        }
-        else
-        {
-            return null;
-        }  
-    }
-
-    public static string GetUserPassword(string email)
-    {
-        using var connection = DbFactory.CreateConnection();
-        connection.Open();
-        var passwordHash = connection.Query<User>("SELECT Password FROM Users WHERE Email = @email", new {email}).FirstOrDefault();
-        
-        if (passwordHash != null)
-        {
-            return passwordHash.Password;
-        }
-        else
-        {
-            return "";
-        }
-        
+        return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email", new { email });
     }
 }

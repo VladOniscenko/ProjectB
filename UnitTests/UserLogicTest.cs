@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ProjectB.Logic;
+using ProjectB.DataAccess;
 
 namespace UnitTests;
 
@@ -10,6 +10,15 @@ public class UserLogicTest
     public void TestMethod1()
     {
     }
+    
+    private UserLogic _userLogic;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        var userRepository = new UserRepository();
+        _userLogic = new UserLogic(userRepository);
+    }
 
 
     [DataTestMethod]
@@ -18,7 +27,7 @@ public class UserLogicTest
     [DataRow("")]
     public void IsNameValid_CharacterLengthTooSmall_False(string name)
     {
-        bool actual = UserLogic.IsNameValid(name);
+        bool actual = _userLogic.IsNameValid(name);
         Assert.AreEqual(false, actual);
     }
 
@@ -31,7 +40,7 @@ public class UserLogicTest
     [DataRow("Abababa")]
     public void IsNameValid_ValidName_True(string name)
     {
-        bool actual = UserLogic.IsNameValid(name);
+        bool actual = _userLogic.IsNameValid(name);
         Assert.AreEqual(true, actual);
     }
 
@@ -41,7 +50,7 @@ public class UserLogicTest
     [DataRow("Abab3")]
     public void IsNameValid_NameWithSymbolsOrNumbers_false(string name)
     {
-        bool actual = UserLogic.IsNameValid(name);
+        bool actual = _userLogic.IsNameValid(name);
         Assert.AreEqual(false, actual);
     }
 
@@ -52,7 +61,7 @@ public class UserLogicTest
     [DataRow("@Notanemail")]
     public void IsEmailValid_InvalidEmail_false(string email)
     {
-        bool actual = UserLogic.IsEmailValid(email);
+        bool actual = _userLogic.IsEmailValid(email);
         Assert.AreEqual(false, actual);
     }
 
@@ -61,7 +70,7 @@ public class UserLogicTest
     public void IsEmailValid_ValidEmail_True()
     {
         string email = "valid@email.com";
-        bool actual = UserLogic.IsEmailValid(email);
+        bool actual = _userLogic.IsEmailValid(email);
         Assert.AreEqual(true, actual);
     }
 }

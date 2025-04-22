@@ -1,59 +1,60 @@
 using System.ComponentModel.DataAnnotations;
 using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
-namespace ProjectB.Logic;
-public static class UserLogic
-{
-    private static EmailAddressAttribute email = new EmailAddressAttribute();
 
-    public static bool IsNameValid(string name){
+public class UserLogic : IUserService
+{
+    private UserRepository _userRepository;
+    public UserLogic(UserRepository userRepository) {
+        _userRepository = userRepository;
+    }
+
+    private EmailAddressAttribute email = new EmailAddressAttribute();
+
+    public bool IsNameValid(string name){
         return !(name.Length < 3 || name.Any(c => !char.IsLetter(c)));
     }
 
-    public static bool IsPasswordValid(string password){
-        return !(password.Length < 4 || !password.Any(c => !char.IsLetterOrDigit(c)) ||
-        !password.Any(char.IsUpper) || !password.Any(char.IsDigit));
+
+    public bool IsPasswordValid(string password){
+        return !(password.Length < 8); 
+        // return !(password.Length < 4 || !password.Any(c => !char.IsLetterOrDigit(c)) ||
+        // !password.Any(char.IsUpper) || !password.Any(char.IsDigit));
     }
 
-    public static bool IsEmailValid(string newEmail){
+    public bool IsPasswordIdentical(string passwordEntry1, string passwordEntry2){
+        return passwordEntry1 == passwordEntry2;
+
+    }
+
+    public bool IsEmailValid(string newEmail){
         return email.IsValid(newEmail);
     }
 
-    public static bool DoesUserExist(string newEmail){
-        return UserRepository.CheckIfUserExistByEmail(newEmail);
+    public bool DoesUserExist(string newEmail){
+        return _userRepository.CheckIfUserExistByEmail(newEmail);
     }
 
-    public static void CreateUser(User user)
+    public void CreateUser(User user)
     {
-        UserRepository userRepository = new UserRepository();
-        userRepository.AddUser(user);
+        _userRepository.AddUser(user);
     }
-
-    public static User IsUserValidWithEmail(string user)
+    
+    private bool VerifyPassword(string enteredPassword, string storedHash)
     {
-        if (UserRepository.GetUserWithEmail(user) is User);
+        return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
+    }
+    
+    public User? Authenticate(string email, string password)
+    {
+        User? user = _userRepository.GetUserByEmail(email);
+        if (user != null && VerifyPassword(password, user.Password))
         {
-            return UserRepository.GetUserWithEmail(user);
+            return user;
         }
-    }
 
-    public static bool IsEmailFoundAndCorrect(string Email)
-    {
-        return !(UserRepository.GetUserEmail(Email).Length > 1);
-    }
-    public static bool IsPasswordFoundAndCorrect(string email, string password)
-    {
-
-        var HashPassword = UserRepository.GetUserPassword(email);
-
-        if (HashPassword != "" && BCrypt.Net.BCrypt.Verify(password,HashPassword))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return null;
     }
 }

@@ -1,45 +1,45 @@
-using System.Reflection.Emit;
-using ProjectB.DataAccess;
-using ProjectB.Logic;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
-public static class UserLogin
+public class UserLogin
 {
-    public static User Login()
+    private readonly IServiceProvider _services;
+    private readonly IUserService _userService;
+    public UserLogin(IServiceProvider services)
     {
-        Console.WriteLine("╔══════════════════════════╗");
-        Console.WriteLine("║ Enter your login details ║");
-        Console.WriteLine("╚══════════════════════════╝");
-        bool succesLog = false; 
-        while (!succesLog)
+        _services = services;
+        _userService = services.GetRequiredService<IUserService>();
+    }
+    
+    public void Run()
+    {
+        while (true)
         {
-            string UserEmail = BaseUI.DrawInputBox("Email",15,30,0,4);
-            while (UserLogic.IsEmailFoundAndCorrect(UserEmail))
-            {
-                BaseUI.ShowErrorMessage("User not found or incorrect", 5);
-                UserEmail = BaseUI.DrawInputBox("Email",15,30,0,4);
-            }
-
+            Console.Clear();
+            Console.WriteLine("╔══════════════════════════╗");
+            Console.WriteLine("║ Enter your login details ║");
+            Console.WriteLine("╚══════════════════════════╝");
+            
+            string email = BaseUI.DrawInputBox("Email",15,30,0,4);
             Console.SetCursorPosition(0,5);
             Console.Write("                                                                                     ");
 
-            string UserPassword = BaseUI.DrawInputBox("Password",15,30,0,6,null,true);
-            while (!UserLogic.IsPasswordFoundAndCorrect(UserEmail,UserPassword))
+            string password = BaseUI.DrawInputBox("Password",15,30,0,6,null,true);
+            ConsoleMethods.AnimateLoadingText("Logging in");
+            User? user = _userService.Authenticate(email, password);
+            if (user == null)
             {
-                BaseUI.ShowErrorMessage("User not found or incorrect", 7);
-                UserPassword = BaseUI.DrawInputBox("Password",15,30,0,6,null,true);
+                ConsoleMethods.Error("Email or password incorrect!");
+                continue;
             }
-
-            Console.SetCursorPosition(0,7);
-            Console.Write("                                                                                     ");
-                
-            BaseUI.ConfirmingMessage("You succesfully logged in(press any key to continue)",9);
-            Console.ReadKey();
-            return UserLogic.IsUserValidWithEmail(UserEmail);
+            
+            ConsoleMethods.Success("You successfully logged in");
+            Program.CurrentUser = user;
+            return;
         }
-        return null;
     }
         
 }
