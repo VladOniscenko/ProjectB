@@ -9,6 +9,7 @@ public class AboutUs
 
     public void Run()
     {
+        Console.Clear();
         Console.WriteLine("=== Welcome to Byte Cinema ===");
         Console.WriteLine("Where storytelling meets cutting-edge technology.");
         Console.WriteLine("Experience ultra-crisp visuals, immersive sound, and an unforgettable atmosphere.");

@@ -141,7 +141,7 @@ public class ReservationFlow
             
             
             sb.AppendLine($"End: {_showtime.EndTime}");
-            sb.AppendLine($"Auditorium {_auditorium.Name}");
+            sb.AppendLine($"Auditorium: {_auditorium.Name}");
         }
 
         if (_seats != null && _seats.Count() > 0)
