@@ -47,6 +47,9 @@ public class CreateShowtime
             movieName = Console.ReadLine().Trim();
         }
 
+        // If not this, after incorrect input, menu won't search movies based on user input.
+        movies = movieRepository.GetMoviesByTitle(movieName);
+
         Console.Clear();
 
         int selectedMovieIndex = ShowMenuMovies("Found the following movies:", movies);

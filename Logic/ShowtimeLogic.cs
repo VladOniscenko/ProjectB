@@ -22,7 +22,7 @@ public class ShowtimeLogic : IShowtimeService
 
     public bool IsMovieIDValid(string movie)
     {   
-        if (string.IsNullOrWhiteSpace(movie))
+        if (movie == "")
         {
             return false;
         }
