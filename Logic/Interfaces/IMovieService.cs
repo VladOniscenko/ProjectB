@@ -9,5 +9,7 @@ public interface IMovieService
     Movie? Find(int id);
     IEnumerable<Movie> All();
 
+    List<Movie> GetPromotedMovies();
+
     bool ValidateInput<T>(int min = 0, int max = 100, string input = null);
 }
