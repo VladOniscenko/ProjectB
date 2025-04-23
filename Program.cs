@@ -119,9 +119,16 @@ class Program
         menuOptions.Add("EX", "Exit");
         
         var customerName = CurrentUser is not null ? $"back {CurrentUser.FirstName}" : "";
+        List<Movie> Promotedmovie = new MovieLogic(new MovieRepository()).GetPromotedMovies();
 
         var heading = $"""
                        {Logo}
+                       
+                       This Week’s Top 3 Movies — Pick Your Favorite and Enjoy the Show!
+                       1: {Promotedmovie[0]}
+                       2: {Promotedmovie[1]}
+                       3: {Promotedmovie[2]}
+                       
                        Welcome {customerName}to the Byte Cinema!
                        Use Up & Down keys to select an option.
                        
