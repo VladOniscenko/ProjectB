@@ -206,6 +206,7 @@ public class ReservationFlow
                 break;
             
             case ReservationState.Tickets:
+                // 2. select tickets type (childrent, adults, seniors)
                 TicketSelection ticketSelection = new(_services, _seats);
                 IEnumerable<Seat> seats = ticketSelection.Run();
                 if (seats != null && seats.Count() > 0)

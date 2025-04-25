@@ -104,7 +104,7 @@ public class SeatSelection
 
             ConsoleColor? seatColor = seat.Type switch
             {
-                "love_seat" => ConsoleColor.Yellow,
+                "premium" => ConsoleColor.Yellow,
                 "vip" => ConsoleColor.Red,
                 "normal" => ConsoleColor.Blue,
                 _ => null
@@ -168,7 +168,7 @@ public class SeatSelection
         Console.WriteLine("[ ] - Normal seat");
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("[ ] - Love seat");
+        Console.WriteLine("[ ] - Premium seat");
 
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("[ ] - VIP seat\n");

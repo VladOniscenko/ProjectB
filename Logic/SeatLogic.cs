@@ -56,7 +56,7 @@ public class SeatLogic : ISeatService
         Dictionary<string, decimal> seatTypeAdjustments = new()
         {
             {"normal", 0.00m},
-            {"love_seat", 3.00m},
+            {"premium", 3.00m},
             {"vip", 5.00m}
         };
 

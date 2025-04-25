@@ -41,7 +41,7 @@ public class SeatRepository
         foreach (Auditorium auditorium in auditoriumRepository.GetAllAuditoriums())
         {
             HashSet<(int row, int number)> disabledSeats = new();
-            HashSet<(int row, int number)> loveSeats = new();
+            HashSet<(int row, int number)> premiumSeats = new();
             HashSet<(int row, int number)> vipSeats = new();
             int rows = 0;
             int cols = 0;
@@ -58,7 +58,7 @@ public class SeatRepository
                     (14, 1), (14, 2), (14, 11), (14, 12)
                 };
 
-                loveSeats = new()
+                premiumSeats = new()
                 {
                     (4, 6), (4, 7),
                     (5, 5), (5, 6), (5, 7), (5, 8),
@@ -95,7 +95,7 @@ public class SeatRepository
                     (14, 18), (15, 18), (16, 18), (17, 18), (18, 18), (19, 18)
                 };
                 
-                loveSeats = new()
+                premiumSeats = new()
                 {
                     (4, 7), (4, 8), (4, 9), (4, 10), (4, 11), (4, 12),
                     (5, 7), (5, 8), (5, 9), (5, 10), (5, 11), (5, 12),
@@ -149,7 +149,7 @@ public class SeatRepository
                 };
                 
                 
-                loveSeats = new ()
+                premiumSeats = new ()
                 {
                     (4, 13), (4, 14), (4, 15), (4, 16), (4, 17), (4, 18),
                     (5, 11), (5, 12), (5, 13), (5, 14), (5, 15), (5, 16), (5, 17), (5, 18), (5, 19), (5, 20),
@@ -200,9 +200,9 @@ public class SeatRepository
                         {
                             type = "vip";
                         }
-                        else if (loveSeats.Contains((row, number)))
+                        else if (premiumSeats.Contains((row, number)))
                         {
-                            type = "love_seat";
+                            type = "premium";
                         }
                         else
                         {
