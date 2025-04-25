@@ -60,8 +60,13 @@ public class SeatLogic : ISeatService
             {"vip", 5.00m}
         };
 
-        string safeTicketType = ticketType?.ToLower() ?? "adult";
-        string safeSeatType = seat.Type?.ToLower() ?? "normal";
+        string? safeTicketType = ticketType?.ToLower() ?? null;
+        string? safeSeatType = seat.Type?.ToLower() ?? null;
+
+        if (safeTicketType == null || safeSeatType == null)
+        {
+            return 0.00m;
+        }
 
         decimal basePrice = baseTicketPrices.GetValueOrDefault(safeTicketType, 0.00m);
         decimal adjustment = seatTypeAdjustments.GetValueOrDefault(safeSeatType, 0.00m);

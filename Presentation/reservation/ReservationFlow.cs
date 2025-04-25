@@ -10,7 +10,7 @@ public class ReservationFlow
 {
     private ReservationLogic Reservation;
     private Showtime SelectedShowtime;
-    
+
     private readonly IServiceProvider _services;
     private readonly IAuditoriumService _auditoriumService;
     private readonly ISeatService _seatService;
@@ -20,7 +20,7 @@ public class ReservationFlow
     private ReservationState _currentState = ReservationState.Showtime;
     private bool Running = false;
     private Auditorium? _auditorium { get; set; } = null;
-    
+
     public ReservationFlow(IServiceProvider services, Movie movie)
     {
         _services = services;
@@ -28,7 +28,7 @@ public class ReservationFlow
         _seatService = services.GetRequiredService<ISeatService>();
         _movie = movie;
     }
-    
+
     enum ReservationState
     {
         Showtime = 0,
@@ -49,12 +49,12 @@ public class ReservationFlow
             // Checks what is the current state and handles it
             // if the state is showtime it opens showtime selection etc.
             HandleReservationStep();
-            
+
             var options = new Dictionary<string, string>()
             {
-                {"NX", "Go further"}
+                { "NX", "Go further" }
             };
-            
+
             if (_currentState != ReservationState.Showtime)
             {
                 options.Add("SB", "Step back");
@@ -76,7 +76,7 @@ public class ReservationFlow
                         _currentState = ReservationState.Seats;
                         _seats = null;
                     }
-                    
+
                     if (_currentState == ReservationState.Confirmation)
                     {
                         _currentState = ReservationState.Tickets;
@@ -85,20 +85,14 @@ public class ReservationFlow
                             seat.TicketType = null;
                         }
                     }
-                    
+
                     break;
-                
+
                 case "CR":
                     Running = false;
                     break;
             }
         }
-
-        
-        
-        
-
-        
 
 
         // 3. select tickets type (childrent, adults, seniors)
@@ -112,74 +106,103 @@ public class ReservationFlow
         // 7. pay
     }
 
+
+    private string SelectedShowtimeInfo()
+    {
+        if (_showtime == null) return "";
+
+
+        var sb = new StringBuilder();
+        int contentWidth = 72; // 76 breedte - 2║ en 2 spaties
+
+        sb.AppendLine();
+        sb.AppendLine("╔══════════════════════════════════════════════════════════════════════════╗");
+        sb.AppendLine("║                             Selected Showtime                            ║");
+        sb.AppendLine("╠══════════════════════════════════════════════════════════════════════════╣");
+        sb.AppendLine("║  Date        ║  Start    ║  End      ║  Auditorium                       ║");
+        sb.AppendLine("╠══════════════╬═══════════╬═══════════╬═══════════════════════════════════╣");
+
+        string date = _showtime.StartTime.ToString("dd-MM-yyyy");
+        string start = _showtime.StartTime.ToString("HH:mm");
+        string end = _showtime.EndTime.ToString("HH:mm");
+        string auditorium = (_auditorium?.Name ?? "N/A").PadRight(33).Substring(0, 31);
+
+        sb.AppendLine($"║  {date,-10}  ║  {start,-7}  ║  {end,-7}  ║  {auditorium}  ║");
+        sb.AppendLine("╚══════════════════════════════════════════════════════════════════════════╝");
+
+        return sb.ToString();
+    }
+
+
+    private string SelectedMovieInfo()
+    {
+        var sb = new StringBuilder();
+        int contentWidth = 70;
+
+        sb.AppendLine("╔══════════════════════════════════════════════════════════════════════════╗");
+        sb.AppendLine("║                               Selected Movie                             ║");
+        sb.AppendLine("╠══════════════════════════════════════════════════════════════════════════╣");
+
+        sb.AppendLine($"║  {TruncateAndPad($"Title: {_movie.Title}", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Runtime: {_movie.Runtime} minutes", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Actors: {_movie.Actors}", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Rating: {_movie.Rating}/10", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Genre: {_movie.Genre}", contentWidth)}  ║");
+
+        if (_movie.AgeRestriction > 0)
+            sb.AppendLine($"║  {TruncateAndPad($"Age restriction: {_movie.AgeRestriction}", contentWidth)}  ║");
+
+        sb.AppendLine($"║  {TruncateAndPad($"Release date: {_movie.ReleaseDate:yyyy-MM-dd}", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Country: {_movie.Country}", contentWidth)}  ║");
+
+        sb.AppendLine("╚══════════════════════════════════════════════════════════════════════════╝");
+
+        return sb.ToString();
+    }
+
+    private string SelectedSeatsInfo()
+    {
+        if (_seats == null || !_seats.Any()) return string.Empty;
+
+        decimal totalPrice = _seatService.GetTotalPrice(_seats);
+        var sb = new StringBuilder();
+
+        sb.AppendLine();
+        sb.AppendLine("╔══════════════════════════════════════════════════════════════════════════╗");
+        sb.AppendLine("║                               Selected Seats                             ║");
+        sb.AppendLine("╠══════════════════════════════════════════════════════════════════════════╣");
+        sb.AppendLine("║  Row    ║  Seat   ║  Seat Type     ║  Ticket Type    ║  Price            ║");
+        sb.AppendLine("╠═════════╬═════════╬════════════════╬═════════════════╬═══════════════════╣");
+
+        foreach (var seat in _seats)
+        {
+            string row = TruncateAndPad(seat.Row.ToString(), 6);
+            string number = TruncateAndPad(seat.Number.ToString(), 6);
+            string seatType = TruncateAndPad(seat.Type ?? "N/A", 13);
+            string ticketType = TruncateAndPad(seat.TicketType ?? "N/A", 15);
+
+            string price = $"€{_seatService.CalculateSeatPrice(seat):0.00}".PadRight(15);
+            if (_seatService.CalculateSeatPrice(seat) <= 0)
+            {
+                price = "N/A".PadRight(15);
+            }
+            
+            sb.AppendLine($"║  {row} ║  {number} ║  {seatType} ║ { ticketType} ║  {price}  ║");
+        }
+
+        sb.AppendLine("╚═════════╩═════════╩════════════════╩═════════════════╩═══════════════════╝");
+        return sb.ToString();
+    }
+
+
+
     private string GetReservationInfo()
     {
         var sb = new StringBuilder();
-        string separator = new string('=', Console.WindowWidth);
-    
-        sb.AppendLine(separator);
-        sb.AppendLine("Selected Movie");
-        sb.AppendLine(separator);
-    
-        sb.AppendLine($"Title: {_movie.Title}");
-        sb.AppendLine($"Runtime: {_movie.Runtime} minutes");
-        sb.AppendLine($"Actors: {_movie.Actors}");
-        sb.AppendLine($"Rating: {_movie.Rating}/10");
-        sb.AppendLine($"Genre: {_movie.Genre}");
 
-        if (_movie.AgeRestriction > 0)
-        {
-            sb.AppendLine($"Age restriction: {_movie.AgeRestriction}");
-        }
-        
-        sb.AppendLine($"Release date: {_movie.ReleaseDate}");
-        sb.AppendLine($"Country: {_movie.Country}");
-
-        if (_showtime != null)
-        {
-            sb.AppendLine();
-            sb.AppendLine(separator);
-            sb.AppendLine("Selected Showtime");
-            sb.AppendLine(separator);
-            sb.AppendLine($"Start: {_showtime.StartTime}");
-            
-            
-            
-            sb.AppendLine($"End: {_showtime.EndTime}");
-            sb.AppendLine($"Auditorium: {_auditorium.Name}");
-        }
-
-        if (_seats != null && _seats.Count() > 0)
-        {
-            sb.AppendLine();
-            sb.AppendLine(separator);
-            sb.AppendLine("Selected Seats");
-            sb.AppendLine(separator);
-
-            
-            
-            
-            decimal totalPrice = _seatService.GetTotalPrice(_seats);
-
-            sb.AppendLine("╔════════╦══════════╦════════════╦════════════════════════╗");
-            sb.AppendLine("║ Row    ║ Seat     ║ Seat Type  ║ Ticket Type  ║  Price  ║");
-            sb.AppendLine("╠════════╬══════════╬════════════╬══════════════╬═════════╣");
-
-            foreach (var seat in _seats)
-            {
-                string row = seat.Row.ToString().PadRight(6);
-                string number = seat.Number.ToString().PadRight(8);
-                string seatType = seat.Type?.PadRight(10) ?? "N/A".PadRight(10);
-                string ticketType = seat.TicketType?.PadRight(12) ?? "N/A".PadRight(12);
-                decimal price = _seatService.CalculateSeatPrice(seat);
-
-                sb.AppendLine($"║ {row} ║ {number} ║ {seatType} ║ {ticketType} ║ €{price,5:F2}  ║");
-            }
-
-            sb.AppendLine("╚════════╩══════════╩════════════╩══════════════╩═════════╝");
-            sb.AppendLine($"Total price: €{totalPrice:F2}");
-            
-        }
+        sb.Append(SelectedMovieInfo());
+        sb.Append(SelectedShowtimeInfo());
+        sb.Append(SelectedSeatsInfo());
 
         return sb.ToString();
     }
@@ -197,9 +220,9 @@ public class ReservationFlow
                     _currentState = ReservationState.Seats;
                     _auditorium = _auditoriumService.Find(_showtime.AuditoriumId);
                 }
-                    
+
                 break;
-            
+
             case ReservationState.Seats:
                 // 2. select seats
                 SeatSelection? seatSelection = new SeatSelection(_services, _movie, _showtime);
@@ -208,8 +231,9 @@ public class ReservationFlow
                 {
                     _currentState = ReservationState.Tickets;
                 }
+
                 break;
-            
+
             case ReservationState.Tickets:
                 // 2. select tickets type (childrent, adults, seniors)
                 TicketSelection ticketSelection = new(_services, _seats);
@@ -219,10 +243,20 @@ public class ReservationFlow
                     _currentState = ReservationState.Confirmation;
                     _seats = seats;
                 }
+
                 break;
             case ReservationState.Confirmation:
                 ConsoleMethods.Error("Not implemented yet");
                 break;
         }
+    }
+
+
+    private string TruncateAndPad(string text, int maxLength)
+    {
+        if (text == null) return "".PadRight(maxLength);
+        if (text.Length > maxLength)
+            return text.Substring(0, maxLength - 3) + "...";
+        return text.PadRight(maxLength);
     }
 }
