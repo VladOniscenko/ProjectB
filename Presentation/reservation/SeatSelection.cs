@@ -140,17 +140,13 @@ public class SeatSelection
 
     private void PrintSeatSelectionContent()
     {
-        Console.WriteLine("Selected movie:");
-        Console.WriteLine(_movie);
-        Console.WriteLine();
-
+        Console.WriteLine("╔═════════════╗");
+        Console.WriteLine("║  Backspace  ║  Press Backspace to go to previous step");
+        Console.WriteLine("╚═════════════╝");
+        
         Console.WriteLine("╔═════╗");
         Console.WriteLine("║  C  ║  Press c to confirm seats and proceed to payment");
         Console.WriteLine("╚═════╝");
-
-        Console.WriteLine("╔═════════════╗");
-        Console.WriteLine("║  Backspace  ║  Press Backspace to go back");
-        Console.WriteLine("╚═════════════╝");
 
         Console.WriteLine("╔═════════╗");
         Console.WriteLine("║  Enter  ║  Press Enter to select a seat");

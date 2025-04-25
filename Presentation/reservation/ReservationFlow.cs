@@ -27,6 +27,8 @@ public class ReservationFlow
         _auditoriumService = services.GetRequiredService<IAuditoriumService>();
         _seatService = services.GetRequiredService<ISeatService>();
         _movie = movie;
+
+        _currentState = ReservationState.Showtime;
     }
 
     enum ReservationState
@@ -46,21 +48,22 @@ public class ReservationFlow
         Running = true;
         while (Running)
         {
-            // Checks what is the current state and handles it
-            // if the state is showtime it opens showtime selection etc.
-            HandleReservationStep();
-
+            string nextButtonName = _currentState switch
+            {
+                ReservationState.Showtime => "Select Showtime",
+                ReservationState.Seats => "Select Seats",
+                ReservationState.Tickets => "Select Tickets",
+                ReservationState.Confirmation => "Go to check out",
+                _ => "Next step"
+            };
+            
             var options = new Dictionary<string, string>()
             {
-                { "NX", "Go further" }
+                { "NX", nextButtonName }
             };
-
-            if (_currentState != ReservationState.Showtime)
-            {
-                options.Add("SB", "Step back");
-            }
-
-            options.Add("CR", "<= Return to movie list");
+            
+            options.Add("SB", "Previous step");
+            
             switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
             {
                 case "SB":
@@ -92,10 +95,17 @@ public class ReservationFlow
                     Running = false;
                     break;
             }
+
+            if (Running)
+            {
+                // Checks what is the current state and handles it
+                // if the state is showtime it opens showtime selection etc.
+                HandleReservationStep();
+            }
+
         }
 
 
-        // 3. select tickets type (childrent, adults, seniors)
 
         // 4. logged in? go to step 6
 
@@ -162,7 +172,7 @@ public class ReservationFlow
 
     private string SelectedSeatsInfo()
     {
-        if (_seats == null || !_seats.Any()) return string.Empty;
+        if (_seats == null || !_seats.Any()) return "";
 
         decimal totalPrice = _seatService.GetTotalPrice(_seats);
         var sb = new StringBuilder();
@@ -194,6 +204,24 @@ public class ReservationFlow
         return sb.ToString();
     }
 
+    private string TotalPriceInfo()
+    {
+        if (_seats == null || !_seats.Any() || _currentState <=
+            
+            
+            ReservationState.Tickets)
+            return string.Empty;
+
+        decimal totalPrice = _seatService.GetTotalPrice(_seats);
+        string totalLine = $"║  Total price: €{totalPrice:0.00}".PadRight(75) + "║";
+
+        var sb = new StringBuilder();
+        sb.AppendLine(totalLine);
+        sb.AppendLine("╚══════════════════════════════════════════════════════════════════════════╝");
+
+        return sb.ToString();
+    }
+
 
 
     private string GetReservationInfo()
@@ -203,6 +231,7 @@ public class ReservationFlow
         sb.Append(SelectedMovieInfo());
         sb.Append(SelectedShowtimeInfo());
         sb.Append(SelectedSeatsInfo());
+        sb.Append(TotalPriceInfo());
 
         return sb.ToString();
     }
@@ -219,8 +248,10 @@ public class ReservationFlow
                 {
                     _currentState = ReservationState.Seats;
                     _auditorium = _auditoriumService.Find(_showtime.AuditoriumId);
+                    break;
                 }
-
+                
+                Running = false;
                 break;
 
             case ReservationState.Seats:

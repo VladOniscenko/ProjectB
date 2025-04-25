@@ -115,7 +115,7 @@ public class MovieList
     private void ShowPurchaseMenu(Movie movie)
     {
         int startingRow = Console.CursorTop + 2;
-        List<string> options = new() { "Check availability", "Back to Movie List" };
+        List<string> options = new() { "Book or view availability", "Back to Movie List" };
         int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
         if (selected == 1)
