@@ -101,7 +101,12 @@ public class MovieList
         Console.WriteLine($"Actors          : {movie.Actors}");
         Console.WriteLine($"Rating          : {CalcStars(movie.Rating)} ({movie.Rating}/5)");
         Console.WriteLine($"Genre           : {movie.Genre}");
-        Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        
+        if (movie.AgeRestriction > 0)
+        {
+            Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        }
+        
         Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
         Console.WriteLine($"Country         : {movie.Country}");
     }

@@ -60,7 +60,7 @@ public class ReservationFlow
                 options.Add("SB", "Step back");
             }
 
-            options.Add("CR", "Cancel reservation and go back");
+            options.Add("CR", "<= Return to movie list");
             switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
             {
                 case "SB":
@@ -126,7 +126,12 @@ public class ReservationFlow
         sb.AppendLine($"Actors: {_movie.Actors}");
         sb.AppendLine($"Rating: {_movie.Rating}/10");
         sb.AppendLine($"Genre: {_movie.Genre}");
-        sb.AppendLine($"Age restriction: {_movie.AgeRestriction}");
+
+        if (_movie.AgeRestriction > 0)
+        {
+            sb.AppendLine($"Age restriction: {_movie.AgeRestriction}");
+        }
+        
         sb.AppendLine($"Release date: {_movie.ReleaseDate}");
         sb.AppendLine($"Country: {_movie.Country}");
 
@@ -168,11 +173,11 @@ public class ReservationFlow
                 string ticketType = seat.TicketType?.PadRight(12) ?? "N/A".PadRight(12);
                 decimal price = _seatService.CalculateSeatPrice(seat);
 
-                sb.AppendLine($"║ {row} ║ {number} ║ {seatType} ║ {ticketType} ║ ${price,5:F2}  ║");
+                sb.AppendLine($"║ {row} ║ {number} ║ {seatType} ║ {ticketType} ║ €{price,5:F2}  ║");
             }
 
             sb.AppendLine("╚════════╩══════════╩════════════╩══════════════╩═════════╝");
-            sb.AppendLine($"Total price: ${totalPrice:F2}");
+            sb.AppendLine($"Total price: €{totalPrice:F2}");
             
         }
 
