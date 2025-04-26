@@ -55,6 +55,7 @@ public class ReservationFlow
                 ReservationState.Seats => "Select Seats",
                 ReservationState.Tickets => "Select Tickets",
                 ReservationState.Authenticate => "Check out",
+                ReservationState.PaymentMethod => "Select Payment method",
                 _ => "Next step"
             };
             
@@ -288,6 +289,11 @@ public class ReservationFlow
                 Authenticate authenticate = new Authenticate(_services);
                 authenticate.Run();
                 
+                if (Program.CurrentUser != null)
+                {
+                    _currentState = ReservationState.PaymentMethod;
+                    break;
+                }
                 
                 ConsoleMethods.Error("Not implemented yet");
                 break;

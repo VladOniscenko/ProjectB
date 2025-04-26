@@ -17,17 +17,21 @@ public class TicketSelection
         _seatService = _services.GetRequiredService<ISeatService>();
     }
     
-    public IEnumerable<Seat> Run()
+    public IEnumerable<Seat>? Run()
     {
         foreach (Seat seat in _seats)
         {
             var ticketOptions = _seatService.GetTicketOptionsForSeat(seat);
-
-            seat.TicketType = Menu.SelectMenu(
+            ticketOptions.Add("return", "Previous step");
+            
+            string selection = Menu.SelectMenu(
                 $"Select ticket type for Seat (Row: {seat.Row}, Seat number: {seat.Number}, {seat.Type})",
                 ticketOptions
             );
 
+            if (selection == "return") return null;
+            
+            seat.TicketType = selection;
             ConsoleMethods.AnimateLoadingText("Saving seat type", 500);
         }
 
