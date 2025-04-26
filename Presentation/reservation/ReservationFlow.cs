@@ -14,10 +14,12 @@ public class ReservationFlow
     private readonly IServiceProvider _services;
     private readonly IAuditoriumService _auditoriumService;
     private readonly ISeatService _seatService;
+    private readonly IReservationService _reservationService;
     private readonly Movie _movie;
     private Showtime _showtime { get; set; } = null;
     private IEnumerable<Seat>? _seats { get; set; } = null;
     private ReservationState _currentState = ReservationState.Showtime;
+    private string? _paymentMethod = null;
     private bool Running = false;
     private Auditorium? _auditorium { get; set; } = null;
 
@@ -26,6 +28,7 @@ public class ReservationFlow
         _services = services;
         _auditoriumService = services.GetRequiredService<IAuditoriumService>();
         _seatService = services.GetRequiredService<ISeatService>();
+        _reservationService = services.GetRequiredService<IReservationService>();
         _movie = movie;
 
         _currentState = ReservationState.Showtime;
@@ -38,10 +41,8 @@ public class ReservationFlow
         Tickets = 2,
         Authenticate = 3,
         PaymentMethod = 4,
-        Payment = 5,
-        Success = 6,
-        Cancelled = 7,
-        Error = 8,
+        Pay = 5,
+        CreateReservation = 6
     }
 
     public void Run()
@@ -69,26 +70,27 @@ public class ReservationFlow
             switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
             {
                 case "SB":
-                    if (_currentState == ReservationState.Seats)
+                    switch (_currentState)
                     {
-                        _currentState = ReservationState.Showtime;
-                        _showtime = null;
-                        _auditorium = null;
-                    }
-
-                    if (_currentState == ReservationState.Tickets)
-                    {
-                        _currentState = ReservationState.Seats;
-                        _seats = null;
-                    }
-
-                    if (_currentState == ReservationState.Authenticate)
-                    {
-                        _currentState = ReservationState.Tickets;
-                        foreach (var seat in _seats)
-                        {
-                            seat.TicketType = null;
-                        }
+                        case ReservationState.Seats:
+                            _currentState = ReservationState.Showtime;
+                            _showtime = null;
+                            _auditorium = null;
+                            break;
+                        case ReservationState.Tickets:
+                            _currentState = ReservationState.Seats;
+                            _seats = null;
+                            break;
+                        case ReservationState.Authenticate:
+                            _currentState = ReservationState.Tickets;
+                            foreach (var seat in _seats)
+                            {
+                                seat.TicketType = null;
+                            }
+                            break;
+                        case ReservationState.PaymentMethod:
+                            _currentState = ReservationState.Tickets;
+                            break;
                     }
 
                     break;
@@ -244,8 +246,7 @@ public class ReservationFlow
         {
             case ReservationState.Showtime:
                 // 1. Handle showtime selection
-                SelectShowtime selectShowtime = new SelectShowtime(_services, _movie);
-                _showtime = selectShowtime.Run();
+                _showtime = new SelectShowtime(_services, _movie).Run();
                 if (_showtime != null)
                 {
                     _currentState = ReservationState.Seats;
@@ -258,8 +259,7 @@ public class ReservationFlow
 
             case ReservationState.Seats:
                 // 2. select seats
-                SeatSelection? seatSelection = new SeatSelection(_services, _movie, _showtime);
-                _seats = seatSelection.Run();
+                _seats = new SeatSelection(_services, _movie, _showtime).Run();
                 if (_seats != null && _seats.Count() > 0)
                 {
                     _currentState = ReservationState.Tickets;
@@ -269,8 +269,7 @@ public class ReservationFlow
 
             case ReservationState.Tickets:
                 // 2. select tickets type (childrent, adults, seniors)
-                TicketSelection ticketSelection = new(_services, _seats);
-                IEnumerable<Seat> seats = ticketSelection.Run();
+                IEnumerable<Seat> seats = new TicketSelection(_services, _seats).Run();
                 if (seats != null && seats.Count() > 0)
                 {
                     _currentState = ReservationState.Authenticate;
@@ -286,16 +285,25 @@ public class ReservationFlow
                     break;
                 }
 
-                Authenticate authenticate = new Authenticate(_services);
-                authenticate.Run();
-                
+                new Authenticate(_services).Run();
                 if (Program.CurrentUser != null)
                 {
                     _currentState = ReservationState.PaymentMethod;
-                    break;
                 }
-                
-                ConsoleMethods.Error("Not implemented yet");
+                break;
+            case ReservationState.PaymentMethod:
+                _paymentMethod = new SelectPaymentMethod(_services).Run();
+                if(_paymentMethod != null)
+                {
+                    _currentState = ReservationState.Pay;
+                }
+                break;
+            case ReservationState.Pay:
+                _currentState = ReservationState.CreateReservation;
+                break;
+            case ReservationState.CreateReservation:
+                // _reservationService.Create(_showtime, _seats, _paymentMethod, Program.CurrentUser.Id);
+                ConsoleMethods.Error("Not implemented");
                 break;
         }
     }
