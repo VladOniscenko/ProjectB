@@ -14,7 +14,7 @@ public class UserLogin
         _userService = services.GetRequiredService<IUserService>();
     }
     
-    public void Run()
+    public bool Run()
     {
         while (true)
         {
@@ -38,7 +38,7 @@ public class UserLogin
             
             ConsoleMethods.Success("You successfully logged in");
             Program.CurrentUser = user;
-            return;
+            return true;
         }
     }
         

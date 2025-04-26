@@ -36,11 +36,12 @@ public class ReservationFlow
         Showtime = 0,
         Seats = 1,
         Tickets = 2,
-        Confirmation = 3,
-        Payment = 4,
-        Success = 5,
-        Cancelled = 6,
-        Error = 7,
+        Authenticate = 3,
+        PaymentMethod = 4,
+        Payment = 5,
+        Success = 6,
+        Cancelled = 7,
+        Error = 8,
     }
 
     public void Run()
@@ -53,7 +54,7 @@ public class ReservationFlow
                 ReservationState.Showtime => "Select Showtime",
                 ReservationState.Seats => "Select Seats",
                 ReservationState.Tickets => "Select Tickets",
-                ReservationState.Confirmation => "Go to check out",
+                ReservationState.Authenticate => "Check out",
                 _ => "Next step"
             };
             
@@ -80,7 +81,7 @@ public class ReservationFlow
                         _seats = null;
                     }
 
-                    if (_currentState == ReservationState.Confirmation)
+                    if (_currentState == ReservationState.Authenticate)
                     {
                         _currentState = ReservationState.Tickets;
                         foreach (var seat in _seats)
@@ -271,12 +272,23 @@ public class ReservationFlow
                 IEnumerable<Seat> seats = ticketSelection.Run();
                 if (seats != null && seats.Count() > 0)
                 {
-                    _currentState = ReservationState.Confirmation;
+                    _currentState = ReservationState.Authenticate;
                     _seats = seats;
                 }
 
                 break;
-            case ReservationState.Confirmation:
+            case ReservationState.Authenticate:
+
+                if (Program.CurrentUser != null)
+                {
+                    _currentState = ReservationState.PaymentMethod;
+                    break;
+                }
+
+                Authenticate authenticate = new Authenticate(_services);
+                authenticate.Run();
+                
+                
                 ConsoleMethods.Error("Not implemented yet");
                 break;
         }

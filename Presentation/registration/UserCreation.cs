@@ -21,7 +21,7 @@ public class UserCreation
         _userService = _services.GetRequiredService<IUserService>();
     }
 
-    public void CreateUser(User? user = null)
+    public bool CreateUser(User? user = null)
     {
         Console.ResetColor();
         Console.CursorVisible = false;
@@ -107,11 +107,14 @@ public class UserCreation
             _userService.CreateUser(newUser);
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
+            return true;
         }
         else
         {
             CreateUser(newUser);
         }
+
+        return false;
     }
 
     public bool CheckIfDataCorrect(User user)
