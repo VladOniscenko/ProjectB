@@ -105,6 +105,7 @@ public class UserCreation
         if (CheckIfDataCorrect(newUser))
         {
             _userService.CreateUser(newUser);
+            Program.CurrentUser = newUser;
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
         }
