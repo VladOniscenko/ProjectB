@@ -42,7 +42,8 @@ public class ReservationFlow
         Authenticate = 3,
         PaymentMethod = 4,
         Pay = 5,
-        CreateReservation = 6
+        CreateReservation = 6,
+        Completed = 7
     }
 
     public void Run()
@@ -66,38 +67,41 @@ public class ReservationFlow
             };
             
             options.Add("SB", "Previous step");
-            
-            switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
+
+            if (_currentState != ReservationState.CreateReservation && _currentState != ReservationState.PaymentMethod && _currentState != ReservationState.Completed && _currentState != ReservationState.Pay)
             {
-                case "SB":
-                    switch (_currentState)
-                    {
-                        case ReservationState.Seats:
-                            _currentState = ReservationState.Showtime;
-                            _showtime = null;
-                            _auditorium = null;
-                            break;
-                        case ReservationState.Tickets:
-                            _currentState = ReservationState.Seats;
-                            _seats = null;
-                            break;
-                        case ReservationState.Authenticate:
-                            _currentState = ReservationState.Tickets;
-                            foreach (var seat in _seats)
-                            {
-                                seat.TicketType = null;
-                            }
-                            break;
-                        case ReservationState.PaymentMethod:
-                            _currentState = ReservationState.Tickets;
-                            break;
-                    }
+                switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
+                {
+                    case "SB":
+                        switch (_currentState)
+                        {
+                            case ReservationState.Seats:
+                                _currentState = ReservationState.Showtime;
+                                _showtime = null;
+                                _auditorium = null;
+                                break;
+                            case ReservationState.Tickets:
+                                _currentState = ReservationState.Seats;
+                                _seats = null;
+                                break;
+                            case ReservationState.Authenticate:
+                                _currentState = ReservationState.Tickets;
+                                foreach (var seat in _seats)
+                                {
+                                    seat.TicketType = null;
+                                }
+                                break;
+                            case ReservationState.PaymentMethod:
+                                _currentState = ReservationState.Tickets;
+                                break;
+                        }
 
-                    break;
+                        break;
 
-                case "CR":
-                    Running = false;
-                    break;
+                    case "CR":
+                        Running = false;
+                        break;
+                }
             }
 
             if (Running)
@@ -302,8 +306,30 @@ public class ReservationFlow
                 _currentState = ReservationState.CreateReservation;
                 break;
             case ReservationState.CreateReservation:
-                // _reservationService.Create(_showtime, _seats, _paymentMethod, Program.CurrentUser.Id);
-                ConsoleMethods.Error("Not implemented");
+                try
+                {
+                    var reservationError = _reservationService.CreateReservation(_showtime.Id, _seats, _paymentMethod, Program.CurrentUser.Id);
+                    if (reservationError != null && reservationError.ErrorCode != "SUCCESS")
+                    {
+                        // Handle error and show appropriate message
+                        ConsoleMethods.Error(reservationError.Message);
+                        _currentState = ReservationState.Seats;
+                        break;
+                    }
+                    
+                    _currentState = ReservationState.Completed;
+                }
+                catch (Exception ex)
+                {
+                    // General exception fallback
+                    ConsoleMethods.Error("An unexpected error occurred. Please try again.");
+                }
+                break;
+            case ReservationState.Completed:
+                // 7. Show success message
+                Console.Clear();
+                ConsoleMethods.Success("Reservation completed!");
+                Running = false;
                 break;
         }
     }

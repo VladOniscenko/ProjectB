@@ -17,7 +17,10 @@ public class SeatReservationRepository
                 TicketType TEXT NOT NULL,
                 ReservationId INTEGER NOT NULL,
                 ShowtimeId INTEGER NOT NULL,
-                FOREIGN KEY (SeatId) REFERENCES Seats(Id)
+                FOREIGN KEY (SeatId) REFERENCES Seats(Id),
+                FOREIGN KEY (ReservationId) REFERENCES Reservations(Id),
+                FOREIGN KEY (ShowtimeId) REFERENCES Showtimes(Id),
+                CONSTRAINT unique_seat_showtime UNIQUE (SeatId, ShowtimeId)
             );
         ");
     }
@@ -45,4 +48,18 @@ public class SeatReservationRepository
         return connection.Query<SeatReservation>(@"SELECT * FROM SeatReservations WHERE ShowtimeId = @Id",
             new { Id = id });
     }
+
+    public bool IsSeatTaken(int showtimeId, int seatId)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        var result = connection.QueryFirstOrDefault<int?>(@"
+        SELECT 1 FROM SeatReservations 
+        WHERE ShowtimeId = @ShowtimeId AND SeatId = @SeatId",
+            new { ShowtimeId = showtimeId, SeatId = seatId });
+
+        return result == 1;
+    }
+
 }

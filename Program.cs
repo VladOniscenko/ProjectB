@@ -81,6 +81,7 @@ class Program
         services.AddSingleton<SeatRepository>();
         services.AddSingleton<ReservationRepository>();
         services.AddSingleton<AuditoriumRepository>();
+        services.AddSingleton<SeatReservationRepository>();
 
         services.AddSingleton<IUserService, UserLogic>();
         services.AddSingleton<IMovieService, MovieLogic>();
@@ -88,6 +89,7 @@ class Program
         services.AddSingleton<ISeatService, SeatLogic>();
         services.AddSingleton<IReservationService, ReservationLogic>();
         services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
+        services.AddSingleton<ISeatReservationService, SeatReservationLogic>();
 
         Services = services.BuildServiceProvider();
     }
