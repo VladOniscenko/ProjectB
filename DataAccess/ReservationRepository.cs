@@ -36,6 +36,23 @@ public class ReservationRepository
 
         return reservationId;
     }
+    
+    public bool UpdateReservation(Reservation reservation)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        var rowsAffected = connection.Execute(@"
+        UPDATE Reservations 
+        SET UserId = @UserId,
+            ShowtimeId = @ShowtimeId,
+            CreationDate = @CreationDate,
+            Status = @Status,
+            TotalPrice = @TotalPrice
+        WHERE Id = @Id", reservation);
+
+        return rowsAffected > 0;
+    }
 
     public IEnumerable<Reservation> GetAllReservations()
     {

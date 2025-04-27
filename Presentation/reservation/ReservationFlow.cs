@@ -112,16 +112,6 @@ public class ReservationFlow
             }
 
         }
-
-
-
-        // 4. logged in? go to step 6
-
-        // 5. Ask to login or to register
-
-        // 6. confirmation (total price seats etc.)
-
-        // 7. pay
     }
 
 

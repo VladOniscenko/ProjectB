@@ -40,6 +40,11 @@ namespace ProjectB.Logic
         {
             return _reservationRepository.AddReservation(reservation);
         }
+        
+        public bool UpdateReservation(Reservation reservation)
+        {
+            return _reservationRepository.UpdateReservation(reservation);
+        }
 
         public ReservationError? CreateReservation(int showtimeId, IEnumerable<Seat> seats, string paymentMethod, int userId)
         {
@@ -69,7 +74,8 @@ namespace ProjectB.Logic
             };
 
             int reservationId = Create(reservation);
-
+            reservation.Id = reservationId;
+            
             foreach (Seat seat in seats)
             {
                 
@@ -89,7 +95,9 @@ namespace ProjectB.Logic
 
                 _seatReservationService.Create(seatReservation);
             }
-
+            
+            reservation.Status = "Confirmed";
+            UpdateReservation(reservation);
             return new ReservationError("SUCCESS", $"Reservation created successfully. ID: {reservationId}");
         }
 
