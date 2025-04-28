@@ -56,6 +56,7 @@ public class ReservationFlow
                 ReservationState.Seats => "Select Seats",
                 ReservationState.Tickets => "Select Tickets",
                 ReservationState.Authenticate => "Check out",
+                ReservationState.Pay => "Pay",
                 _ => "Next step"
             };
             
@@ -66,7 +67,7 @@ public class ReservationFlow
             
             options.Add("SB", "Previous step");
 
-            if (_currentState != ReservationState.CreateReservation && _currentState != ReservationState.Completed && _currentState != ReservationState.Pay)
+            if (_currentState != ReservationState.CreateReservation && _currentState != ReservationState.Completed)
             {
                 switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
                 {
@@ -90,7 +91,6 @@ public class ReservationFlow
                                 }
                                 break;
                         }
-
                         break;
 
                     case "CR":
@@ -289,12 +289,12 @@ public class ReservationFlow
                 {
                     Console.Clear();
                     ConsoleMethods.Error("Payment cancelled");
-                    _currentState = ReservationState.Tickets;
                     break;
                 }
                 
                 _currentState = ReservationState.CreateReservation;
                 ConsoleMethods.AnimateLoadingText("Processing payment");
+                ConsoleMethods.AnimateLoadingText("Payment received!");
                 break;
             case ReservationState.CreateReservation:
                 try
