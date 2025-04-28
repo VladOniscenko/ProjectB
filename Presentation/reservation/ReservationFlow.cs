@@ -40,10 +40,9 @@ public class ReservationFlow
         Seats = 1,
         Tickets = 2,
         Authenticate = 3,
-        PaymentMethod = 4,
-        Pay = 5,
-        CreateReservation = 6,
-        Completed = 7
+        Pay = 4,
+        CreateReservation = 5,
+        Completed = 6
     }
 
     public void Run()
@@ -57,7 +56,6 @@ public class ReservationFlow
                 ReservationState.Seats => "Select Seats",
                 ReservationState.Tickets => "Select Tickets",
                 ReservationState.Authenticate => "Check out",
-                ReservationState.PaymentMethod => "Select Payment method",
                 _ => "Next step"
             };
             
@@ -68,7 +66,7 @@ public class ReservationFlow
             
             options.Add("SB", "Previous step");
 
-            if (_currentState != ReservationState.CreateReservation && _currentState != ReservationState.PaymentMethod && _currentState != ReservationState.Completed && _currentState != ReservationState.Pay)
+            if (_currentState != ReservationState.CreateReservation && _currentState != ReservationState.Completed && _currentState != ReservationState.Pay)
             {
                 switch (Menu.SelectMenu(GetReservationInfo() + "\n\nSelect an option", options))
                 {
@@ -90,9 +88,6 @@ public class ReservationFlow
                                 {
                                     seat.TicketType = null;
                                 }
-                                break;
-                            case ReservationState.PaymentMethod:
-                                _currentState = ReservationState.Tickets;
                                 break;
                         }
 
@@ -275,25 +270,31 @@ public class ReservationFlow
 
                 if (Program.CurrentUser != null)
                 {
-                    _currentState = ReservationState.PaymentMethod;
+                    _currentState = ReservationState.Pay;
                     break;
                 }
 
                 new Authenticate(_services).Run();
                 if (Program.CurrentUser != null)
                 {
-                    _currentState = ReservationState.PaymentMethod;
-                }
-                break;
-            case ReservationState.PaymentMethod:
-                _paymentMethod = new SelectPaymentMethod(_services).Run();
-                if(_paymentMethod != null)
-                {
                     _currentState = ReservationState.Pay;
                 }
                 break;
             case ReservationState.Pay:
+                ConsoleMethods.AnimateLoadingText("Redirecting to payment provider");
+
+                PaymentProviderFlow paymentProviderFlow = new ("Payment for Cookiebytes cinema", _seatService.GetTotalPrice(_seats));
+                _paymentMethod = paymentProviderFlow.Run();
+                if (_paymentMethod == null)
+                {
+                    Console.Clear();
+                    ConsoleMethods.Error("Payment cancelled");
+                    _currentState = ReservationState.Tickets;
+                    break;
+                }
+                
                 _currentState = ReservationState.CreateReservation;
+                ConsoleMethods.AnimateLoadingText("Processing payment");
                 break;
             case ReservationState.CreateReservation:
                 try
@@ -318,7 +319,7 @@ public class ReservationFlow
             case ReservationState.Completed:
                 // 7. Show success message
                 Console.Clear();
-                ConsoleMethods.AnimateLoadingText("Creating Booking... ", 1000);
+                ConsoleMethods.AnimateLoadingText("Creating Booking", 1000);
                 ConsoleMethods.Success("Reservation completed!");
                 Running = false;
                 break;
