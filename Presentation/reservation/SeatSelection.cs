@@ -16,6 +16,7 @@ public class SeatSelection
     private readonly int _maxRow;
 
     private readonly IServiceProvider _services;
+    private readonly ISeatService _seatService;
     private Seat? _selectedSeat;
     
 
@@ -27,6 +28,7 @@ public class SeatSelection
         
         var seatService = _services.GetRequiredService<ISeatService>();
         var auditoriumService = _services.GetRequiredService<IAuditoriumService>();
+        _seatService = _services.GetRequiredService<ISeatService>();
 
         _seats = seatService.GetSeatsByShowtime(_showtime.Id);
         _selectedAuditorium = auditoriumService.Find(_showtime.AuditoriumId);
@@ -54,6 +56,7 @@ public class SeatSelection
             RedrawSeatGrid();
 
             ConsoleKeyInfo pressedKey = Console.ReadKey();
+            // ConsoleMethods.Success($"{pressedKey.Key}");
             if (pressedKey.Key == ConsoleKey.Enter)
             {
                 AddOrRemoveSeat(_selectedSeat);
@@ -75,11 +78,25 @@ public class SeatSelection
         }
     }
 
-    public void RedrawSeatGrid()
+    private void RedrawSeatGrid()
     {
 
         PrintSeatNumbers();
         PrintSeats();
+        PrintAuditoriumScreen();
+    }
+
+    private void PrintAuditoriumScreen()
+    {
+        int len = ((_maxNumber * 4) - 1) + ((_selectedAuditorium.Id == 3 || _selectedAuditorium.Id == 2) ? 6 : 0);
+        string screen = "SCREEN";
+        string padded = "SCREEN".PadLeft((screen.Length + len) / 2).PadRight(len);
+        
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("         ╔" + ( new string('═', len ) ) + "╗");
+        Console.WriteLine($"         ║{padded}║");
+        Console.WriteLine("         ╚"  + ( new string('═', len ) ) +  "╝");
     }
 
     private void PrintSeats()
@@ -161,13 +178,14 @@ public class SeatSelection
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine("[ ] - Normal seat");
+        Console.WriteLine($"[ ] - Normal seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "normal"}, "adult")})");
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("[ ] - Premium seat");
+        Console.WriteLine($"[ ] - Premium seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "premium"}, "adult")})");
 
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("[ ] - VIP seat\n");
+        Console.WriteLine($"[ ] - VIP seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "vip"}, "adult")})");
+        Console.WriteLine();
 
         Console.ResetColor();
     }
