@@ -125,6 +125,7 @@ public class MovieList
         }
         
         // start reservation process
+        Running = false;
         Program.StartReservation(movie);
     }
 

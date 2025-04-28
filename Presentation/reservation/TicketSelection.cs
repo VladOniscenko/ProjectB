@@ -19,17 +19,28 @@ public class TicketSelection
     
     public IEnumerable<Seat>? Run()
     {
+        bool adult = false;
+        
         foreach (Seat seat in _seats)
         {
             var ticketOptions = _seatService.GetTicketOptionsForSeat(seat);
+            ticketOptions.Add("all_adult", "Set all next seats to adult");
             ticketOptions.Add("return", "Previous step");
-            
-            string selection = Menu.SelectMenu(
-                $"Select ticket type for Seat (Row: {seat.Row}, Seat number: {seat.Number}, {seat.Type})",
-                ticketOptions
-            );
 
-            if (selection == "return") return null;
+            string selection = "adult";
+            if (!adult)
+            {
+                selection = Menu.SelectMenu(
+                    $"Select ticket type for Seat (Row: {seat.Row}, Seat number: {seat.Number}, {seat.Type})",
+                    ticketOptions
+                );
+                if (selection == "all_adult")
+                {
+                    selection = "adult";
+                    adult = true;
+                }
+                if (selection == "return") return null;
+            }
             
             seat.TicketType = selection;
             ConsoleMethods.AnimateLoadingText("Saving seat type", 500);
