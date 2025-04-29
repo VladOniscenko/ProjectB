@@ -9,15 +9,15 @@ public class TicketSelection
 {
     private IServiceProvider _services;
     private ISeatService _seatService;
-    private IEnumerable<Seat> _seats;
-    public TicketSelection(IServiceProvider serviceProvider, IEnumerable<Seat> seats)
+    private List<Seat> _seats;
+    public TicketSelection(IServiceProvider serviceProvider, List<Seat> seats)
     {
         _services = serviceProvider;
         _seats = seats;
         _seatService = _services.GetRequiredService<ISeatService>();
     }
     
-    public IEnumerable<Seat>? Run()
+    public List<Seat>? Run()
     {
         bool adult = false;
         

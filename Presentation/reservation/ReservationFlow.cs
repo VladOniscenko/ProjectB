@@ -17,7 +17,7 @@ public class ReservationFlow
     private readonly IReservationService _reservationService;
     private readonly Movie _movie;
     private Showtime _showtime { get; set; } = null;
-    private IEnumerable<Seat>? _seats { get; set; } = null;
+    private List<Seat>? _seats { get; set; } = null;
     private ReservationState _currentState = ReservationState.Showtime;
     private string? _paymentMethod = null;
     private bool Running = false;
@@ -76,19 +76,15 @@ public class ReservationFlow
                         {
                             case ReservationState.Seats:
                                 _currentState = ReservationState.Showtime;
-                                _showtime = null;
-                                _auditorium = null;
                                 break;
                             case ReservationState.Tickets:
                                 _currentState = ReservationState.Seats;
-                                _seats = null;
                                 break;
                             case ReservationState.Authenticate:
                                 _currentState = ReservationState.Tickets;
-                                foreach (var seat in _seats)
-                                {
-                                    seat.TicketType = null;
-                                }
+                                break;
+                            case ReservationState.Pay:
+                                _currentState = ReservationState.Tickets;
                                 break;
                         }
                         break;
@@ -165,7 +161,7 @@ public class ReservationFlow
 
     private string SelectedSeatsInfo()
     {
-        if (_seats == null || !_seats.Any()) return "";
+        if (_seats == null || _seats.Count <= 0) return "";
 
         decimal totalPrice = _seatService.GetTotalPrice(_seats);
         var sb = new StringBuilder();
@@ -199,11 +195,10 @@ public class ReservationFlow
 
     private string TotalPriceInfo()
     {
-        if (_seats == null || !_seats.Any() || _currentState <=
-            
-            
-            ReservationState.Tickets)
-            return string.Empty;
+        if (_seats == null || _seats.Count <= 0 || _currentState <= ReservationState.Tickets)
+        {
+            return "";
+        }
 
         decimal totalPrice = _seatService.GetTotalPrice(_seats);
         string totalLine = $"║  Total price: €{totalPrice:0.00}".PadRight(75) + "║";
@@ -248,8 +243,8 @@ public class ReservationFlow
 
             case ReservationState.Seats:
                 // 2. select seats
-                _seats = new SeatSelection(_services, _movie, _showtime).Run();
-                if (_seats != null && _seats.Count() > 0)
+                _seats = new SeatSelection(_services, _movie, _showtime, _seats).Run();
+                if (_seats != null && _seats.Count > 0)
                 {
                     _currentState = ReservationState.Tickets;
                 }
@@ -258,11 +253,18 @@ public class ReservationFlow
 
             case ReservationState.Tickets:
                 // 2. select tickets type (childrent, adults, seniors)
-                IEnumerable<Seat> seats = new TicketSelection(_services, _seats).Run();
-                if (seats != null && seats.Count() > 0)
+                List<Seat> seats = new TicketSelection(_services, _seats).Run();
+                if (seats != null && seats.Count > 0)
                 {
-                    _currentState = ReservationState.Authenticate;
                     _seats = seats;
+
+                    if (Program.CurrentUser == null)
+                    {
+                        _currentState = ReservationState.Authenticate;
+                        break;
+                    }
+                    
+                    _currentState = ReservationState.Pay;
                 }
 
                 break;

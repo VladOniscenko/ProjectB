@@ -9,29 +9,27 @@ public class SeatSelection
     private readonly Showtime? _showtime;
     private readonly Movie? _movie;
     private readonly Auditorium? _selectedAuditorium;
-    private readonly IEnumerable<Seat>? _seats;
+    private readonly IEnumerable<Seat>? _seats; // all seats of auditorium
     private readonly List<Seat>? _selectedSeats;
-    
-    private readonly int _maxNumber;
-    private readonly int _maxRow;
+
+    private readonly int _maxNumber; // max seat number of the rows
+    private readonly int _maxRow; // max row number of the seats
 
     private readonly IServiceProvider _services;
     private readonly ISeatService _seatService;
     private Seat? _selectedSeat;
-    
 
-    public SeatSelection(IServiceProvider services, Movie movie, Showtime showtime)
+
+    public SeatSelection(IServiceProvider services, Movie movie, Showtime showtime, List<Seat>? selectedSeats = null)
     {
         _services = services;
         _showtime = showtime;
         _movie = movie;
-        
-        var seatService = _services.GetRequiredService<ISeatService>();
-        var auditoriumService = _services.GetRequiredService<IAuditoriumService>();
-        _seatService = _services.GetRequiredService<ISeatService>();
 
-        _seats = seatService.GetSeatsByShowtime(_showtime.Id);
-        _selectedAuditorium = auditoriumService.Find(_showtime.AuditoriumId);
+        _seatService = _services.GetRequiredService<ISeatService>();
+        _seats = _seatService.GetSeatsByShowtime(_showtime.Id);
+        _selectedAuditorium = _services.GetRequiredService<IAuditoriumService>().Find(_showtime.AuditoriumId);
+
         if (_movie == null || _seats == null || _seats.Count() <= 0)
         {
             ConsoleMethods.Error("Something went wrong! Get in touch with our Customer service!");
@@ -44,6 +42,20 @@ public class SeatSelection
         _maxNumber = _seats.Max(s => s.Number);
         _maxRow = _seats.Max(s => s.Row);
         _selectedSeats = new List<Seat>();
+
+        if (selectedSeats != null)
+        {
+            foreach (Seat seat in selectedSeats)
+            {
+                // check if seat is in the list of selected seats
+                // using of the implementation of IComparable
+                Seat? foundSeat = _seats.FirstOrDefault(s => s == seat);
+                if (foundSeat != null)
+                {
+                    AddOrRemoveSeat(foundSeat);
+                }
+            }
+        }
     }
 
     public List<Seat>? Run()
@@ -52,7 +64,6 @@ public class SeatSelection
         {
             Console.Clear();
             PrintSeatSelectionContent();
-            
             RedrawSeatGrid();
 
             ConsoleKeyInfo pressedKey = Console.ReadKey();
@@ -71,6 +82,8 @@ public class SeatSelection
             if (pressedKey.Key == ConsoleKey.C)
             {
                 Console.Clear();
+                // using of the implementation of IComparable
+                _selectedSeats.Order();
                 return _selectedSeats;
             }
 
@@ -80,7 +93,6 @@ public class SeatSelection
 
     private void RedrawSeatGrid()
     {
-
         PrintSeatNumbers();
         PrintSeats();
         PrintAuditoriumScreen();
@@ -91,12 +103,12 @@ public class SeatSelection
         int len = ((_maxNumber * 4) - 1) + ((_selectedAuditorium.Id == 3 || _selectedAuditorium.Id == 2) ? 6 : 0);
         string screen = "SCREEN";
         string padded = "SCREEN".PadLeft((screen.Length + len) / 2).PadRight(len);
-        
+
         Console.WriteLine();
         Console.WriteLine();
-        Console.WriteLine("         ╔" + ( new string('═', len ) ) + "╗");
+        Console.WriteLine("         ╔" + (new string('═', len)) + "╗");
         Console.WriteLine($"         ║{padded}║");
-        Console.WriteLine("         ╚"  + ( new string('═', len ) ) +  "╝");
+        Console.WriteLine("         ╚" + (new string('═', len)) + "╝");
     }
 
     private void PrintSeats()
@@ -112,6 +124,7 @@ public class SeatSelection
                 {
                     Console.WriteLine();
                 }
+
                 currentRow = seat.Row;
 
                 Console.ForegroundColor = ConsoleColor.Magenta;
@@ -160,7 +173,7 @@ public class SeatSelection
         Console.WriteLine("╔═════════════╗");
         Console.WriteLine("║  Backspace  ║  Press Backspace to go to previous step");
         Console.WriteLine("╚═════════════╝");
-        
+
         Console.WriteLine("╔═════╗");
         Console.WriteLine("║  C  ║  Press c to confirm seats and proceed to payment");
         Console.WriteLine("╚═════╝");
@@ -178,13 +191,13 @@ public class SeatSelection
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Blue;
-        Console.WriteLine($"[ ] - Normal seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "normal"}, "adult")})");
+        Console.WriteLine($"[ ] - Normal seat (€{_seatService.CalculateSeatPrice(new Seat() { Type = "normal" }, "adult")})");
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"[ ] - Premium seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "premium"}, "adult")})");
+        Console.WriteLine($"[ ] - Premium seat (€{_seatService.CalculateSeatPrice(new Seat() { Type = "premium" }, "adult")})");
 
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"[ ] - VIP seat (€{_seatService.CalculateSeatPrice(new Seat(){Type = "vip"}, "adult")})");
+        Console.WriteLine($"[ ] - VIP seat (€{_seatService.CalculateSeatPrice(new Seat() { Type = "vip" }, "adult")})");
         Console.WriteLine();
 
         Console.ResetColor();
@@ -208,11 +221,10 @@ public class SeatSelection
         };
 
         // search for matching seat
-        var nextSeat = _seats.FirstOrDefault(
-            s =>
-                s.Row == _selectedSeat.Row + row &&
-                s.Number == _selectedSeat.Number + number &&
-                s.Active == 1
+        var nextSeat = _seats.FirstOrDefault(s =>
+            s.Row == _selectedSeat.Row + row &&
+            s.Number == _selectedSeat.Number + number &&
+            s.Active == 1
         );
 
         // if seat not found return current seat. otherwise return found seat
@@ -282,7 +294,7 @@ public class SeatSelection
             }
         }
     }
-    
+
     private void AddSeat(Seat seat)
     {
         if (seat.Taken == 0)
@@ -291,7 +303,7 @@ public class SeatSelection
             _selectedSeats.Add(seat);
         }
     }
-    
+
     private void RemoveSeat(Seat seat)
     {
         if (_selectedSeats.Contains(seat))
@@ -300,7 +312,7 @@ public class SeatSelection
             _selectedSeats.Remove(seat);
         }
     }
-    
+
     public void AddOrRemoveSeat(Seat seat)
     {
         if (seat.Selected)
@@ -308,6 +320,7 @@ public class SeatSelection
             RemoveSeat(seat);
             return;
         }
+
         AddSeat(seat);
     }
 }
