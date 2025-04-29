@@ -321,7 +321,7 @@ public class ReservationFlow
             case ReservationState.Completed:
                 // 7. Show success message
                 Console.Clear();
-                ConsoleMethods.AnimateLoadingText("Creating Booking", 1000);
+                ConsoleMethods.AnimateLoadingText("Creating reservation", 1000);
                 ConsoleMethods.Success("Reservation completed!");
                 Running = false;
                 break;
