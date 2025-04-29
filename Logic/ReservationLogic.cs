@@ -28,12 +28,12 @@ namespace ProjectB.Logic
             return _reservationRepository.UpdateReservation(reservation);
         }
 
-        public ReservationError? CreateReservation(int showtimeId, IEnumerable<Seat> seats, string paymentMethod, int userId)
+        public ReservationError? CreateReservation(int showtimeId, List<Seat> seats, string paymentMethod, int userId)
         {
             if (showtimeId <= 0)
                 return new ReservationError("INVALID_SHOWTIME_ID", "Invalid showtime ID.");
 
-            if (seats == null || !seats.Any())
+            if (seats == null || seats.Count == 0)
                 return new ReservationError("INVALID_SEAT_SELECTION", "At least one seat must be selected.");
 
             if (string.IsNullOrWhiteSpace(paymentMethod))
