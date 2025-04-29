@@ -4,9 +4,9 @@ namespace ProjectB.Logic;
 
 public class PaymentProvider : IPaymentProvider
 {
-    public decimal Amount { get; private set; }
-    public string Title { get; private set; }
-    public string Method { get; private set; }
+    public decimal? Amount { get; private set; }
+    public string? Title { get; private set; }
+    public string? Method { get; private set; }
     public bool PaymentProcessed { get; private set; }
 
     public PaymentProvider(string title)
@@ -19,7 +19,7 @@ public class PaymentProvider : IPaymentProvider
     {
         if (amount <= 0)
         {
-            throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
+            return false;
         }
 
         Amount = amount;
@@ -31,7 +31,7 @@ public class PaymentProvider : IPaymentProvider
 
         if (!GetPaymentMethods().ContainsKey(method))
         {
-            throw new IndexOutOfRangeException("Payment method not found.");
+            return false;
         }
         
         Method = method;
@@ -40,6 +40,12 @@ public class PaymentProvider : IPaymentProvider
     
     public bool ProcessPayment()
     {
+
+        if (Amount is null || Method is null)
+        {
+            return false;
+        }
+        
         PaymentProcessed = true;
         return PaymentProcessed;
     }
