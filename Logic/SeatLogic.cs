@@ -12,13 +12,13 @@ public class SeatLogic : ISeatService
     {
         _seatRepository = seatRepository;
     }
-    
+
     public IEnumerable<Seat> GetSeatsByShowtime(int showtimeId)
     {
         SeatRepository seatRepository = new();
         return seatRepository.GetSeatsByShowtime(showtimeId);
     }
-    
+
     public Dictionary<string, string> GetTicketOptionsForSeat(Seat seat)
     {
         var ticketTypes = new List<string> { "adult", "child", "senior" };
@@ -36,28 +36,29 @@ public class SeatLogic : ISeatService
 
             adjustedOptions.Add(ticketType, $"{description} ${finalPrice:F2}");
         }
+
         return adjustedOptions;
     }
-    
+
     public decimal CalculateSeatPrice(Seat seat)
     {
         return CalculateSeatPrice(seat, seat.TicketType);
     }
-    
-    public decimal CalculateSeatPrice(Seat seat, string? ticketType = null)
+
+    public decimal CalculateSeatPrice(Seat seat, string? ticketType)
     {
         Dictionary<string, decimal> baseTicketPrices = new()
         {
-            {"adult", 15.00m},
-            {"child", 10.00m},
-            {"senior", 10.00m}
+            { "adult", 15.00m },
+            { "child", 10.00m },
+            { "senior", 10.00m }
         };
 
         Dictionary<string, decimal> seatTypeAdjustments = new()
         {
-            {"normal", 0.00m},
-            {"premium", 3.00m},
-            {"vip", 5.00m}
+            { "normal", 0.00m },
+            { "premium", 3.00m },
+            { "vip", 5.00m }
         };
 
         string? safeTicketType = ticketType?.ToLower() ?? null;
@@ -73,7 +74,7 @@ public class SeatLogic : ISeatService
 
         return basePrice + adjustment;
     }
-    
+
     public decimal GetTotalPrice(IEnumerable<Seat> seats)
     {
         decimal total = 0.00m;
@@ -85,5 +86,4 @@ public class SeatLogic : ISeatService
 
         return total;
     }
-
 }
