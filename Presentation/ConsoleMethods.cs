@@ -49,4 +49,14 @@ public static class ConsoleMethods
         Console.SetCursorPosition(originalLeft, originalTop);
         Console.WriteLine($"{text}...");
     }
+    
+    
+    public static string CenterTextInBox(string text, int boxWidth)
+    {
+        int padding = boxWidth - text.Length;
+        int paddingLeft = padding / 2;
+        int paddingRight = padding - paddingLeft;
+
+        return $"║{new string(' ', paddingLeft)}{text}{new string(' ', paddingRight)}║";
+    }
 }

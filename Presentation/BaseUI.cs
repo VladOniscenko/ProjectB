@@ -1,16 +1,25 @@
-public static class BaseUI{
-    const int BoxX = 15;
-    const int Width = 30;
+public static class BaseUI
+{
+    private static int BoxX { get; set; }
+    private static int Width { get; set; }
     //make width boXx AND X Y OPTIONAL
-    //
-    public static string DrawInputBox(string label, int BoxX = 15, int Width = 30, int x = -1, int y = -1, 
-                                        string? previouslyWritten = null, bool isPassword = false)
-    {   
-        if(x == -1){
+
+    static BaseUI()
+    {
+        BoxX = 15;
+        Width = 30;
+    }
+
+    public static string DrawInputBox(string label, int BoxX = 15, int Width = 30, int x = -1, int y = -1,
+        string? previouslyWritten = null, bool isPassword = false)
+    {
+        if (x == -1)
+        {
             x = Console.CursorLeft;
         }
 
-        if(y == -1){
+        if (y == -1)
+        {
             y = Console.CursorTop;
         }
 
@@ -73,9 +82,11 @@ public static class BaseUI{
     public static void ShowErrorMessage(string errorMessage, int? yAxis = null)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        if(yAxis is int Y){
+        if (yAxis is int Y)
+        {
             Console.SetCursorPosition(0, Y);
         }
+
         Console.Write("" + errorMessage);
         Console.ResetColor();
     }
@@ -83,14 +94,17 @@ public static class BaseUI{
     public static void ConfirmingMessage(string confirmingMessage, int? yAxis = null)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        if(yAxis is int Y){
+        if (yAxis is int Y)
+        {
             Console.SetCursorPosition(0, Y);
         }
+
         Console.Write("    " + confirmingMessage);
         Console.ResetColor();
     }
 
-    public static bool BasicYesOrNo(int y){
+    public static bool BasicYesOrNo(int y)
+    {
         bool isAccepted = true;
 
         Console.SetCursorPosition(0, y);
@@ -132,10 +146,11 @@ public static class BaseUI{
             {
                 return isAccepted;
             }
-    }
+        }
     }
 
-    public static bool BasicYesOrNo(){
+    public static bool BasicYesOrNo()
+    {
         int y = Console.CursorTop;
         return BasicYesOrNo(y + 1);
     }

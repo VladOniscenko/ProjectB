@@ -11,9 +11,9 @@ public class SelectShowtime
 
     private readonly IServiceProvider _services;
     
-    public SelectShowtime(IServiceProvider services, Movie? movie)
+    public SelectShowtime(Movie? movie)
     {
-        _services = services;
+        _services = Program.Services;
         _movie = movie;
         
         // get show times of the movie

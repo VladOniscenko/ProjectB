@@ -9,7 +9,7 @@ using ProjectB.Presentation;
 
 class Program
 {
-    private static ServiceProvider Services;
+    public static ServiceProvider Services { get; private set; }
     public static User? CurrentUser { get; set; } = null;
 
     public static string Logo = @"
@@ -35,15 +35,15 @@ class Program
             switch (GetMainMenuSelection())
             {
                 case "RE":
-                    var userCreation = new UserCreation(Services);
+                    var userCreation = new UserCreation();
                     userCreation.CreateUser();
                     break;
                 case "UM":
-                    MovieList movieList = new MovieList(Services);
+                    MovieList movieList = new MovieList();
                     movieList.Run();
                     break;
                 case "CM":
-                    var createMovieFlow = new CreateMovieFlow(Services);
+                    var createMovieFlow = new CreateMovieFlow();
                     createMovieFlow.Run();
                     break;
                 case "AU":
@@ -55,11 +55,11 @@ class Program
                     Logout();
                     break;
                 case "LI":
-                    var userLogin = new UserLogin(Services);
+                    var userLogin = new UserLogin();
                     userLogin.Run();
                     break;
                 case "CS":
-                    var createShowtime = new CreateShowtime(Services);
+                    var createShowtime = new CreateShowtime();
                     createShowtime.Run();
                     break;
                 default:
@@ -81,6 +81,7 @@ class Program
         services.AddSingleton<SeatRepository>();
         services.AddSingleton<ReservationRepository>();
         services.AddSingleton<AuditoriumRepository>();
+        services.AddSingleton<SeatReservationRepository>();
 
         services.AddSingleton<IUserService, UserLogic>();
         services.AddSingleton<IMovieService, MovieLogic>();
@@ -88,6 +89,7 @@ class Program
         services.AddSingleton<ISeatService, SeatLogic>();
         services.AddSingleton<IReservationService, ReservationLogic>();
         services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
+        services.AddSingleton<ISeatReservationService, SeatReservationLogic>();
 
         Services = services.BuildServiceProvider();
     }
@@ -141,10 +143,7 @@ class Program
 
     public static void StartReservation(Movie movie)
     {
-        var reservationFlow = new ReservationFlow(
-            Services,
-            movie
-        );
+        var reservationFlow = new ReservationFlow(movie);
 
         reservationFlow.Run();
     }

@@ -18,4 +18,14 @@ public class SeatReservationLogic : ISeatReservationService
         SeatReservationRepository seatReservationRepository = new();
         return seatReservationRepository.GetReservedSeatsByShowtimeId(showtimeId);
     }
+    
+    public void Create(SeatReservation seatReservation)
+    {
+        _seatReservationRepository.AddSeatReservation(seatReservation);
+    }
+
+    public bool IsSeatTaken(int showtimeId, int seatId)
+    {
+        return _seatReservationRepository.IsSeatTaken(showtimeId, seatId);
+    }
 }
