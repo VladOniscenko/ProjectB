@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProjectB.Logic;
 
-namespace UnitTests;
+namespace ProjectB.UnitTests;
 
 [TestClass]
 public class PaymentProviderTest
