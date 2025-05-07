@@ -11,7 +11,7 @@ public class UserLogicTest
     {
     }
     
-    private UserLogic _userLogic;
+    private UserLogic? _userLogic;
 
     [TestInitialize]
     public void Initialize()

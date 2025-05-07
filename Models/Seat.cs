@@ -36,4 +36,14 @@ public class Seat : IEquatable<Seat>, IComparable<Seat>
     {
         return !(left == right);
     }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj);
+    }
+    
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }
