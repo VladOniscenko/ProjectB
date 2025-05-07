@@ -3,6 +3,7 @@ using ProjectB.Logic;
 
 namespace ProjectB.UnitTests;
 
+[TestClass]
 public class ReservationTest
 {
     [DataTestMethod]
@@ -30,9 +31,10 @@ public class ReservationTest
     [DataRow(0.01, true)]
     [DataRow(0.00, false)]
     [DataRow(-10.00, false)]
-    public void ValidatesTotalPrice(decimal price, bool expectedResult)
+    public void ValidatesTotalPrice(object price, bool expectedResult)
     {
-        bool res = ReservationLogic.IsTotalPriceValid(price);
+        decimal amount = Convert.ToDecimal(price);
+        bool res = ReservationLogic.IsTotalPriceValid(amount);
         Assert.AreEqual(res, expectedResult);
     }
     
@@ -45,6 +47,7 @@ public class ReservationTest
         bool res = ReservationLogic.IsUserValid(id);
         Assert.AreEqual(res, expectedResult);
     }
+
 }
 
 
