@@ -28,20 +28,29 @@ public class ReservationLogic : IReservationService
         return _reservationRepository.UpdateReservation(reservation);
     }
 
+    public static bool IsShowtimeValid(int showtimeId) => showtimeId > 0;
+    public static bool IsSeatsValid(List<Seat> seats) => seats != null && seats.Count > 0;
+    public static bool IsPaymentMethodValid(string method) => !string.IsNullOrWhiteSpace(method) && method.Length > 0;
+    public static bool IsUserValid(int userId) => userId > 0;
+    public static bool IsTotalPriceValid(decimal price) => price > 0;
+
     public ReservationError? CreateReservation(int showtimeId, List<Seat> seats, string paymentMethod, int userId)
     {
-        if (showtimeId <= 0)
+        if (!IsShowtimeValid(showtimeId))
             return new ReservationError("INVALID_SHOWTIME_ID", "Invalid showtime ID.");
 
-        if (seats == null || seats.Count == 0)
+        if (!IsSeatsValid(seats))
             return new ReservationError("INVALID_SEAT_SELECTION", "At least one seat must be selected.");
 
-        if (string.IsNullOrWhiteSpace(paymentMethod))
+        if (!IsPaymentMethodValid(paymentMethod))
             return new ReservationError("INVALID_PAYMENT_METHOD", "Payment method is required.");
 
-        if (userId <= 0)
+        if (!IsUserValid(0))
             return new ReservationError("INVALID_USER_ID", "Invalid user ID.");
-
+        
+        if (!IsTotalPriceValid(_seatService.GetTotalPrice(seats)))
+            return new ReservationError("INVALID_TOTAL_PRICE", "Invalid total price.");
+        
         var reservation = new Reservation
         {
             ShowtimeId = showtimeId,
