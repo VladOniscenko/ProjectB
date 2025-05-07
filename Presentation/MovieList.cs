@@ -11,9 +11,9 @@ public class MovieList
     private const int MaxMoviesPerPage = 5;
     private readonly IServiceProvider _services;
 
-    public MovieList(IServiceProvider services)
+    public MovieList()
     {
-        _services = services;
+        _services = Program.Services;
         Running = false;
     }
 

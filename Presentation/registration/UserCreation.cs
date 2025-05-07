@@ -15,9 +15,9 @@ public class UserCreation
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
 
-    public UserCreation(IServiceProvider services)
+    public UserCreation()
     {
-        _services = services;
+        _services = Program.Services;
         _userService = _services.GetRequiredService<IUserService>();
     }
 

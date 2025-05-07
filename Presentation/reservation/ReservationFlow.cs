@@ -23,12 +23,12 @@ public class ReservationFlow
     private bool Running = false;
     private Auditorium? _auditorium { get; set; } = null;
 
-    public ReservationFlow(IServiceProvider services, Movie movie)
+    public ReservationFlow(Movie movie)
     {
-        _services = services;
-        _auditoriumService = services.GetRequiredService<IAuditoriumService>();
-        _seatService = services.GetRequiredService<ISeatService>();
-        _reservationService = services.GetRequiredService<IReservationService>();
+        _services = Program.Services;
+        _auditoriumService = _services.GetRequiredService<IAuditoriumService>();
+        _seatService = _services.GetRequiredService<ISeatService>();
+        _reservationService = _services.GetRequiredService<IReservationService>();
         _movie = movie;
 
         _currentState = ReservationState.Showtime;
@@ -230,7 +230,7 @@ public class ReservationFlow
         {
             case ReservationState.Showtime:
                 // 1. Handle showtime selection
-                _showtime = new SelectShowtime(_services, _movie).Run();
+                _showtime = new SelectShowtime(_movie).Run();
                 if (_showtime != null)
                 {
                     _currentState = ReservationState.Seats;
@@ -243,7 +243,7 @@ public class ReservationFlow
 
             case ReservationState.Seats:
                 // 2. select seats
-                _seats = new SeatSelection(_services, _movie, _showtime, _seats).Run();
+                _seats = new SeatSelection(_movie, _showtime, _seats).Run();
                 if (_seats != null && _seats.Count > 0)
                 {
                     _currentState = ReservationState.Tickets;
@@ -253,7 +253,7 @@ public class ReservationFlow
 
             case ReservationState.Tickets:
                 // 2. select tickets type (childrent, adults, seniors)
-                List<Seat> seats = new TicketSelection(_services, _seats).Run();
+                List<Seat> seats = new TicketSelection(_seats).Run();
                 if (seats != null && seats.Count > 0)
                 {
                     _seats = seats;
@@ -276,7 +276,7 @@ public class ReservationFlow
                     break;
                 }
 
-                new Authenticate(_services).Run();
+                new Authenticate().Run();
                 if (Program.CurrentUser != null)
                 {
                     _currentState = ReservationState.Pay;

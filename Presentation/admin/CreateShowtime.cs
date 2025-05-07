@@ -12,9 +12,9 @@ public class CreateShowtime
     private readonly IServiceProvider _services;
     private readonly IShowtimeService _showtimeLogic;
 
-    public CreateShowtime(IServiceProvider services)
+    public CreateShowtime()
     {
-        _services = services;
+        _services = Program.Services;
         _showtimeLogic = _services.GetRequiredService<IShowtimeService>();
     }
 

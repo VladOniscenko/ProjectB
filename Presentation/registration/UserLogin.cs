@@ -8,10 +8,10 @@ public class UserLogin
 {
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
-    public UserLogin(IServiceProvider services)
+    public UserLogin()
     {
-        _services = services;
-        _userService = services.GetRequiredService<IUserService>();
+        _services = Program.Services;
+        _userService = _services.GetRequiredService<IUserService>();
     }
     
     public bool Run()

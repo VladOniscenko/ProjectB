@@ -20,9 +20,9 @@ public class SeatSelection
     private Seat? _selectedSeat;
 
 
-    public SeatSelection(IServiceProvider services, Movie movie, Showtime showtime, List<Seat>? selectedSeats = null)
+    public SeatSelection(Movie movie, Showtime showtime, List<Seat>? selectedSeats = null)
     {
-        _services = services;
+        _services = Program.Services;
         _showtime = showtime;
         _movie = movie;
 

@@ -5,9 +5,9 @@ public class Authenticate
     
     private readonly IServiceProvider _services;
     private Dictionary<string, string> _options;
-    public Authenticate(IServiceProvider services)
+    public Authenticate()
     {
-        _services = services;
+        _services = Program.Services;
         _options = new()
         {
             { "LI", "Login" },
@@ -28,9 +28,9 @@ public class Authenticate
         switch (selection)
         {
             case "RE":
-                return new UserCreation(_services).CreateUser();
+                return new UserCreation().CreateUser();
             case "LI":
-                return new UserLogin(_services).Run();
+                return new UserLogin().Run();
             default:
                 return false;
         }

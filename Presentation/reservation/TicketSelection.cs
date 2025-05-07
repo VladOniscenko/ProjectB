@@ -10,9 +10,9 @@ public class TicketSelection
     private IServiceProvider _services;
     private ISeatService _seatService;
     private List<Seat> _seats;
-    public TicketSelection(IServiceProvider serviceProvider, List<Seat> seats)
+    public TicketSelection(List<Seat> seats)
     {
-        _services = serviceProvider;
+        _services = Program.Services;
         _seats = seats;
         _seatService = _services.GetRequiredService<ISeatService>();
     }
