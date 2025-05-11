@@ -14,4 +14,8 @@ public class SearchMovieLogic : ISearchMovieService{
         return _movieRepository.GetMoviesByTitle(title);
     }
 
+    public List<Movie> GetSearchedMovies(string title, int amount){
+        return _movieRepository.GetMoviesByTitle(title, amount);
+    }
+
 }

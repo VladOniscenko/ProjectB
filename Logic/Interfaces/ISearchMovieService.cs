@@ -5,4 +5,6 @@ namespace ProjectB.Logic.Interfaces;
 public interface ISearchMovieService
 {
     public List<Movie> GetSearchedMovies(string title);
+    public List<Movie> GetSearchedMovies(string title, int amount);
+
 }
