@@ -38,6 +38,9 @@ class Program
                     var userCreation = new UserCreation(Services);
                     userCreation.CreateUser();
                     break;
+                case "SM":
+                    SearchMovie.SearchForMovies();
+                    break;
                 case "UM":
                     MovieList movieList = new MovieList(Services);
                     movieList.Run();
@@ -97,6 +100,7 @@ class Program
         Dictionary<string, string> menuOptions = new()
         {
             { "UM", "Upcoming Movies" },
+            { "SM", "Search Movie"},
             { "AU", "About us" },
         };
 
