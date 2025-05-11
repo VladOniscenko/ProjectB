@@ -39,7 +39,8 @@ class Program
                     userCreation.CreateUser();
                     break;
                 case "SM":
-                    SearchMovie.SearchForMovies();
+                    SearchMovie searchMovie = new(Services);
+                    searchMovie.SearchForMovies();
                     break;
                 case "UM":
                     MovieList movieList = new MovieList(Services);
@@ -91,6 +92,7 @@ class Program
         services.AddSingleton<ISeatService, SeatLogic>();
         services.AddSingleton<IReservationService, ReservationLogic>();
         services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
+        services.AddSingleton<ISearchMovieService, SearchMovieLogic>();
 
         Services = services.BuildServiceProvider();
     }
