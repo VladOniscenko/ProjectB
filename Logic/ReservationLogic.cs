@@ -45,7 +45,7 @@ public class ReservationLogic : IReservationService
         if (!IsPaymentMethodValid(paymentMethod))
             return new ReservationError("INVALID_PAYMENT_METHOD", "Payment method is required.");
 
-        if (!IsUserValid(0))
+        if (!IsUserValid(userId))
             return new ReservationError("INVALID_USER_ID", "Invalid user ID.");
         
         if (!IsTotalPriceValid(_seatService.GetTotalPrice(seats)))
