@@ -4,7 +4,15 @@ namespace ProjectB.Logic.Interfaces;
 
 public interface ISearchMovieService
 {
-    public List<Movie> GetSearchedMovies(string title);
-    public List<Movie> GetSearchedMovies(string title, int amount);
+    public List<Movie> GetSearchedMoviesByTitle(string title);
+    public List<Movie> GetSearchedMoviesByTitle(string title, int amount);
+    public List<Movie> GetSearchedMoviesByGenre(string genre);
+    public List<Movie> GetSearchedMovieByActor(string actor);
+    public List<Movie> GetSearchedMovieByTitleAndGenre(string title, string genre);
+    public List<Movie> GetSearchedMovieByTitleAndActor(string title, string actor);
+    public List<Movie> GetSearchedMovieByGenreAndActor(string genre, string actor);
+
+    public List<Movie> GetSearchedMovieByGenreTitleAndActor(string title, string genre, string actor);
+    public bool DoesGenreExist(string genre);
 
 }
