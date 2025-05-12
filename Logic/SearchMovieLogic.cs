@@ -46,7 +46,7 @@ public class SearchMovieLogic : ISearchMovieService{
         return _movieRepository.GetMoviesByGenreAndActor(genre, actor);
     }
 
-    public List<Movie> GetSearchedMovieByGenreTitleAndActor(string title, string genre, string actor)
+    public List<Movie> GetSearchedMovieByTitleGenreAndActor(string title, string genre, string actor)
     {
         return _movieRepository.GetMoviesByTitleGenreAndActor(title, genre, actor);
     }
