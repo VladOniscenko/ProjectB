@@ -11,9 +11,9 @@ public class MovieList
     private const int MaxMoviesPerPage = 5;
     private readonly IServiceProvider _services;
 
-    public MovieList(IServiceProvider services)
+    public MovieList()
     {
-        _services = services;
+        _services = Program.Services;
         Running = false;
     }
 
@@ -101,7 +101,12 @@ public class MovieList
         Console.WriteLine($"Actors          : {movie.Actors}");
         Console.WriteLine($"Rating          : {CalcStars(movie.Rating)} ({movie.Rating}/5)");
         Console.WriteLine($"Genre           : {movie.Genre}");
-        Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        
+        if (movie.AgeRestriction > 0)
+        {
+            Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        }
+        
         Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
         Console.WriteLine($"Country         : {movie.Country}");
     }
@@ -110,7 +115,7 @@ public class MovieList
     private void ShowPurchaseMenu(Movie movie)
     {
         int startingRow = Console.CursorTop + 2;
-        List<string> options = new() { "Check availability", "Back to Movie List" };
+        List<string> options = new() { "Book or view availability", "Back to Movie List" };
         int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
         if (selected == 1)
@@ -120,6 +125,7 @@ public class MovieList
         }
         
         // start reservation process
+        Running = false;
         Program.StartReservation(movie);
     }
 

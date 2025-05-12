@@ -4,8 +4,8 @@ namespace ProjectB.Logic.Interfaces;
 
 public interface IReservationService
 {
-    // bool SelectShowtime(Showtime? showtime);
-    // void AddOrRemoveSeat(Seat seat);
-    // bool ConfirmReservation();
+    public ReservationError? CreateReservation(int showtimeId, List<Seat> seats, string paymentMethod, int userId);
     // void CancelReservation();
+
+    bool UpdateReservation(Reservation reservation);
 }
