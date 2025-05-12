@@ -37,6 +37,7 @@ public class MovieList
             }
             else{
                 ConsoleMethods.Error("No movies found with requested paramaters");
+                Running = true;
             }
             return;
         }
