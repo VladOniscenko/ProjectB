@@ -205,13 +205,14 @@ public class MovieRepository
         ).ToList();
     }
 
-    public List<string> GetAllGenres()
+    public List<string> GetGenre(string genre)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
 
         return connection.Query<string>(
-            "SELECT DISTINCT Genre FROM Movies"
+            "SELECT * FROM Movies WHERE LOWER(Genre) LIKE LOWER('%' || @Genre || '%') LIMIT @Count",
+            new { Count = 1, Genre = genre }
         ).ToList();
     }
     

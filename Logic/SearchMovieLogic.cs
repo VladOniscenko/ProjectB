@@ -52,8 +52,11 @@ public class SearchMovieLogic : ISearchMovieService{
         return _movieRepository.GetMoviesByTitleGenreAndActor(title, genre, actor);
     }
 
-    public List<Movie> FindSpeceficMovieList(string title, string genre, string actor){
-        if(title != "" && genre != "" && actor == ""){
+    public List<Movie>? FindSpeceficMovieList(string title, string genre, string actor){
+        if(title != "" && genre == "" && actor == ""){
+            return GetSearchedMoviesByTitle(title, 30);
+        }
+        else if(title != "" && genre != "" && actor == ""){
            return GetSearchedMovieByTitleAndGenre(title, genre);
         }
         else if(title != "" && genre == "" && actor !=""){
@@ -69,13 +72,13 @@ public class SearchMovieLogic : ISearchMovieService{
             return GetSearchedMovieByTitleGenreAndActor(title, genre, actor);
         }
         else{
-            return GetSearchedMoviesByTitle(title, 30);
+            return null;
         }
     }
 
 
     public bool DoesGenreExist(string genre){
-        return _movieRepository.GetAllGenres().Contains(genre);
+        return _movieRepository.GetGenre(genre).Count() != 0;
     }
 
 
