@@ -81,6 +81,9 @@ public class SearchMovie{
         else if(movieName != "" && genre == "" && actor !=""){
             foundMovies = _searchMovieService.GetSearchedMovieByTitleAndActor(movieName, actor);
         }
+        else if(movieName == "" && genre == "" && actor !=""){
+            foundMovies = _searchMovieService.GetSearchedMovieByActor(actor);
+        }
         else if(movieName == "" && genre != "" && actor !=""){
             foundMovies = _searchMovieService.GetSearchedMovieByGenreAndActor(genre, actor);
         }
