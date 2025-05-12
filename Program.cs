@@ -62,6 +62,10 @@ class Program
                     var createShowtime = new CreateShowtime(Services);
                     createShowtime.Run();
                     break;
+                case "UP":
+                    var userProfile = new UserProfile(Services);
+                    userProfile.Run();
+                    break;
                 default:
                     ConsoleMethods.Error("Invalid option.");
                     break;
@@ -102,10 +106,12 @@ class Program
 
         if (CurrentUser != null)
         {
-            menuOptions.Add("LO", "Log out");
+            // menuOptions.Add("LO", "Log out");    This option will be moved to the 'User Profile' menu option!
+            
         
             if (CurrentUser.IsAdmin)
             {
+                menuOptions.Add("UP", "Profile");
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
             }
