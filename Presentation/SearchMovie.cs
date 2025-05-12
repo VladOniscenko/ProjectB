@@ -10,8 +10,8 @@ public class SearchMovie{
     private readonly IServiceProvider _services;
     private readonly ISearchMovieService _searchMovieService;
 
-    public SearchMovie(IServiceProvider services){
-        _services = services;
+    public SearchMovie(){
+        _services = Program.Services;
         _searchMovieService = _services.GetRequiredService<ISearchMovieService>();
     }
 
@@ -109,7 +109,7 @@ public class SearchMovie{
         ConsoleMethods.AnimateLoadingText("Searching for movies");
         
 
-        MovieList movieList = new(_services);
+        MovieList movieList = new MovieList();
         movieList.Run(foundMovies);
 
         if(!movieList.Running){
