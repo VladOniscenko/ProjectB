@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
@@ -49,6 +50,27 @@ public class SearchMovieLogic : ISearchMovieService{
     public List<Movie> GetSearchedMovieByTitleGenreAndActor(string title, string genre, string actor)
     {
         return _movieRepository.GetMoviesByTitleGenreAndActor(title, genre, actor);
+    }
+
+    public List<Movie> FindSpeceficMovieList(string title, string genre, string actor){
+        if(title != "" && genre != "" && actor == ""){
+           return GetSearchedMovieByTitleAndGenre(title, genre);
+        }
+        else if(title != "" && genre == "" && actor !=""){
+            return GetSearchedMovieByTitleAndActor(title, actor);
+        }
+        else if(title == "" && genre == "" && actor !=""){
+            return GetSearchedMovieByActor(actor);
+        }
+        else if(title == "" && genre != "" && actor !=""){
+            return GetSearchedMovieByGenreAndActor(genre, actor);
+        }
+        else if(title != "" && genre != "" && actor !=""){
+            return GetSearchedMovieByTitleGenreAndActor(title, genre, actor);
+        }
+        else{
+            return GetSearchedMoviesByTitle(title, 30);
+        }
     }
 
 

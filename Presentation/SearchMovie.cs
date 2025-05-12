@@ -78,28 +78,7 @@ public class SearchMovie{
 
         ConsoleMethods.AnimateLoadingText("Searching for movies");
 
-        List<Movie> foundMovies;
-
-
-        //vm moet dit in logic layer
-        if(movieName != "" && genre != "" && actor ==""){
-            foundMovies = _searchMovieService.GetSearchedMovieByTitleAndGenre(movieName, genre);
-        }
-        else if(movieName != "" && genre == "" && actor !=""){
-            foundMovies = _searchMovieService.GetSearchedMovieByTitleAndActor(movieName, actor);
-        }
-        else if(movieName == "" && genre == "" && actor !=""){
-            foundMovies = _searchMovieService.GetSearchedMovieByActor(actor);
-        }
-        else if(movieName == "" && genre != "" && actor !=""){
-            foundMovies = _searchMovieService.GetSearchedMovieByGenreAndActor(genre, actor);
-        }
-        else if(movieName != "" && genre != "" && actor !=""){
-            foundMovies = _searchMovieService.GetSearchedMovieByTitleGenreAndActor(movieName, genre, actor);
-        }
-        else{
-            foundMovies = _searchMovieService.GetSearchedMoviesByTitle(movieName, 30);
-        }
+        List<Movie> foundMovies = _searchMovieService.FindSpeceficMovieList(movieName, genre, actor);
         
 
         MovieList movieList = new(_services);

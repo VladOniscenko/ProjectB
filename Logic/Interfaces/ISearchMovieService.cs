@@ -13,6 +13,7 @@ public interface ISearchMovieService
     public List<Movie> GetSearchedMovieByGenreAndActor(string genre, string actor);
 
     public List<Movie> GetSearchedMovieByTitleGenreAndActor(string title, string genre, string actor);
+    public List<Movie> FindSpeceficMovieList(string title, string genre, string actor);
     public bool DoesGenreExist(string genre);
 
 }
