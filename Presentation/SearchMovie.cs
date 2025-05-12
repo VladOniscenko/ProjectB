@@ -25,15 +25,15 @@ public class SearchMovie{
         Console.SetCursorPosition(0, 1);
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write(new string(' ', 50));
+        Console.Write(new string(' ', 40));
         Console.ResetColor();
 
         Console.SetCursorPosition(0, 3);
         Console.Write("Genre: ");
         Console.SetCursorPosition(0, 4);
-        Console.BackgroundColor = ConsoleColor.White;
+        Console.BackgroundColor = ConsoleColor.DarkGray;
         Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write(new string(' ', 20));
+        Console.Write(new string(' ', 40));
         Console.ResetColor();
 
         
@@ -49,20 +49,25 @@ public class SearchMovie{
         Console.SetCursorPosition(0, 6);
         Console.Write("Actor's/Actress' name: ");
         Console.SetCursorPosition(0, 7);
-        Console.BackgroundColor = ConsoleColor.White;
+        Console.BackgroundColor = ConsoleColor.DarkGray;
         Console.ForegroundColor = ConsoleColor.Black;
-        Console.Write(new string(' ', 30));
+        Console.Write(new string(' ', 40));
+        Console.BackgroundColor = ConsoleColor.White;
 
         Console.SetCursorPosition(0, 1);
-        string movieName = BaseUI.ReadInputBox(0, 50, false, 1, null);
+        string movieName = BaseUI.ReadInputBox(0, 40, false, 1, null);
         Console.SetCursorPosition(0,4);
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
-        string genre = BaseUI.ReadInputBox(0, 20, false, 4, null);
+        Console.Write(new string(' ', 40));
+        Console.SetCursorPosition(0,4);
+        string genre = BaseUI.ReadInputBox(0, 40, false, 4, null);
         Console.SetCursorPosition(0,7);
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
-        string actor = BaseUI.ReadInputBox(0, 30, false, 7, null);
+        Console.Write(new string(' ', 40));
+        Console.SetCursorPosition(0,7);
+        string actor = BaseUI.ReadInputBox(0, 40, false, 7, null);
         Console.ResetColor();
         Console.Clear();
         // Console.WriteLine($"Movies found for'{movieName}'\n=============================");
