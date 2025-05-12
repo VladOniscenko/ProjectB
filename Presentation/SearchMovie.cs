@@ -26,15 +26,15 @@ public class SearchMovie{
         Console.BackgroundColor = ConsoleColor.White;
         Console.ForegroundColor = ConsoleColor.Black;
         Console.Write(new string(' ', 50));
-        // Console.ResetColor();
+        Console.ResetColor();
 
-        // Console.SetCursorPosition(0, 3);
-        // Console.Write("Genre: ");
-        // Console.SetCursorPosition(0, 4);
-        // Console.BackgroundColor = ConsoleColor.White;
-        // Console.ForegroundColor = ConsoleColor.Black;
-        // Console.Write(new string(' ', 20));
-        // Console.ResetColor();
+        Console.SetCursorPosition(0, 3);
+        Console.Write("Genre: ");
+        Console.SetCursorPosition(0, 4);
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
+        Console.Write(new string(' ', 20));
+        Console.ResetColor();
 
         
         // Console.SetCursorPosition(28, 3);
@@ -46,25 +46,54 @@ public class SearchMovie{
         // Console.ResetColor();
 
 
-        // Console.SetCursorPosition(0, 6);
-        // Console.Write("Actors name: ");
-        // Console.SetCursorPosition(0, 7);
-        // Console.BackgroundColor = ConsoleColor.White;
-        // Console.ForegroundColor = ConsoleColor.Black;
-        // Console.Write(new string(' ', 30));
+        Console.SetCursorPosition(0, 6);
+        Console.Write("Actor's/Actress' name: ");
+        Console.SetCursorPosition(0, 7);
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
+        Console.Write(new string(' ', 30));
 
         Console.SetCursorPosition(0, 1);
         string movieName = BaseUI.ReadInputBox(0, 50, false, 1, null);
+        Console.SetCursorPosition(0,4);
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
+        string genre = BaseUI.ReadInputBox(0, 20, false, 4, null);
+        Console.SetCursorPosition(0,7);
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
+        string actor = BaseUI.ReadInputBox(0, 30, false, 7, null);
         Console.ResetColor();
         Console.Clear();
-        Console.WriteLine($"Movies found for'{movieName}'\n=============================");
+        // Console.WriteLine($"Movies found for'{movieName}'\n=============================");
 
         // foreach(Movie movie in _searchMovieService.GetSearchedMovies(movieName, 30)){
         //     Console.WriteLine(movie.Title);
         // }
 
+        List<Movie> foundMovies;
+
+
+        //vm moet dit in logic layer
+        if(movieName != "" && genre != "" && actor ==""){
+            foundMovies = _searchMovieService.GetSearchedMovieByTitleAndGenre(movieName, genre);
+        }
+        else if(movieName != "" && genre == "" && actor !=""){
+            foundMovies = _searchMovieService.GetSearchedMovieByTitleAndActor(movieName, actor);
+        }
+        else if(movieName == "" && genre != "" && actor !=""){
+            foundMovies = _searchMovieService.GetSearchedMovieByGenreAndActor(genre, actor);
+        }
+        else if(movieName != "" && genre != "" && actor !=""){
+            foundMovies = _searchMovieService.GetSearchedMovieByTitleGenreAndActor(movieName, genre, actor);
+        }
+        else{
+            foundMovies = _searchMovieService.GetSearchedMoviesByTitle(movieName, 30);
+        }
+        
+
         MovieList movieList = new(_services);
-        movieList.Run(_searchMovieService.GetSearchedMovies(movieName, 30));
+        movieList.Run(foundMovies);
 
         if(!movieList.Running){
             break;
