@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectB;
 using ProjectB.DataAccess;
@@ -28,7 +29,8 @@ class Program
     static void Main(string[] args)
     {
         InitializeServices();
-
+        Console.OutputEncoding = Encoding.UTF8;
+        
         while (true)
         {
             Console.Clear();
