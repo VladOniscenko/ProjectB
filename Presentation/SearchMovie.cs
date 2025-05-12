@@ -71,6 +71,8 @@ public class SearchMovie{
         //     Console.WriteLine(movie.Title);
         // }
 
+        ConsoleMethods.AnimateLoadingText("Searching for movies");
+
         List<Movie> foundMovies;
 
 
