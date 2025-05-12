@@ -7,7 +7,7 @@ namespace ProjectB.Presentation;
 
 public class MovieList
 {
-    private bool Running;
+    public bool Running{get; private set;}
     private const int MaxMoviesPerPage = 5;
     private readonly IServiceProvider _services;
 
@@ -18,15 +18,27 @@ public class MovieList
     }
 
     // Takes from the Repo and makes a list of movies
-    public void Run()
+    public void Run(IEnumerable<Movie>? searchedMovies = null)
     {
         Console.Clear();
         var _movieLogic = _services.GetRequiredService<IMovieService>();
-        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
+        IEnumerable<Movie> movies;
+        if(searchedMovies is null){
+        movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
+        }
+        else{
+             movies = searchedMovies;
+        }
 
         if (movies.Count() == 0)
         {
-            ConsoleMethods.Error("No movies available this week.");
+            if(searchedMovies is null){
+                ConsoleMethods.Error("No movies available this week.");
+            }
+            else{
+                ConsoleMethods.Error("No movies found with requested paramaters");
+                Running = true;
+            }
             return;
         }
 
@@ -62,7 +74,12 @@ public class MovieList
                 movieOptions.Add("P", "Previous Page");
             }
 
+            if(searchedMovies is not null){
+                movieOptions.Add("S", "Go back to search menu");
+            }
+
             movieOptions.Add("M", "Back to Main Menu");
+
             // show the movies in the menu
             var selectedOption = Menu.SelectMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
             switch (selectedOption)
@@ -73,6 +90,8 @@ public class MovieList
                 case "P":
                     page--;
                     break;
+                case "S":
+                    return;
                 case "M":
                     Running = false;
                     break;

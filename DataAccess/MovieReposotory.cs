@@ -110,6 +110,16 @@ public class MovieRepository
             new { Count = count }
         ).ToList();
     }
+
+    public List<Movie> GetMoviesByActor(string actor, int limit){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Actors) LIKE LOWER('%' || @Actor || '%') LIMIT @Count",
+            new { Count = limit, Actor = actor }
+        ).ToList();
+    }
     
     public List<Movie> GetMoviesByGenre(string genre, int limit = 10)
     {
@@ -133,6 +143,57 @@ public class MovieRepository
         ).ToList();
     }
 
+    public List<Movie> GetMoviesByTitleAndGenre(string title, string genre, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Title) LIKE LOWER('%' || @Title || '%')" +
+            "AND LOWER(Genre) LIKE LOWER('%' || @Genre || '%') LIMIT @Count",
+            new { Count = limit, Title = title, Genre = genre }
+        ).ToList();
+    }
+
+    public List<Movie> GetMoviesByTitleAndActor(string title, string actor, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Title) LIKE LOWER('%' || @Title || '%')" +
+            "AND LOWER(Actors) LIKE LOWER('%' || @Actor || '%') LIMIT @Count",
+            new { Count = limit, Title = title, Actor = actor }
+        ).ToList();
+    }
+
+    public List<Movie> GetMoviesByGenreAndActor(string genre, string actor, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Genre) LIKE LOWER('%' || @Genre || '%')" +
+            "AND LOWER(Actors) LIKE LOWER('%' || @Actor || '%') LIMIT @Count",
+            new { Count = limit, Genre = genre, Actor = actor }
+        ).ToList();
+    }
+
+    public List<Movie> GetMoviesByTitleGenreAndActor(string title, string genre, string actor, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+    
+        return connection.Query<Movie>(
+            "SELECT * FROM Movies WHERE LOWER(Title) LIKE LOWER('%' || @Title || '%')" +
+            "AND LOWER(Genre) LIKE LOWER('%' || @Genre || '%')" +
+            "AND LOWER(Actors) LIKE LOWER('%' || @Actor || '%') LIMIT @Count",
+            new { Count = limit, Title = title, Genre = genre , Actor = actor}
+        ).ToList();
+    }
+
+
+
     public List<Movie> GetMoviesWithShowtimeInNextDays(int days, int limit = 50)
     {
         using var connection = DbFactory.CreateConnection();
@@ -141,6 +202,17 @@ public class MovieRepository
         return connection.Query<Movie>(
             "SELECT m.* FROM Movies as m LEFT JOIN Showtimes as s ON s.MovieId = m.Id WHERE s.StartTime BETWEEN DATETIME('now') AND DATETIME('now', '+' || @Days || ' days') GROUP BY m.Id LIMIT @Limit",
             new {Days = days, Limit = limit}
+        ).ToList();
+    }
+
+    public List<string> GetGenre(string genre)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        return connection.Query<string>(
+            "SELECT * FROM Movies WHERE LOWER(Genre) LIKE LOWER('%' || @Genre || '%') LIMIT @Count",
+            new { Count = 1, Genre = genre }
         ).ToList();
     }
     

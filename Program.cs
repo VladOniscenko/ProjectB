@@ -40,6 +40,10 @@ class Program
                     var userCreation = new UserCreation();
                     userCreation.CreateUser();
                     break;
+                case "SM":
+                    SearchMovie searchMovie = new SearchMovie();
+                    searchMovie.SearchForMovies();
+                    break;
                 case "UM":
                     MovieList movieList = new MovieList();
                     movieList.Run();
@@ -91,7 +95,6 @@ class Program
         services.AddSingleton<ISeatService, SeatLogic>();
         services.AddSingleton<IReservationService, ReservationLogic>();
         services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
-        services.AddSingleton<ISeatReservationService, SeatReservationLogic>();
 
         Services = services.BuildServiceProvider();
     }
@@ -101,6 +104,7 @@ class Program
         Dictionary<string, string> menuOptions = new()
         {
             { "UM", "Upcoming Movies" },
+            { "SM", "Search Movie"},
             { "AU", "About us" },
         };
 
