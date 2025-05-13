@@ -11,4 +11,5 @@ public interface IUserService
     void CreateUser(User user);
     User? Authenticate(string email, string password);
     bool IsPasswordIdentical(string password, string passwordHash);
+    public void UpdateUser(User user);
 }

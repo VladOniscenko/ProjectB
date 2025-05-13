@@ -57,4 +57,9 @@ public class UserLogic : IUserService
 
         return null;
     }
+
+    public void UpdateUser(User user)
+    {
+        _userRepository.UpdateUser(user);
+    }
 }

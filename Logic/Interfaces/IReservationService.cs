@@ -10,4 +10,5 @@ public interface IReservationService
     // void CancelReservation();
 
     public IEnumerable<Reservation> GetReservationsById(int userId);
+    string GetReservationInfo(Reservation reservation);
 }

@@ -89,4 +89,26 @@ public class UserRepository
         connection.Open();
         return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email LIMIT 1", new { email });
     }
+
+    // Gotta thank Jesse for the help on this one
+    public void UpdateUser(User user)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        
+        string query = @"
+            UPDATE Users
+            SET FirstName = @FirstName,
+                LastName = @LastName,
+                Email = @Email,
+                Password = @Password,
+                IsAdmin = @IsAdmin
+            WHERE Id = @Id";
+
+        connection.Execute(query, new
+        {
+            user.FirstName, user.LastName, user.Email,
+            user.Password, user.IsAdmin, user.Id
+        });
+    }
 }
