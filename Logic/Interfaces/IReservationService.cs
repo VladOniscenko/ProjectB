@@ -8,4 +8,6 @@ public interface IReservationService
     // void AddOrRemoveSeat(Seat seat);
     // bool ConfirmReservation();
     // void CancelReservation();
+
+    public IEnumerable<Reservation> GetReservationsById(int userId);
 }

@@ -102,7 +102,6 @@ public class CreateShowtime
             Thread.Sleep(1000);
             Console.WriteLine("Would you like to add another showtime?");
 
-            // Issue: BasicYesOrNo menu is glitched when used a second time for some reason.
             if (BaseUI.BasicYesOrNo())
             {
                 Run();

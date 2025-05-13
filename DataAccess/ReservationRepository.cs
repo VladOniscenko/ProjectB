@@ -37,4 +37,13 @@ public class ReservationRepository
         connection.Open();
         return connection.Query<Reservation>("SELECT * FROM Reservations");
     }
+
+    // New method to get all reservations from a specific user
+    public IEnumerable<Reservation> GetReservationsById(int userId)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<Reservation>("SELECT * FROM Reservations WHERE UserId = @UserId",
+            new { UserId = userId });
+    }
 }
