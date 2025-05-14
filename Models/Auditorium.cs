@@ -17,6 +17,6 @@ public class Auditorium
 
     public override string ToString()
     {       
-        return $"{Name} | {TotalSeats}   | {CinemaId}";
+        return $"{Name} | {TotalSeats}";
     }
 }

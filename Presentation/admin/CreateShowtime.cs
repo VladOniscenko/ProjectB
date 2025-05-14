@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ProjectB;
 using ProjectB.DataAccess;
 using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
@@ -20,42 +21,43 @@ public class CreateShowtime
 
     public void Run()
     {
-        Console.ResetColor();
         Console.CursorVisible = false;
-        Console.Clear();
-
-        Console.WriteLine("╔═════════════════════════════╗");
-        Console.WriteLine("║       Create  Showtime      ║");
-        Console.WriteLine("╚═════════════════════════════╝");
 
         Showtime newShowtime = new Showtime();
-
-        Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
-        string movieName = Console.ReadLine().Trim();
-
-        Console.Clear();
-
-        MovieRepository movieRepository = new MovieRepository();
-        List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
-
-        // Dunno how to make it so it has multiple pages.
-        while (!_showtimeLogic.IsMovieIDValid(movieName))
+        // Object of the selected movie
+        Movie selectedMovie;
+        while (true)
         {
             Console.Clear();
-            BaseUI.ShowErrorMessage("No input given. Please try again.\n", 0);
-            Console.WriteLine("Enter the name/keyword of the movie you want to create a showtime for.");
-            movieName = Console.ReadLine().Trim();
+
+            Console.WriteLine("╔═════════════════════════════╗");
+            Console.WriteLine("║       Create  Showtime      ║");
+            Console.WriteLine("╚═════════════════════════════╝");
+            
+            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
+            string movieName = Console.ReadLine().Trim();
+
+            MovieRepository movieRepository = new MovieRepository();
+            List<Movie> movies = movieRepository.GetMoviesByTitle(movieName);
+
+            Console.Clear();
+            
+            string selectedOption = SearchMovie("Found the following movies:", movies);
+    
+            if (selectedOption == "EX") return;
+            if (selectedOption == "SA") continue;
+
+            int parsedIndex;
+            bool success = int.TryParse(selectedOption, out parsedIndex);
+            if (success)
+            {
+                selectedMovie = movies.FirstOrDefault(x => x.Id == parsedIndex);
+                break;
+            };
+    
+            Console.WriteLine("Film niet gevonden.");
         }
-
-        // If not this, after incorrect input, menu won't search movies based on user input.
-        movies = movieRepository.GetMoviesByTitle(movieName);
-
-        Console.Clear();
-
-        int selectedMovieIndex = ShowMenuMovies("Found the following movies:", movies);
-
-        // Object of the selected movie
-        Movie selectedMovie = movies[selectedMovieIndex];
+        
         newShowtime.MovieId = selectedMovie.Id;
 
         Console.Clear();
@@ -69,20 +71,20 @@ public class CreateShowtime
 
         newShowtime.AuditoriumId = auditoriums[
             ShowMenuAuditoriums(
-            "Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats | ID",
+            "Select an auditorium for the previously selected movie.\n\n   Auditorium   | Seats ",
             auditoriums)
         ].Id;
 
         Console.Clear();
 
-        Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm:ss) for the movie you want to create a showtime for.");
+        Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm) for the movie you want to create a showtime for.");
         string movieStartTime = Console.ReadLine().Trim();
 
         while (!_showtimeLogic.IsMovieStartTimeValid(movieStartTime))
         {
             Console.Clear();
             BaseUI.ShowErrorMessage("Incorrect date, given. Please try again.\n", 0);
-            Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm:ss) for the movie you want to create a showtime for.");
+            Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm) for the movie you want to create a showtime for.");
             movieStartTime = Console.ReadLine().Trim();
         }
 
@@ -117,55 +119,19 @@ public class CreateShowtime
 
 // =============================================================================================================================================
 
-    public int ShowMenuMovies(string title, List<Movie> options )
+    public string SearchMovie(string title, List<Movie> options )
     {
-        int selected = 0;
-        ConsoleKey key;
-        List<string> writtenLines = new();
- 
-        do
+        
+        Dictionary<string, string> movieOptions = new();
+        foreach (Movie movie in options) 
         {
-            Console.SetCursorPosition(0,0);
-            Console.WriteLine(title);
-            Console.WriteLine(new string('═', title.Length));
-
-            for (int i = 0; i < options.Count; i++)
-            {
-                if (i == selected)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($">> {options[i]}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"   {options[i]}");
-                }
-                // Spaces between titles looks ugly tbh.
-                // Console.WriteLine(new string('-', options[i].Length));
-            }
-
-            if (options.Count == 0)
-            {   Console.WriteLine();
-                BaseUI.ShowErrorMessage("\nNo movies found with this title/keyword.", 6);
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selected = (selected == 0) ? options.Count - 1 : selected - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selected = (selected == options.Count - 1) ? 0 : selected + 1;
-                    break;
-            }
-
-        } while (key != ConsoleKey.Enter);
-
-        return selected;
+            movieOptions.Add(movie.Id.ToString(), movie.Title);
+        }
+        
+        movieOptions.Add("EX", "Exit");
+        movieOptions.Add("SA", "Search Again");
+        
+        return Menu.SelectMenu(title, movieOptions);
     }
 
     public int ShowMenuAuditoriums(string title, List<Auditorium> options )
