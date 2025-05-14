@@ -2,6 +2,7 @@ using Dapper;
 using ProjectB.Database;
 using System.Text.Json;
 using ProjectB.Models;
+using Bogus;
 
 namespace ProjectB.DataAccess;
 
@@ -29,6 +30,8 @@ public class MovieRepository
 
     public static void PopulateTable()
     {
+        var faker = new Faker(); 
+
         try
         {
             var movieRepo = new MovieRepository();
@@ -49,6 +52,12 @@ public class MovieRepository
 
             foreach (Movie movie in movies)
             {
+                string names = "";
+                for (int i = 0; i < 5; i++) 
+                { 
+                    names += faker.Name.FirstName() + " " + faker.Name.LastName() + ",";
+                }
+                movie.Actors = names;
                 movieRepo.AddMovie(movie);
             }
 
