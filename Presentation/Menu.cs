@@ -122,5 +122,73 @@ namespace ProjectB
 
             return optionKeys[selectedIndex];
         }
+
+        public static int AddMenuFromStartRow(string title, List<string> options, int startRow, int rowBuffer = 1)
+        {
+            int selected = 0;
+            ConsoleKey key;
+
+            do
+            {   
+                // Clear all lines below our starting row. 
+                ClearAllLinesDownFrom(startRow - (rowBuffer + 1));
+
+                // Set the cursor in the console to our starting row.
+                Console.SetCursorPosition(0, startRow - (rowBuffer + 1));
+
+                // Empty line for spacing.
+                Console.WriteLine();
+
+                // Write the menu itself
+                Console.WriteLine(new string('-', Console.WindowWidth));
+                Console.WriteLine(title);
+                Console.WriteLine(new string('-', Console.WindowWidth));
+
+                for (int i = 0; i < options.Count; i++)
+                {
+                    if (i == selected)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.WriteLine($"> {options[i]}");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  {options[i]}");
+                    }
+                }
+
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selected = (selected == 0) ? options.Count - 1 : selected - 1;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selected = (selected == options.Count - 1) ? 0 : selected + 1;
+                        break;
+                }
+
+            // Run while the user has not pressed Enter.
+            } while (key != ConsoleKey.Enter);
+
+
+            // Return the selected option.
+            return selected;
+        }
+
+        public static void ClearAllLinesDownFrom(int startRow)
+    {
+        int cursorPos = Console.CursorTop;
+        int lineAmount = cursorPos - startRow;
+
+        for (int i = 0; i < lineAmount; i++)
+        {
+            Console.SetCursorPosition(0, startRow + i);
+            Console.WriteLine(new string(' ', Console.WindowWidth)); // Clear the line
+        }
+    }
     }
 }
