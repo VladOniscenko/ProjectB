@@ -1,3 +1,4 @@
+using System.Numerics;
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
@@ -90,11 +91,19 @@ public class ReservationLogic : IReservationService
         return new ReservationError("SUCCESS", $"Reservation created successfully. ID: {reservationId}");
     }
 
-    private void Delete(int reservationId)
+    public void Delete(int reservationId)
     {
         _reservationRepository.Delete(reservationId);
     }
-    
+
+    public void Cancel(int Id)
+    {
+        _reservationRepository.Cancel(Id);
+    }
+    public IEnumerable<Reservation> GetReservationByUserID(User user)
+    {
+        return _reservationRepository.GetReservationsByUserID(user);
+    }
 }
 
 public class ReservationError

@@ -51,6 +51,10 @@ class Program
                 case "AU":
                     new AboutUs().Run();
                     break;
+                case "VP":
+                    var viewProfile = new ViewReservation();
+                    viewProfile.Run(CurrentUser);
+                    break;
                 case "EX":
                     return;
                 case "LO":
@@ -107,6 +111,7 @@ class Program
         if (CurrentUser != null)
         {
             menuOptions.Add("LO", "Log out");
+            menuOptions.Add("VP", "View profile");
         
             if (CurrentUser.IsAdmin)
             {

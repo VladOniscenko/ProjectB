@@ -68,4 +68,26 @@ public class ReservationRepository
         connection.Execute(@"
             DELETE FROM Reservations WHERE Id = @Id", new { Id = id });
     }
+
+    public IEnumerable<Reservation> GetReservationsByUserID(User user)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<Reservation>(@"SELECT * FROM Reservations WHERE Id = @Id", new {user.Id});
+    }
+
+    public void Cancel(int id)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        
+        connection.Execute(@"
+            DELETE FROM Seatreservations 
+            WHERE Id = @Id", new { Id = id, });
+
+        connection.Execute(@"
+            DELETE FROM Reservations 
+            WHERE Id = @Id", new { Id = id, });
+        
+    }
 }
