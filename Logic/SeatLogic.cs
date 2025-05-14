@@ -34,7 +34,7 @@ public class SeatLogic : ISeatService
                 _ => ticketType
             };
 
-            adjustedOptions.Add(ticketType, $"{description} ${finalPrice:F2}");
+            adjustedOptions.Add(ticketType, $"{description} €{finalPrice:F2}");
         }
 
         return adjustedOptions;
