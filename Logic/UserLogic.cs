@@ -37,9 +37,9 @@ public class UserLogic : IUserService
         return _userRepository.CheckIfUserExistByEmail(newEmail);
     }
 
-    public void CreateUser(User user)
+    public int? CreateUser(User user)
     {
-        _userRepository.AddUser(user);
+        return _userRepository.AddUser(user);
     }
     
     private bool VerifyPassword(string enteredPassword, string storedHash)

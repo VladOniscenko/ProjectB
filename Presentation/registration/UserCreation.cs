@@ -104,7 +104,14 @@ public class UserCreation
 
         if (CheckIfDataCorrect(newUser))
         {
-            _userService.CreateUser(newUser);
+            int? userId = _userService.CreateUser(newUser);
+            if (userId is null)
+            {
+                ConsoleMethods.Error("Something went wrong! Please try again.");
+                return false;
+            }
+            
+            newUser.Id = userId.Value;
             Program.CurrentUser = newUser;
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);

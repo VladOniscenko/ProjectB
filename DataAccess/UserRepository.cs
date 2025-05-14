@@ -56,17 +56,14 @@ public class UserRepository
         }
     }
     
-    public void AddUser(User user)
+    public int? AddUser(User user)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
 
         // Hash the password before storing it
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-        connection.Execute(@"
-        INSERT INTO Users (FirstName, LastName, Email, Password, IsAdmin) 
-        VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
+        return connection.QuerySingle<int>(@"INSERT INTO Users (FirstName, LastName, Email, Password, IsAdmin) VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin); SELECT last_insert_rowid();", user);
     }
 
     public IEnumerable<User> GetAllUsers()
