@@ -49,7 +49,7 @@ public class UserProfile
         {
             User? user = Program.CurrentUser;
             Console.Clear();
-            switch (EditProfileDetails())
+            switch (EditMenuSelection())
         {
             case "FN":
                 EditFirstName(user);
@@ -85,7 +85,7 @@ public class UserProfile
         return selectMenu.Run();
     }
 
-    public static string EditProfileDetails()
+    public static string EditMenuSelection()
     {
         string title = "Select information to edit.\n";
         Dictionary<string, string> menuOptions = new()
@@ -168,6 +168,7 @@ public class UserProfile
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/// Using Dmitiri's output checks for this!
     private void EditFirstName(User user)
     {
         Console.Clear();
