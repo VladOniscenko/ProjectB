@@ -90,7 +90,7 @@ public class CreateShowtime
 
             if (!_showtimeLogic.IsMovieStartTimeValid(movieStartTime))
             {
-                ConsoleMethods.Error("Incorrect date format. Please use yyyy-MM-dd HH:mm format.");
+                ConsoleMethods.Error("Something went wrong! Check if the date is correct format (yyyy-MM-dd HH:mm) and is not in the past!");
                 continue;
             }
 
