@@ -80,7 +80,6 @@ public class UserProfile
             { "RM", "Return to menu" },
         };
 
-
         var selectMenu = new Menu(title, menuOptions);
         return selectMenu.Run();
     }
@@ -122,7 +121,10 @@ public class UserProfile
         Console.WriteLine($"║ Last name:        {user.LastName,-32} ║");
         Console.WriteLine($"║ Email:            {user.Email,-32} ║");
         Console.WriteLine($"║ Password:         {"*********",-32} ║");
-        Console.WriteLine($"║ Is admin:         {(user.IsAdmin ? "Yes" : "No"),-32} ║");
+        if (user.IsAdmin)
+        {
+            Console.WriteLine($"║ Is admin:         {(user.IsAdmin ? "Yes" : "No"),-32} ║");
+        }
         Console.WriteLine("╚════════════════════════════════════════════════════╝\n");
         Console.WriteLine("Press 'Backspace' to edit personal information.");
         // IsAdmin is a 'ternary conditional'! Basically a shortened if/else lol. Note to remember that StackOverflow clutch knowledge.

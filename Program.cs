@@ -106,13 +106,10 @@ class Program
 
         if (CurrentUser != null)
         {
-            // menuOptions.Add("LO", "Log out");    This option will be moved to the 'User Profile' menu option!
+            menuOptions.Add("UP", "Profile");
             
-        
             if (CurrentUser.IsAdmin)
             {
-                // Remove profile from here and add to the above dictionary when done.
-                menuOptions.Add("UP", "Profile");
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
             }
