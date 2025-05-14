@@ -51,7 +51,7 @@ public class ShowtimeLogic : IShowtimeService
         {
             return false;
         }
-
+        
         parsedStartTime = result;
         return true;
     }

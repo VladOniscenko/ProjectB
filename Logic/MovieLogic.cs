@@ -85,4 +85,9 @@ public class MovieLogic : IMovieService
         }
         return false;
     }
+    
+    public IEnumerable<Movie> GetMoviesByTitle(string title, int limit = 10)
+    {
+        return _movieRepository.GetMoviesByTitle(title, limit);
+    }
 }
