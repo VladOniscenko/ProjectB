@@ -53,7 +53,7 @@ public class ViewReservation
                 break;
 
                 default:
-                    Reservation reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
+                    Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
 
                     ShowReservationInformation(reservation);
                     ShowPurchaseMenu(reservation);
@@ -66,14 +66,21 @@ public class ViewReservation
 
     public void ShowReservationInformation(Reservation reservation)
     {
+        var ReservationShowtime = _reservationService.GetShowtimeByShowtimeId(reservation);
+        var ReservationMovie = _reservationService.GetMovieByShowtimeId(reservation);
+
         Console.Clear();
         Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("");
-        Console.WriteLine($"ID: {reservation.Id}");
-        Console.WriteLine($"ShowtimeId: {reservation.ShowtimeId}");
-        Console.WriteLine($"Creation date: {reservation.CreationDate}");
+        Console.WriteLine($"Title: {ReservationMovie.Title}"); 
+        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime}"); 
+        Console.WriteLine($"Ending: {ReservationShowtime.EndTime}"); 
+        Console.WriteLine($"Reservated on: {reservation.CreationDate}");
+        Console.WriteLine($"Auditorium: {ReservationShowtime.AuditoriumId}");
+        // Console.WriteLine($"Total price: {STOEL}");
+        Console.WriteLine($"Reservation ID: {reservation.Id}");
+        // Console.WriteLine($"ShowtimeId: {RESERVATION DATE}");
         Console.WriteLine($"Status: {reservation.Status}");
-        Console.WriteLine($"Total price: {reservation.TotalPrice}");
     }
 
     private void ShowPurchaseMenu(Reservation reservation)
@@ -98,7 +105,6 @@ public class ViewReservation
     {
         _reservationService.Cancel(reservation.Id);
         ConsoleMethods.AnimateLoadingText("Canceling reservatoin");
-        
     }
 
 }

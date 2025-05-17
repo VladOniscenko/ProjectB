@@ -48,10 +48,10 @@ public class ReservationLogic : IReservationService
 
         if (!IsUserValid(userId))
             return new ReservationError("INVALID_USER_ID", "Invalid user ID.");
-        
+
         if (!IsTotalPriceValid(_seatService.GetTotalPrice(seats)))
             return new ReservationError("INVALID_TOTAL_PRICE", "Invalid total price.");
-        
+
         var reservation = new Reservation
         {
             ShowtimeId = showtimeId,
@@ -103,6 +103,16 @@ public class ReservationLogic : IReservationService
     public IEnumerable<Reservation> GetReservationByUserID(User user)
     {
         return _reservationRepository.GetReservationsByUserID(user);
+    }
+
+    public Showtime GetShowtimeByShowtimeId(Reservation reservation)
+    {
+        return _reservationRepository.GetShowtimeByShowtimeId(reservation);
+    }
+
+    public Movie GetMovieByShowtimeId(Reservation reservation)
+    {
+        return _reservationRepository.GetMovieByShowtimeId(reservation);
     }
 }
 

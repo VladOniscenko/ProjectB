@@ -23,12 +23,12 @@ public class ReservationRepository
             );
         ");
     }
-    
+
     public int AddReservation(Reservation reservation)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-    
+
         var reservationId = connection.ExecuteScalar<int>(@"
         INSERT INTO Reservations (UserId, ShowtimeId, CreationDate, Status, TotalPrice) 
         VALUES (@UserId, @ShowtimeId, @CreationDate, @Status, @TotalPrice);
@@ -36,7 +36,7 @@ public class ReservationRepository
 
         return reservationId;
     }
-    
+
     public bool UpdateReservation(Reservation reservation)
     {
         using var connection = DbFactory.CreateConnection();
@@ -60,7 +60,7 @@ public class ReservationRepository
         connection.Open();
         return connection.Query<Reservation>("SELECT * FROM Reservations");
     }
-    
+
     public void Delete(int id)
     {
         using var connection = DbFactory.CreateConnection();
@@ -73,21 +73,40 @@ public class ReservationRepository
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<Reservation>(@"SELECT * FROM Reservations WHERE Id = @Id", new {user.Id});
+        if (user == null || user.Id <= 0)
+        {
+            throw new ArgumentException("Invalid user or user ID.");
+        }
+
+        return connection.Query<Reservation>(@"SELECT * FROM Reservations WHERE UserId = @UserId", new { UserId = user.Id });
     }
 
     public void Cancel(int id)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        
+
         connection.Execute(@"
             DELETE FROM Seatreservations 
-            WHERE Id = @Id", new { Id = id, });
+            WHERE ReservationId = @Id", new { Id = id, });
 
         connection.Execute(@"
             DELETE FROM Reservations 
             WHERE Id = @Id", new { Id = id, });
-        
     }
+
+    public Showtime GetShowtimeByShowtimeId(Reservation showtime)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<Showtime>(@"SELECT * FROM Showtimes WHERE Id = @Id", new { Id = showtime.ShowtimeId }).First();
+    }
+
+    public Movie GetMovieByShowtimeId(Reservation reservation)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<Movie>(@"SELECT * FROM Movies WHERE Id = @Id", new { GetShowtimeByShowtimeId(reservation).Id }).First();
+    }
+
 }
