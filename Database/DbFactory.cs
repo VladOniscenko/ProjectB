@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using ProjectB.DataAccess;
+using ProjectB.Presentation;
 
 namespace ProjectB.Database;
 
@@ -103,5 +104,7 @@ public class DbFactory
         // create movies and show times
         ExecuteWithLogging(MovieRepository.PopulateTable, "Adding Movies to the database");
         ExecuteWithLogging(ShowtimeRepository.PopulateTable, "Adding Show times to the database");
+
+        ConsoleMethods.Success("Database populated successfully.");
     }
 }

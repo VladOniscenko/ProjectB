@@ -11,5 +11,7 @@ public interface IMovieService
 
     List<Movie> GetPromotedMovies();
 
-    bool ValidateInput<T>(int min = 0, int max = 100, string input = null);
+    bool ValidateInput<T>(int min = 0, int max = 100, string? input = null);
+    
+    IEnumerable<Movie> GetMoviesByTitle(string title, int limit = 50);
 }

@@ -15,13 +15,13 @@ public class UserCreation
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
 
-    public UserCreation(IServiceProvider services)
+    public UserCreation()
     {
-        _services = services;
+        _services = Program.Services;
         _userService = _services.GetRequiredService<IUserService>();
     }
 
-    public void CreateUser(User? user = null)
+    public bool CreateUser(User? user = null)
     {
         Console.ResetColor();
         Console.CursorVisible = false;
@@ -105,13 +105,17 @@ public class UserCreation
         if (CheckIfDataCorrect(newUser))
         {
             _userService.CreateUser(newUser);
+            Program.CurrentUser = newUser;
             Console.WriteLine("\nYour account has been made!");
             Thread.Sleep(1000);
+            return true;
         }
         else
         {
             CreateUser(newUser);
         }
+
+        return false;
     }
 
     public bool CheckIfDataCorrect(User user)

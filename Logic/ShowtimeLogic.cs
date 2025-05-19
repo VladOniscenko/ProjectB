@@ -31,23 +31,21 @@ public class ShowtimeLogic : IShowtimeService
 
     public bool IsMovieStartTimeValid(string date)
     {
-        // DateTime.TryParseExact(input, date format, ?, ?, bool output)
-        // CultureInfo uses a fixed format (so not the system's local date format)
-        // DateTimeStyles refers to different ways of parsing input. .None means parse the exact output
-        // result is the variable where the successfully parsed date gets stored
-        bool dateCheck = DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
-
         if (string.IsNullOrWhiteSpace(date))
         {
             return false;
         }
 
-        if (!dateCheck)
+        if (!DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", 
+                CultureInfo.InvariantCulture, 
+                DateTimeStyles.None, 
+                out DateTime result))
         {
             return false;
         }
 
-        if (result < DateTime.Now)
+        var now = DateTime.Now;
+        if (result <= now.AddMinutes(-5))
         {
             return false;
         }

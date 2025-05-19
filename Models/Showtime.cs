@@ -7,5 +7,6 @@ public class Showtime
     public int AuditoriumId { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
+    public Auditorium? Auditorium { get; set; }
 }
 

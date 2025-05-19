@@ -53,7 +53,7 @@ public class MovieLogic : IMovieService
         return _movieRepository.GetBestAndNewestMovies(3);
     }
     
-    public bool ValidateInput<T>(int min = 0, int max = 100, string input = null)
+    public bool ValidateInput<T>(int min = 0, int max = 100, string? input = null)
     { 
         if (typeof(T) == typeof(int))
         {
@@ -84,5 +84,10 @@ public class MovieLogic : IMovieService
             }
         }
         return false;
+    }
+    
+    public IEnumerable<Movie> GetMoviesByTitle(string title, int limit = 10)
+    {
+        return _movieRepository.GetMoviesByTitle(title, limit);
     }
 }

@@ -8,13 +8,13 @@ public class UserLogin
 {
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
-    public UserLogin(IServiceProvider services)
+    public UserLogin()
     {
-        _services = services;
-        _userService = services.GetRequiredService<IUserService>();
+        _services = Program.Services;
+        _userService = _services.GetRequiredService<IUserService>();
     }
     
-    public void Run()
+    public bool Run()
     {
         while (true)
         {
@@ -38,7 +38,7 @@ public class UserLogin
             
             ConsoleMethods.Success("You successfully logged in");
             Program.CurrentUser = user;
-            return;
+            return true;
         }
     }
         
