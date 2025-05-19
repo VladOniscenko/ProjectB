@@ -94,7 +94,30 @@ public class ReservationLogic : IReservationService
     {
         _reservationRepository.Delete(reservationId);
     }
-    
+
+    public IEnumerable<Reservation> GetReservationsById(int userId)
+    {
+        if (userId <= 0)
+        {
+            throw new ArgumentException("User ID must be a positive integer.", nameof(userId));
+        }
+
+        return _reservationRepository.GetReservationsById(userId);
+    }
+
+    public string GetReservationInfo(Reservation reservation)
+    {
+        if (reservation == null)
+        {
+            throw new ArgumentNullException(nameof(reservation), "Reservation cannot be null.");
+        }
+
+        return 
+            $"Reservation ID: {reservation.Id}, Status: {reservation.Status}, " + 
+            $"Showtime ID: {reservation.ShowtimeId}, User ID: {reservation.UserId}, " +
+            $"Total Price: {reservation.TotalPrice}, Payment Method: {reservation.PaymentMethod}, " +
+            $"Created On: {reservation.CreationDate}";
+    }
 }
 
 public class ReservationError
