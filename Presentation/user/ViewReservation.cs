@@ -72,15 +72,15 @@ public class ViewReservation
         Console.Clear();
         Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("");
-        Console.WriteLine($"Title: {ReservationMovie.Title}"); 
-        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime}"); 
-        Console.WriteLine($"Ending: {ReservationShowtime.EndTime}"); 
+        Console.WriteLine($"Title: {ReservationMovie.Title}");
+        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime}");
+        Console.WriteLine($"Ending: {ReservationShowtime.EndTime}");
         Console.WriteLine($"Reservated on: {reservation.CreationDate}");
         Console.WriteLine($"Auditorium: {ReservationShowtime.AuditoriumId}");
-        // Console.WriteLine($"Total price: {STOEL}");
         Console.WriteLine($"Reservation ID: {reservation.Id}");
-        // Console.WriteLine($"ShowtimeId: {RESERVATION DATE}");
         Console.WriteLine($"Status: {reservation.Status}");
+        Console.WriteLine("");
+        
     }
 
     private void ShowPurchaseMenu(Reservation reservation)
@@ -95,7 +95,6 @@ public class ViewReservation
             return;
         }
         
-        // start canceling
         Running = false;
         canceling(reservation);
 
