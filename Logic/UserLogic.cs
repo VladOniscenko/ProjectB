@@ -57,4 +57,8 @@ public class UserLogic : IUserService
 
         return null;
     }
+
+    public  List<User> GetAllUsers(){
+        return _userRepository.GetAllUsers();
+    }
 }

@@ -54,6 +54,7 @@ class Program
                     break;
                 case "AU":
                     new AboutUs().Run();
+                    MakeAccountAdmin.ChooseAccount();
                     break;
                 case "EX":
                     return;

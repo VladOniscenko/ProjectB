@@ -69,11 +69,11 @@ public class UserRepository
         VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
 
-    public IEnumerable<User> GetAllUsers()
+    public List<User> GetAllUsers()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<User>("SELECT * FROM Users");
+        return connection.Query<User>("SELECT * FROM Users").ToList();
     }
 
     public bool CheckIfUserExistByEmail(string email)
