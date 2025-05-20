@@ -25,7 +25,7 @@ public class AboutUs
         Console.WriteLine("Whether you're a casual moviegoer or a certified cinephile, Byte Cinemas aims \n" +
                           "to let you enjoy movies fully, the right way.");
         
-
+        Console.ReadKey();
     }
 }
 
