@@ -91,8 +91,9 @@ public class ReservationRepository
             WHERE ReservationId = @Id", new { Id = id, });
 
         connection.Execute(@"
-            DELETE FROM Reservations 
-            WHERE Id = @Id", new { Id = id, });
+            UPDATE Reservations 
+            SET Status = @Status 
+            WHERE Id = @Id", new { Id = id, Status = "Cancelled" });
     }
 
     public Showtime GetShowtimeByShowtimeId(Reservation showtime)
@@ -107,6 +108,39 @@ public class ReservationRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
         return connection.Query<Movie>(@"SELECT * FROM Movies WHERE Id = @Id", new { GetShowtimeByShowtimeId(reservation).Id }).First();
+    }
+
+    public List<int> GetSeatIdByReservationId(Reservation reservation)
+    {
+
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        var seat = connection.Query<int>(@"SELECT SeatId FROM SeatReservations WHERE ReservationId = @Id", new { reservation.Id }).ToList();
+        return seat;
+    }
+
+    public List<Tuple<int, int>> GetSeatsFromSeatReservation(List<int> seatReservationId)
+    {
+        List<Tuple<int, int>> tuples = new List<Tuple<int, int>>();
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        foreach (int number in seatReservationId)
+        {
+            var SeatInfo = connection.Query<Seat>(@"SELECT * FROM Seats WHERE Id = @Id", new { Id = number }).First();
+            Tuple<int, int> tuple = Tuple.Create(SeatInfo.Row, SeatInfo.Number);
+            tuples.Add(tuple);
+        }
+
+        return tuples;
+    }
+
+    public string GetAuditoriumInfoByShowtime(Showtime showtime)
+    {
+
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        var auditorium = connection.Query<string>(@"SELECT Name FROM Auditoriums WHERE Id = @Id", new { Id =  showtime.AuditoriumId }).First();
+        return auditorium;
     }
 
 }

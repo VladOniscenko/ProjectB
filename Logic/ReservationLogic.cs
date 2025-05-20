@@ -114,6 +114,21 @@ public class ReservationLogic : IReservationService
     {
         return _reservationRepository.GetMovieByShowtimeId(reservation);
     }
+
+    public List<int> GetSeatIdByReservationId(Reservation reservation)
+    {
+        return _reservationRepository.GetSeatIdByReservationId(reservation);
+    }
+
+    public List<Tuple<int, int>> GetSeatsFromSeatReservation(List<int> seatReservationId)
+    {
+        return _reservationRepository.GetSeatsFromSeatReservation(seatReservationId);
+    }
+
+    public string GetAuditoriumInfoByReservationId(Showtime showtime)
+    {
+        return _reservationRepository.GetAuditoriumInfoByShowtime(showtime);
+    }
 }
 
 public class ReservationError

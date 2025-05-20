@@ -9,7 +9,9 @@ public interface IReservationService
 
     Showtime GetShowtimeByShowtimeId(Reservation reservation);
     Movie GetMovieByShowtimeId(Reservation reservation);
+    List<int> GetSeatIdByReservationId(Reservation reservation);
+    List<Tuple<int, int>> GetSeatsFromSeatReservation(List<int> seatReservationId);
     bool UpdateReservation(Reservation reservation);
-
+    string GetAuditoriumInfoByReservationId(Showtime showtime);
     void Cancel(int Id);
 }

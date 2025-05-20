@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProjectB.Logic;
+using ProjectB.Models;
 
 namespace ProjectB.UnitTests;
 
@@ -15,7 +16,7 @@ public class ReservationTest
         bool res = ReservationLogic.IsShowtimeValid(showtimeId);
         Assert.AreEqual(res, expectedResult);
     }
-    
+
     [DataTestMethod]
     [DataRow("ideal", true)]
     [DataRow("", false)]
@@ -25,7 +26,7 @@ public class ReservationTest
         bool res = ReservationLogic.IsPaymentMethodValid(method);
         Assert.AreEqual(res, expectedResult);
     }
-    
+
     [DataTestMethod]
     [DataRow(100.00, true)]
     [DataRow(0.01, true)]
@@ -37,7 +38,7 @@ public class ReservationTest
         bool res = ReservationLogic.IsTotalPriceValid(amount);
         Assert.AreEqual(res, expectedResult);
     }
-    
+
     [DataTestMethod]
     [DataRow(1, true)]
     [DataRow(0, false)]
