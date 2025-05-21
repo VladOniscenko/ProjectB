@@ -6,6 +6,7 @@ public static class MakeAccountAdmin{
 
     public static void ChooseAccount(){
         Console.Clear();
+        Console.WriteLine("Select which user you would like to give admin access:");
         var userLogic = new UserLogic(new UserRepository());
         List<User> AllUsers = userLogic.GetAllUsers();
         ShowUsers(AllUsers);
@@ -14,6 +15,8 @@ public static class MakeAccountAdmin{
         int selectedIndex = 0;
 
         while(true){
+            UpdateLine(AllUsers[previousIndex], previousIndex, false);
+            UpdateLine(AllUsers[selectedIndex], selectedIndex, true);
 
             previousIndex = selectedIndex;
             var key = Console.ReadKey(true).Key;
@@ -26,34 +29,42 @@ public static class MakeAccountAdmin{
                 case ConsoleKey.DownArrow:
                     selectedIndex = (selectedIndex == AllUsers.Count - 1) ? 0 : selectedIndex + 1;
                     break;
+                case ConsoleKey.Enter:
+                    userLogic.MakeUserAdmin(AllUsers[selectedIndex].Email);
+                    Console.Clear();
+                    Console.WriteLine($"{AllUsers[selectedIndex].FirstName} + {AllUsers[selectedIndex].LastName} has been given admin rights!");
+                    Thread.Sleep(1000);
+                    return;
             }
 
-            UpdateLine(AllUsers[previousIndex], previousIndex, false);
-            UpdateLine(AllUsers[selectedIndex], selectedIndex, true);
+
         }
 
     }
 
     public static void ShowUsers(List<User> Users){
         for(int i = 0; i < Users.Count(); i++){
-            Console.SetCursorPosition(0,i);
-            Console.WriteLine(Users[i].Email);
-            Console.SetCursorPosition(18, i);
+            Console.SetCursorPosition(0,i + 1);
             Console.WriteLine(Users[i].FirstName + " " + Users[i].LastName);
-            Thread.Sleep(1000);
+            Console.SetCursorPosition(20, i + 1);
+            Console.WriteLine(Users[i].Email);
         }
     }
 
     public static void UpdateLine(User user, int index, bool isSelected){
+        int consoleWidth = Console.WindowWidth;
+
         if(isSelected){
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
         }
 
-            Console.SetCursorPosition(0,index);
-            Console.WriteLine(user.Email);
-            Console.SetCursorPosition(18, index);
-            Console.WriteLine(user.FirstName + " " + user.LastName);
+        string fullName = user.FirstName + " " + user.LastName;
+        string email = user.Email;
+        string row = fullName.PadRight(20) + email.PadRight(20);
+
+        Console.SetCursorPosition(0, index + 1);
+        Console.Write(row);
 
         Console.ResetColor();
 

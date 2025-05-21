@@ -89,4 +89,11 @@ public class UserRepository
         connection.Open();
         return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email LIMIT 1", new { email });
     }
+
+    public void MakeUserAdmin(string email){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        connection.Execute(@"
+        UPDATE Users SET IsAdmin = 1 WHERE Email = @email",new { email });
+    }
 }
