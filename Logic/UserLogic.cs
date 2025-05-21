@@ -62,4 +62,9 @@ public class UserLogic : IUserService
     {
         _userRepository.UpdateUser(user);
     }
+
+    bool IUserService.VerifyPassword(string currentPassword, string password)
+    {
+        return VerifyPassword(currentPassword, password);
+    }
 }

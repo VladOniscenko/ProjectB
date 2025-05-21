@@ -12,4 +12,5 @@ public interface IUserService
     User? Authenticate(string email, string password);
     bool IsPasswordIdentical(string password, string passwordHash);
     public void UpdateUser(User user);
+    bool VerifyPassword(string enteredPassword, string storedHash);
 }

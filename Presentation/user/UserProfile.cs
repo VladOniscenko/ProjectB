@@ -50,21 +50,21 @@ public class UserProfile
             User? user = Program.CurrentUser;
             Console.Clear();
             switch (EditMenuSelection())
-        {
-            case "FN":
-                EditFirstName(user);
-                break;
-            case "LN":
-                EditLastName(user);
-                break;
-            case "EM":
-                EditEmail(user);
-                break;
-            case "PW":
-                EditPassword(user);
-                break;
-            case "EX":
-                return;
+            {
+                case "FN":
+                    EditFirstName(user);
+                    break;
+                case "LN":
+                    EditLastName(user);
+                    break;
+                case "EM":
+                    EditEmail(user);
+                    break;
+                case "PW":
+                    EditPassword(user);
+                    break;
+                case "EX":
+                    return;
             }
         }
     }
@@ -93,7 +93,7 @@ public class UserProfile
             { "LN", "Last name" },
             { "EM", "Email" },
             { "PW", "Password" },
-            { "EX", "Exit" },
+            { "EX", "Return to profile menu" },
         };
 
         var selectMenu = new Menu(title, menuOptions);
@@ -110,7 +110,7 @@ public class UserProfile
             Console.WriteLine("No user currently logged in. How did you manage to get here?");
             return;
         }
-        
+
         Console.ResetColor();
         Console.CursorVisible = false;
         Console.Clear();
@@ -123,15 +123,15 @@ public class UserProfile
         Console.WriteLine($"║ Password:         {"*********",-32} ║");
         if (user.IsAdmin)
         {
-            Console.WriteLine($"║ Is admin:         {(user.IsAdmin ? "Yes" : "No"),-32} ║");
+            Console.WriteLine($"║ Is admin:         {"Yes",-32} ║");
         }
         Console.WriteLine("╚════════════════════════════════════════════════════╝\n");
-        Console.WriteLine("Press 'Backspace' to edit personal information.");
+        Console.WriteLine("Press 'E' to edit personal information.");
         // IsAdmin is a 'ternary conditional'! Basically a shortened if/else lol. Note to remember that StackOverflow clutch knowledge.
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-        if (keyInfo.Key == ConsoleKey.Backspace)
+        if (keyInfo.Key == ConsoleKey.E)
         {
             RunEdit();
         }
@@ -157,20 +157,21 @@ public class UserProfile
         }
         else
         {
-        foreach (var reservation in reservations)
-        {
-            Console.WriteLine(_reservationService.GetReservationInfo(reservation));
-            Console.WriteLine();
+            foreach (var reservation in reservations)
+            {
+                Console.WriteLine(_reservationService.GetReservationInfo(reservation));
+                Console.WriteLine();
+            }
         }
+
+        Console.WriteLine("\nPress any button to go back");
+        Console.ReadLine();
+
     }
 
-    Console.ReadLine();
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Using Dmitiri's output checks for this!
+    /// Using Dmitiri's output checks for this!
     private void EditFirstName(User user)
     {
         Console.Clear();
@@ -215,6 +216,21 @@ public class UserProfile
     {
         Console.Clear();
         string confirmPassword = "-";
+        string currentPassword = "";
+
+        while (!VerifyPassword(currentPassword, user.Password))
+        {
+            currentPassword = BaseUI.DrawInputBox("Current Password", BoxX, Width, 0, 10, "", true);
+
+            while (!_userService.IsPasswordValid(currentPassword))
+            {
+                BaseUI.ShowErrorMessage("Please enter a valid password (at least 8 characters)", 11);
+                currentPassword = BaseUI.DrawInputBox("Current Password", BoxX, Width, 0, 10, "", true);
+            }
+        }
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 11);
 
         while (!_userService.IsPasswordIdentical(user.Password, confirmPassword))
         {
@@ -226,7 +242,6 @@ public class UserProfile
                 user.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, user.Password, true);
             }
 
-            Console.SetCursorPosition(0, 11);
             Console.Write("                                                                                                   ");
 
             confirmPassword = BaseUI.DrawInputBox("Re-enter password", BoxX, Width, 0, 12, user.Password, true);
@@ -241,7 +256,15 @@ public class UserProfile
             }
         }
 
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
         _userService.UpdateUser(user);
 
     }
+
+    private bool VerifyPassword(string enteredPassword, string storedHash)
+    {
+        return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
+    }
 }
+
