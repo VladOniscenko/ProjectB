@@ -8,7 +8,7 @@ public static class MakeAccountAdmin{
         Console.Clear();
         Console.WriteLine("Select which user you would like to give admin access:");
         var userLogic = new UserLogic(new UserRepository());
-        List<User> AllUsers = userLogic.GetAllUsers();
+        List<User> AllUsers = userLogic.GetAllNonAdminUsers();
         ShowUsers(AllUsers);
 
         int previousIndex = 0;

@@ -76,6 +76,12 @@ public class UserRepository
         return connection.Query<User>("SELECT * FROM Users").ToList();
     }
 
+    public List<User> GetAllNonAdminUsers(){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<User>("SELECT * FROM Users WHERE IsAdmin = 0").ToList();
+    }
+
     public bool CheckIfUserExistByEmail(string email)
     {
         using var connection = DbFactory.CreateConnection();

@@ -62,6 +62,10 @@ public class UserLogic : IUserService
         return _userRepository.GetAllUsers();
     }
 
+    public  List<User> GetAllNonAdminUsers(){
+        return _userRepository.GetAllNonAdminUsers();
+    }
+
     public void MakeUserAdmin(string email){
         _userRepository.MakeUserAdmin(email);
     }
