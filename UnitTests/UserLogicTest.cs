@@ -80,4 +80,17 @@ public class UserLogicTest
         bool actual = _userLogic.IsEmailValid(email);
         Assert.AreEqual(true, actual);
     }
+    
+    [TestMethod]
+    [DataRow("strongpass1", true)]
+    [DataRow("Password123", true)]
+    [DataRow("SuperSecure!", true)]
+    [DataRow("short", false)]
+    [DataRow("", false)]
+    [DataRow("1234567", false)]
+    public void IsPasswordValid_TestCases(string password, bool expectedResult)
+    {
+        bool actual = _userLogic.IsPasswordValid(password);
+        Assert.AreEqual(expectedResult, actual);
+    }
 }
