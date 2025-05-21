@@ -66,6 +66,10 @@ public class UserLogic : IUserService
         return _userRepository.GetAllNonAdminUsers();
     }
 
+    public bool CheckIfUserListIsEmpty(List<User> users){
+        return !users.Any();
+    }
+
     public void MakeUserAdmin(string email){
         _userRepository.MakeUserAdmin(email);
     }

@@ -1,14 +1,21 @@
 using System.Security.Cryptography.X509Certificates;
 using ProjectB.DataAccess;
 using ProjectB.Models;
+using ProjectB.Presentation;
 
 public static class MakeAccountAdmin{
 
     public static void ChooseAccount(){
         Console.Clear();
-        Console.WriteLine("Select which user you would like to give admin access:");
         var userLogic = new UserLogic(new UserRepository());
         List<User> AllUsers = userLogic.GetAllNonAdminUsers();
+
+
+        if(userLogic.CheckIfUserListIsEmpty(AllUsers)){
+            ConsoleMethods.Error("No non admin users exist");
+            return;
+        }
+        Console.WriteLine("Select which user you would like to give admin access:");
         ShowUsers(AllUsers);
 
         int previousIndex = 0;
@@ -30,11 +37,22 @@ public static class MakeAccountAdmin{
                     selectedIndex = (selectedIndex == AllUsers.Count - 1) ? 0 : selectedIndex + 1;
                     break;
                 case ConsoleKey.Enter:
-                    userLogic.MakeUserAdmin(AllUsers[selectedIndex].Email);
                     Console.Clear();
-                    Console.WriteLine($"{AllUsers[selectedIndex].FirstName} + {AllUsers[selectedIndex].LastName} has been given admin rights!");
-                    Thread.Sleep(1000);
-                    return;
+                    Console.WriteLine($"are you sure you wish to make {AllUsers[selectedIndex].FirstName} {AllUsers[selectedIndex].LastName} an admin?");
+                    if(BaseUI.BasicYesOrNo()){
+                        userLogic.MakeUserAdmin(AllUsers[selectedIndex].Email);
+                        ConsoleMethods.AnimateLoadingText("Making user admin", 2000);
+                        Console.WriteLine($"{AllUsers[selectedIndex].FirstName} {AllUsers[selectedIndex].LastName} has been given admin rights!");
+                        ConsoleMethods.AwaitUser();
+                        return;
+                    }
+                    Console.Clear();
+                    Console.WriteLine("Select which user you would like to give admin access:");
+                    ShowUsers(AllUsers);
+                    break;
+
+
+
             }
 
 
@@ -44,10 +62,12 @@ public static class MakeAccountAdmin{
 
     public static void ShowUsers(List<User> Users){
         for(int i = 0; i < Users.Count(); i++){
-            Console.SetCursorPosition(0,i + 1);
-            Console.WriteLine(Users[i].FirstName + " " + Users[i].LastName);
-            Console.SetCursorPosition(20, i + 1);
-            Console.WriteLine(Users[i].Email);
+            string fullName = Users[i].FirstName + " " + Users[i].LastName;
+            string email = Users[i].Email;
+            string row = fullName.PadRight(20) + email.PadRight(18);
+
+            Console.SetCursorPosition(4, i + 2);
+            Console.Write(row);
         }
     }
 
@@ -61,9 +81,9 @@ public static class MakeAccountAdmin{
 
         string fullName = user.FirstName + " " + user.LastName;
         string email = user.Email;
-        string row = fullName.PadRight(20) + email.PadRight(20);
+        string row = fullName.PadRight(20) + email.PadRight(18);
 
-        Console.SetCursorPosition(0, index + 1);
+        Console.SetCursorPosition(4, index + 2);
         Console.Write(row);
 
         Console.ResetColor();
