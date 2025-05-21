@@ -21,7 +21,7 @@ public class MovieList
     public void Run(IEnumerable<Movie>? searchedMovies = null)
     {
         Console.Clear();
-        var _movieLogic = _services.GetRequiredService<IMovieService>();
+        var _movieLogic = _services.GetRequiredService<MovieLogic>();
         IEnumerable<Movie> movies;
         if(searchedMovies is null){
         movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);

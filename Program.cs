@@ -79,8 +79,11 @@ class Program
     {
         DbFactory.InitializeDatabase();
 
+        // create services collection for dependency injection
         var services = new ServiceCollection();
 
+        // add repositories (data access layers)
+        // singleton makes sure that only one instance of any class exists
         services.AddSingleton<UserRepository>();
         services.AddSingleton<MovieRepository>();
         services.AddSingleton<ShowtimeRepository>();
@@ -89,16 +92,16 @@ class Program
         services.AddSingleton<AuditoriumRepository>();
         services.AddSingleton<SeatReservationRepository>();
         services.AddSingleton<SearchMovieLogic>();
+        services.AddSingleton<UserLogic>();
+        services.AddSingleton<MovieLogic>();
+        services.AddSingleton<ShowtimeLogic>();
+        services.AddSingleton<SeatLogic>();
+        services.AddSingleton<ReservationLogic>();
+        services.AddSingleton<AuditoriumLogic>();
+        services.AddSingleton<SeatReservationLogic>();
+        services.AddSingleton<SearchMovieLogic>();
 
-        services.AddSingleton<IUserService, UserLogic>();
-        services.AddSingleton<IMovieService, MovieLogic>();
-        services.AddSingleton<IShowtimeService, ShowtimeLogic>();
-        services.AddSingleton<ISeatService, SeatLogic>();
-        services.AddSingleton<IReservationService, ReservationLogic>();
-        services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
-        services.AddSingleton<ISeatReservationService, SeatReservationLogic>();
-        services.AddSingleton<ISearchMovieService, SearchMovieLogic>();
-
+        // initializes all classes only once
         Services = services.BuildServiceProvider();
     }
 
@@ -153,7 +156,6 @@ class Program
     public static void StartReservation(Movie movie)
     {
         var reservationFlow = new ReservationFlow(movie);
-
         reservationFlow.Run();
     }
 

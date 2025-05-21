@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
@@ -10,7 +11,7 @@ public class SelectShowtime
     private IEnumerable<Showtime> _availableShowtimes;
 
     private readonly IServiceProvider _services;
-    private readonly IShowtimeService _showtimeService;
+    private readonly ShowtimeLogic _showtimeService;
     
     public SelectShowtime(Movie? movie)
     {
@@ -18,7 +19,7 @@ public class SelectShowtime
         _movie = movie;
         
         // get show times of the movie
-        _showtimeService = _services.GetRequiredService<IShowtimeService>();
+        _showtimeService = _services.GetRequiredService<ShowtimeLogic>();
         _availableShowtimes = _showtimeService.GetShowtimesByMovieId(_movie.Id);
     }
 
