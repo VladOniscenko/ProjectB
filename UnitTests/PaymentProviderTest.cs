@@ -44,7 +44,7 @@ public class PaymentProviderTest
     {
         // arrange
         var provider = new PaymentProvider("Test");
-        provider.SetPaymentAmount(50.00m);
+        provider.SetPaymentAmount(50.00m); // m stays for decimal
         provider.SetPaymentMethod("ideal");
 
         // act
@@ -60,7 +60,7 @@ public class PaymentProviderTest
     {
         // arrange
         var provider = new PaymentProvider("Test");
-        provider.SetPaymentAmount(25.00m);
+        provider.SetPaymentAmount(25.00m); // m stays for decimal
 
         // act
         var result = provider.ProcessPayment();
