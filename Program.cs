@@ -122,7 +122,7 @@ class Program
             {
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
-                menuOptions.Add("AA", "Give Admin Access to an account");
+                menuOptions.Add("AA", "Give Admin Access");
             }
         }
         else
