@@ -72,9 +72,11 @@ public class UserLogicTest
 
 
     [TestMethod]
-    public void IsEmailValid_ValidEmail_True()
+    [DataRow("email@email.com")]
+    [DataRow("a@gmail.com")]
+    [DataRow("cinema@hotmail.com")]
+    public void IsEmailValid_ValidEmail_True(string email)
     {
-        string email = "valid@email.com";
         bool actual = _userLogic.IsEmailValid(email);
         Assert.AreEqual(true, actual);
     }
