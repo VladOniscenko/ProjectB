@@ -57,7 +57,7 @@ class Program
                     break;
                 case "VP":
                     var viewProfile = new ViewReservation();
-                    viewProfile.Run(CurrentUser);
+                    viewProfile.Run();
                     break;
                 case "EX":
                     return;

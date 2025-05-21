@@ -1,5 +1,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
+using ProjectB.DataAccess;
+using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
@@ -10,17 +12,18 @@ public class ViewReservation
 
     bool Running;
     private readonly IServiceProvider _services;
-    private readonly IReservationService _reservationService;
+    private readonly ReservationLogic _reservationService;
 
     public ViewReservation()
     {
         _services = Program.Services;
-        _reservationService = _services.GetRequiredService<IReservationService>();
+        _reservationService = _services.GetRequiredService<ReservationLogic>();
         Running = false;
     }
 
-    public void Run(User CurrentUser)
+    public void Run()
     {
+        User CurrentUser = Program.CurrentUser;
         IEnumerable<Reservation> reservations = _reservationService.GetReservationByUserID(CurrentUser);
 
         if (reservations.Count() == 0)
