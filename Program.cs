@@ -54,7 +54,6 @@ class Program
                     break;
                 case "AU":
                     new AboutUs().Run();
-                    MakeAccountAdmin.ChooseAccount();
                     break;
                 case "EX":
                     return;
@@ -68,6 +67,9 @@ class Program
                 case "CS":
                     var createShowtime = new CreateShowtime();
                     createShowtime.Run();
+                    break;
+                case "AA":
+                    MakeAccountAdmin.ChooseAccount();
                     break;
                 default:
                     ConsoleMethods.Error("Invalid option.");
@@ -120,6 +122,7 @@ class Program
             {
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
+                menuOptions.Add("AA", "Give Admin Access to an account");
             }
         }
         else
