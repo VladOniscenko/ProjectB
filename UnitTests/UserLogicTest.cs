@@ -38,16 +38,21 @@ public class UserLogicTest
     [DataRow("Ababa")]
     [DataRow("Ababab")]
     [DataRow("Abababa")]
+    [DataRow("Elizabeth")]
+    [DataRow("aBc")]
     public void IsNameValid_ValidName_True(string name)
     {
         bool actual = _userLogic.IsNameValid(name);
         Assert.AreEqual(true, actual);
     }
 
-
     [DataTestMethod]
     [DataRow("Aba$")]
+    [DataRow("")]
     [DataRow("Abab3")]
+    [DataRow("John3")]
+    [DataRow("Ana@")]
+    [DataRow("Anna Lee1")]
     public void IsNameValid_NameWithSymbolsOrNumbers_false(string name)
     {
         bool actual = _userLogic.IsNameValid(name);
