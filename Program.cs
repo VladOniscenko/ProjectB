@@ -73,7 +73,7 @@ class Program
                     createShowtime.Run();
                     break;
                 case "UP":
-                    var userProfile = new UserProfile(Services);
+                    var userProfile = new UserProfile();
                     userProfile.Run();
                     break;
                 default:

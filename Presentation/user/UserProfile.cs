@@ -1,3 +1,5 @@
+using ProjectB.Logic;
+
 namespace ProjectB.Presentation;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectB.Models;
@@ -12,11 +14,11 @@ public class UserProfile
     private readonly IReservationService _reservationService;
     private readonly IUserService _userService;
 
-    public UserProfile(IServiceProvider services)
+    public UserProfile()
     {
-        _services = services;
-        _reservationService = _services.GetRequiredService<IReservationService>();
-        _userService = _services.GetRequiredService<IUserService>();
+        _services = Program.Services;
+        _reservationService = _services.GetRequiredService<ReservationLogic>();
+        _userService = _services.GetRequiredService<UserLogic>();
     }
 
     // Cases for profile menu
