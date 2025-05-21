@@ -12,16 +12,16 @@ public class CreateShowtime
     const int TotalPages = 1;
 
     private readonly IServiceProvider _services;
-    private readonly IShowtimeService _showtimeLogic;
-    private readonly IAuditoriumService _auditoriumLogic;
-    private readonly IMovieService _movieLogic;
+    private readonly ShowtimeLogic _showtimeLogic;
+    private readonly AuditoriumLogic _auditoriumLogic;
+    private readonly MovieLogic _movieLogic;
 
     public CreateShowtime()
     {
         _services = Program.Services;
-        _showtimeLogic = _services.GetRequiredService<IShowtimeService>();
-        _auditoriumLogic = _services.GetRequiredService<IAuditoriumService>();
-        _movieLogic = _services.GetRequiredService<IMovieService>();
+        _showtimeLogic = _services.GetRequiredService<ShowtimeLogic>();
+        _auditoriumLogic = _services.GetRequiredService<AuditoriumLogic>();
+        _movieLogic = _services.GetRequiredService<MovieLogic>();
     }
 
     public void Run()

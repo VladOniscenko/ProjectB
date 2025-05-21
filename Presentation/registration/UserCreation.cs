@@ -13,12 +13,12 @@ public class UserCreation
     const int Width = 35;
 
     private readonly IServiceProvider _services;
-    private readonly IUserService _userService;
+    private readonly UserLogic _userService;
 
     public UserCreation()
     {
         _services = Program.Services;
-        _userService = _services.GetRequiredService<IUserService>();
+        _userService = _services.GetRequiredService<UserLogic>();
     }
 
     public bool CreateUser(User? user = null)

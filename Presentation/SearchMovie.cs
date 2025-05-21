@@ -8,11 +8,11 @@ using ProjectB.Presentation;
 public class SearchMovie{
 
     private readonly IServiceProvider _services;
-    private readonly ISearchMovieService _searchMovieService;
+    private readonly SearchMovieLogic _searchMovieService;
 
     public SearchMovie(){
         _services = Program.Services;
-        _searchMovieService = _services.GetRequiredService<ISearchMovieService>();
+        _searchMovieService = _services.GetRequiredService<SearchMovieLogic>();
     }
 
 

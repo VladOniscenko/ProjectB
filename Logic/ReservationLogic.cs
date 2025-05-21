@@ -1,3 +1,4 @@
+using System.Numerics;
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
@@ -7,11 +8,11 @@ namespace ProjectB.Logic;
 public class ReservationLogic : IReservationService
 {
     private readonly ReservationRepository _reservationRepository;
-    private readonly ISeatService _seatService;
-    private readonly ISeatReservationService _seatReservationService;
+    private readonly SeatLogic _seatService;
+    private readonly SeatReservationLogic _seatReservationService;
 
-    public ReservationLogic(ReservationRepository reservationRepository, ISeatService seatService,
-        ISeatReservationService seatReservationService)
+    public ReservationLogic(ReservationRepository reservationRepository, SeatLogic seatService,
+        SeatReservationLogic seatReservationService)
     {
         _reservationRepository = reservationRepository;
         _seatService = seatService;
@@ -47,10 +48,10 @@ public class ReservationLogic : IReservationService
 
         if (!IsUserValid(userId))
             return new ReservationError("INVALID_USER_ID", "Invalid user ID.");
-        
+
         if (!IsTotalPriceValid(_seatService.GetTotalPrice(seats)))
             return new ReservationError("INVALID_TOTAL_PRICE", "Invalid total price.");
-        
+
         var reservation = new Reservation
         {
             ShowtimeId = showtimeId,
@@ -90,9 +91,43 @@ public class ReservationLogic : IReservationService
         return new ReservationError("SUCCESS", $"Reservation created successfully. ID: {reservationId}");
     }
 
-    private void Delete(int reservationId)
+    public void Delete(int reservationId)
     {
         _reservationRepository.Delete(reservationId);
+    }
+
+    public void Cancel(int Id)
+    {
+        _reservationRepository.Cancel(Id);
+    }
+    public IEnumerable<Reservation> GetReservationByUserID(User user)
+    {
+        return _reservationRepository.GetReservationsByUserID(user);
+    }
+
+    public Showtime GetShowtimeByShowtimeId(Reservation reservation)
+    {
+        return _reservationRepository.GetShowtimeByShowtimeId(reservation);
+    }
+
+    public Movie GetMovieByShowtimeId(Reservation reservation)
+    {
+        return _reservationRepository.GetMovieByShowtimeId(reservation);
+    }
+
+    public List<int> GetSeatIdByReservationId(Reservation reservation)
+    {
+        return _reservationRepository.GetSeatIdByReservationId(reservation);
+    }
+
+    public List<Tuple<int, int>> GetSeatsFromSeatReservation(List<int> seatReservationId)
+    {
+        return _reservationRepository.GetSeatsFromSeatReservation(seatReservationId);
+    }
+
+    public string GetAuditoriumInfoByReservationId(Showtime showtime)
+    {
+        return _reservationRepository.GetAuditoriumInfoByShowtime(showtime);
     }
 
     public IEnumerable<Reservation> GetReservationsById(int userId)

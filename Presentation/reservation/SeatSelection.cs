@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ProjectB.Logic;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
@@ -16,7 +17,7 @@ public class SeatSelection
     private readonly int _maxRow; // max row number of the seats
 
     private readonly IServiceProvider _services;
-    private readonly ISeatService _seatService;
+    private readonly SeatLogic _seatService;
     private Seat? _selectedSeat;
 
 
@@ -26,9 +27,9 @@ public class SeatSelection
         _showtime = showtime;
         _movie = movie;
 
-        _seatService = _services.GetRequiredService<ISeatService>();
+        _seatService = _services.GetRequiredService<SeatLogic>();
         _seats = _seatService.GetSeatsByShowtime(_showtime.Id);
-        _selectedAuditorium = _services.GetRequiredService<IAuditoriumService>().Find(_showtime.AuditoriumId);
+        _selectedAuditorium = _services.GetRequiredService<AuditoriumLogic>().Find(_showtime.AuditoriumId);
 
         if (_movie == null || _seats == null || _seats.Count() <= 0)
         {

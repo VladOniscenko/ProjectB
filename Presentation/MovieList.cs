@@ -21,7 +21,7 @@ public class MovieList
     public void Run(IEnumerable<Movie>? searchedMovies = null)
     {
         Console.Clear();
-        var _movieLogic = _services.GetRequiredService<IMovieService>();
+        var _movieLogic = _services.GetRequiredService<MovieLogic>();
         IEnumerable<Movie> movies;
         if(searchedMovies is null){
         movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
@@ -135,7 +135,7 @@ public class MovieList
     {
         int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Book or view availability", "Back to Movie List" };
-        int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
+        int selected = Menu.AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
         if (selected == 1)
         {
@@ -156,73 +156,6 @@ public class MovieList
     /// <param name="startRow"> Row from where to start the menu </param>
     /// <param name="rowBuffer"> Used in addition to the startRow param to maniupulate the actual start of writing the menu. </param>
     /// <returns></returns>
-    private int AddMenuFromStartRow(string title, List<string> options, int startRow, int rowBuffer = 1)
-    {
-        int selected = 0;
-        ConsoleKey key;
-
-        do
-        {   
-            // Clear all lines below our starting row. 
-            ClearAllLinesDownFrom(startRow - (rowBuffer + 1));
-
-            // Set the cursor in the console to our starting row.
-            Console.SetCursorPosition(0, startRow - (rowBuffer + 1));
-
-            // Empty line for spacing.
-            Console.WriteLine();
-
-            // Write the menu itself
-            Console.WriteLine(new string('-', Console.WindowWidth));
-            Console.WriteLine(title);
-            Console.WriteLine(new string('-', Console.WindowWidth));
-
-            for (int i = 0; i < options.Count; i++)
-            {
-                if (i == selected)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.WriteLine($"> {options[i]}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"  {options[i]}");
-                }
-            }
-
-            key = Console.ReadKey(true).Key;
-
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    selected = (selected == 0) ? options.Count - 1 : selected - 1;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selected = (selected == options.Count - 1) ? 0 : selected + 1;
-                    break;
-            }
-
-        // Run while the user has not pressed Enter.
-        } while (key != ConsoleKey.Enter);
-
-
-        // Return the selected option.
-        return selected;
-    }
-
-    private void ClearAllLinesDownFrom(int startRow)
-    {
-        int cursorPos = Console.CursorTop;
-        int lineAmount = cursorPos - startRow;
-
-        for (int i = 0; i < lineAmount; i++)
-        {
-            Console.SetCursorPosition(0, startRow + i);
-            Console.WriteLine(new string(' ', Console.WindowWidth)); // Clear the line
-        }
-    }
 
     private static string CalcStars(double rating)
     {

@@ -12,9 +12,9 @@ public class ReservationFlow
     private Showtime SelectedShowtime;
 
     private readonly IServiceProvider _services;
-    private readonly IAuditoriumService _auditoriumService;
-    private readonly ISeatService _seatService;
-    private readonly IReservationService _reservationService;
+    private readonly AuditoriumLogic _auditoriumService;
+    private readonly SeatLogic _seatService;
+    private readonly ReservationLogic _reservationService;
     private readonly Movie _movie;
     private Showtime _showtime { get; set; } = null;
     private List<Seat>? _seats { get; set; } = null;
@@ -26,9 +26,9 @@ public class ReservationFlow
     public ReservationFlow(Movie movie)
     {
         _services = Program.Services;
-        _auditoriumService = _services.GetRequiredService<IAuditoriumService>();
-        _seatService = _services.GetRequiredService<ISeatService>();
-        _reservationService = _services.GetRequiredService<IReservationService>();
+        _auditoriumService = _services.GetRequiredService<AuditoriumLogic>();
+        _seatService = _services.GetRequiredService<SeatLogic>();
+        _reservationService = _services.GetRequiredService<ReservationLogic>();
         _movie = movie;
 
         _currentState = ReservationState.Showtime;
