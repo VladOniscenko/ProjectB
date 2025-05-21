@@ -1,7 +1,6 @@
 using Dapper;
 using ProjectB.Database;
 using ProjectB.Models;
-using ProjectB.Models;
 
 namespace ProjectB.DataAccess;
 
@@ -95,5 +94,31 @@ public class AuditoriumRepository
             "SELECT * FROM Auditoriums WHERE Id = @Id",
             new { Id = id }
         );
+    }
+
+    public bool IsAuditoriumTakenAt(int auditoriumId, DateTime startTime, DateTime endTime)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        
+        const string sql = @"
+        SELECT COUNT(*) 
+        FROM Showtimes 
+        WHERE AuditoriumId = @AuditoriumId 
+        AND (
+            (@StartTime BETWEEN StartTime AND EndTime) OR
+            (@EndTime BETWEEN StartTime AND EndTime) OR
+            (StartTime BETWEEN @StartTime AND @EndTime) OR
+            (EndTime BETWEEN @StartTime AND @EndTime)
+        )";
+    
+        var count = connection.ExecuteScalar<int>(sql, new 
+        { 
+            AuditoriumId = auditoriumId,
+            StartTime = startTime,
+            EndTime = endTime
+        });
+    
+        return count > 0;
     }
 }

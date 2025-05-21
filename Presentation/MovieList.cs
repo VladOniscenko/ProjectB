@@ -7,26 +7,38 @@ namespace ProjectB.Presentation;
 
 public class MovieList
 {
-    private bool Running;
+    public bool Running{get; private set;}
     private const int MaxMoviesPerPage = 5;
     private readonly IServiceProvider _services;
 
-    public MovieList(IServiceProvider services)
+    public MovieList()
     {
-        _services = services;
+        _services = Program.Services;
         Running = false;
     }
 
     // Takes from the Repo and makes a list of movies
-    public void Run()
+    public void Run(IEnumerable<Movie>? searchedMovies = null)
     {
         Console.Clear();
         var _movieLogic = _services.GetRequiredService<IMovieService>();
-        IEnumerable<Movie> movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
+        IEnumerable<Movie> movies;
+        if(searchedMovies is null){
+        movies = _movieLogic.GetMoviesWithShowtimeInNextDays(999);
+        }
+        else{
+             movies = searchedMovies;
+        }
 
         if (movies.Count() == 0)
         {
-            ConsoleMethods.Error("No movies available this week.");
+            if(searchedMovies is null){
+                ConsoleMethods.Error("No movies available this week.");
+            }
+            else{
+                ConsoleMethods.Error("No movies found with requested paramaters");
+                Running = true;
+            }
             return;
         }
 
@@ -62,7 +74,12 @@ public class MovieList
                 movieOptions.Add("P", "Previous Page");
             }
 
+            if(searchedMovies is not null){
+                movieOptions.Add("S", "Go back to search menu");
+            }
+
             movieOptions.Add("M", "Back to Main Menu");
+
             // show the movies in the menu
             var selectedOption = Menu.SelectMenu($"Select a movie or option [ Page {page + 1}/{totalPages} ]", movieOptions);
             switch (selectedOption)
@@ -73,6 +90,8 @@ public class MovieList
                 case "P":
                     page--;
                     break;
+                case "S":
+                    return;
                 case "M":
                     Running = false;
                     break;
@@ -101,7 +120,12 @@ public class MovieList
         Console.WriteLine($"Actors          : {movie.Actors}");
         Console.WriteLine($"Rating          : {CalcStars(movie.Rating)} ({movie.Rating}/5)");
         Console.WriteLine($"Genre           : {movie.Genre}");
-        Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        
+        if (movie.AgeRestriction > 0)
+        {
+            Console.WriteLine($"Age Restriction : {movie.AgeRestriction}");
+        }
+        
         Console.WriteLine($"Release Date    : {movie.ReleaseDate.ToShortDateString()}");
         Console.WriteLine($"Country         : {movie.Country}");
     }
@@ -110,7 +134,7 @@ public class MovieList
     private void ShowPurchaseMenu(Movie movie)
     {
         int startingRow = Console.CursorTop + 2;
-        List<string> options = new() { "Check availability", "Back to Movie List" };
+        List<string> options = new() { "Book or view availability", "Back to Movie List" };
         int selected = AddMenuFromStartRow("=== CHOOSE AN OPTION ===", options, startingRow);
 
         if (selected == 1)
@@ -120,6 +144,7 @@ public class MovieList
         }
         
         // start reservation process
+        Running = false;
         Program.StartReservation(movie);
     }
 

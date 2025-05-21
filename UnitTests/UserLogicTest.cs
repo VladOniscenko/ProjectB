@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProjectB.DataAccess;
 
-namespace UnitTests;
+namespace ProjectB.UnitTests;
 
 [TestClass]
 public class UserLogicTest
@@ -11,7 +11,7 @@ public class UserLogicTest
     {
     }
     
-    private UserLogic _userLogic;
+    private UserLogic? _userLogic;
 
     [TestInitialize]
     public void Initialize()

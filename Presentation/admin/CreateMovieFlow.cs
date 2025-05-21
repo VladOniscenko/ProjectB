@@ -8,10 +8,10 @@ public class CreateMovieFlow
     
     private readonly IServiceProvider _services;
     private readonly IMovieService _movieService;
-    public CreateMovieFlow(IServiceProvider services)
+    public CreateMovieFlow()
     {
-        _services = services;
-        _movieService = services.GetRequiredService<IMovieService>();
+        _services = Program.Services;
+        _movieService = _services.GetRequiredService<IMovieService>();
     }
     
     public void Run()

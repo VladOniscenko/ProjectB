@@ -1,0 +1,86 @@
+using System.Security.Cryptography.X509Certificates;
+using ProjectB.DataAccess;
+using ProjectB.Logic.Interfaces;
+using ProjectB.Models;
+
+public class SearchMovieLogic : ISearchMovieService{
+
+    private readonly MovieRepository _movieRepository;
+
+    public SearchMovieLogic(MovieRepository movieRepository)
+    {
+        _movieRepository = movieRepository;
+    }
+
+    public List<Movie> GetSearchedMoviesByTitle(string title)
+    {
+        return _movieRepository.GetMoviesByTitle(title);
+    }
+
+    public List<Movie> GetSearchedMoviesByTitle(string title, int amount)
+    {
+        return _movieRepository.GetMoviesByTitle(title, amount);
+    }
+
+    public List<Movie> GetSearchedMoviesByGenre(string genre)
+    {
+        return _movieRepository.GetMoviesByGenre(genre);
+    }
+
+    public List<Movie> GetSearchedMovieByActor(string actor)
+    {
+        return _movieRepository.GetMoviesByActor(actor, 30);
+    }
+
+    public List<Movie> GetSearchedMovieByTitleAndGenre(string title, string genre)
+    {
+        return _movieRepository.GetMoviesByTitleAndGenre(title, genre);
+    }
+
+    public List<Movie> GetSearchedMovieByTitleAndActor(string title, string actor)
+    {
+        return _movieRepository.GetMoviesByTitleAndActor(title, actor);
+    }
+
+    public List<Movie> GetSearchedMovieByGenreAndActor(string genre, string actor)
+    {
+        return _movieRepository.GetMoviesByGenreAndActor(genre, actor);
+    }
+
+    public List<Movie> GetSearchedMovieByTitleGenreAndActor(string title, string genre, string actor)
+    {
+        return _movieRepository.GetMoviesByTitleGenreAndActor(title, genre, actor);
+    }
+
+    public List<Movie>? FindSpeceficMovieList(string title, string genre, string actor){
+        if(title != "" && genre == "" && actor == ""){
+            return GetSearchedMoviesByTitle(title, 30);
+        }
+        else if(title != "" && genre != "" && actor == ""){
+           return GetSearchedMovieByTitleAndGenre(title, genre);
+        }
+        else if(title != "" && genre == "" && actor !=""){
+            return GetSearchedMovieByTitleAndActor(title, actor);
+        }
+        else if(title == "" && genre == "" && actor !=""){
+            return GetSearchedMovieByActor(actor);
+        }
+        else if(title == "" && genre != "" && actor !=""){
+            return GetSearchedMovieByGenreAndActor(genre, actor);
+        }
+        else if(title != "" && genre != "" && actor !=""){
+            return GetSearchedMovieByTitleGenreAndActor(title, genre, actor);
+        }
+        else{
+            return null;
+        }
+    }
+
+
+    public bool DoesGenreExist(string genre){
+        return _movieRepository.GetGenre(genre).Count() != 0;
+    }
+
+
+
+}
