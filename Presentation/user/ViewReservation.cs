@@ -81,7 +81,10 @@ public class ViewReservation
         Console.WriteLine($"{AuditoriumInfo}");
         Console.WriteLine($"Reservation ID: {reservation.Id}");
         Console.WriteLine($"Status: {reservation.Status}");
-        Console.WriteLine($"Reservated seats:\n{SeatInfo}");
+        if (reservation.Status == "Confirmed")
+        {
+            Console.WriteLine($"Reservated seats:\n{SeatInfo}");
+        }
         Console.WriteLine("");
         
     }
@@ -100,17 +103,24 @@ public class ViewReservation
     private void ShowPurchaseMenu(Reservation reservation)
     {
         int startingRow = Console.CursorTop + 2;
-        List<string> options = new() { "Cancel reservation", "Back to reservation List" };
-        int selected = Menu.AddMenuFromStartRow("What would you like to", options, startingRow);
+        List<string> options = new() { "Cancel reservation", "Back to reservation list" };
 
-        if (selected == 1)
+        if (reservation.Status == "Cancelled")
         {
-            Console.Clear();
-            return;
+            options.Remove("Cancel reservation");
         }
 
-        Running = false;
-        canceling(reservation);
+        int selected = Menu.AddMenuFromStartRow("What would you like to", options, startingRow);
+
+        if (selected == 0 && reservation.Status != "Cancelled")
+        {
+            Running = false;
+            canceling(reservation);  
+        }
+
+        Console.Clear();
+        return;
+        
 
     }
 
