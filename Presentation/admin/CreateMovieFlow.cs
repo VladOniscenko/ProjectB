@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using ProjectB.Logic.Interfaces;
+using ProjectB.Logic;
 
 namespace ProjectB.Presentation;
 
@@ -7,11 +7,11 @@ public class CreateMovieFlow
 {
     
     private readonly IServiceProvider _services;
-    private readonly IMovieService _movieService;
+    private readonly MovieLogic _movieService;
     public CreateMovieFlow()
     {
         _services = Program.Services;
-        _movieService = _services.GetRequiredService<IMovieService>();
+        _movieService = _services.GetRequiredService<MovieLogic>();
     }
     
     public void Run()

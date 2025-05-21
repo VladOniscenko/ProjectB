@@ -17,4 +17,14 @@ public class AuditoriumLogic : IAuditoriumService
     {
         return _auditoriumRepository.Find(id);
     }
+    
+    public IEnumerable<Auditorium> GetAllAuditoriums()
+    {
+        return _auditoriumRepository.GetAllAuditoriums();
+    }
+
+    public bool IsAuditoriumTakenAt(int id, DateTime startTime, DateTime endTime)
+    {
+        return _auditoriumRepository.IsAuditoriumTakenAt(id, startTime, endTime);
+    }
 }

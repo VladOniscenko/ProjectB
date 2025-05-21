@@ -56,7 +56,7 @@ public class ShowtimeRepository
             {
                 List<DateTime> bookedTimes = new();
 
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     DateTime startTime;
                     DateTime endTime;
@@ -125,9 +125,16 @@ public class ShowtimeRepository
         using var connection = DbFactory.CreateConnection();
         connection.Open();
 
-        return connection.Query<Showtime>(
-            "SELECT * FROM Showtimes WHERE MovieId = @Id LIMIT @Limit",
-            new { Id = id, Limit = limit }
+        return connection.Query<Showtime, Auditorium, Showtime>(
+            "SELECT *, a.Name as Auditorium FROM Showtimes as s LEFT JOIN Auditoriums as a ON s.AuditoriumId = a.Id WHERE MovieId = @Id LIMIT @Limit",
+            (showtime, auditorium) =>
+            {
+                showtime.Auditorium = auditorium;
+                return showtime;
+            },
+
+            new { Id = id, Limit = limit },
+            splitOn: "Id"
         );
     }
 }

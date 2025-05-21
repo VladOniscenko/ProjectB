@@ -7,11 +7,11 @@ namespace ProjectB.Presentation;
 public class UserLogin
 {
     private readonly IServiceProvider _services;
-    private readonly IUserService _userService;
+    private readonly UserLogic _userService;
     public UserLogin()
     {
         _services = Program.Services;
-        _userService = _services.GetRequiredService<IUserService>();
+        _userService = _services.GetRequiredService<UserLogic>();
     }
     
     public bool Run()

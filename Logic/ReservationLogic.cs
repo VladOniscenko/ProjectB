@@ -8,11 +8,11 @@ namespace ProjectB.Logic;
 public class ReservationLogic : IReservationService
 {
     private readonly ReservationRepository _reservationRepository;
-    private readonly ISeatService _seatService;
-    private readonly ISeatReservationService _seatReservationService;
+    private readonly SeatLogic _seatService;
+    private readonly SeatReservationLogic _seatReservationService;
 
-    public ReservationLogic(ReservationRepository reservationRepository, ISeatService seatService,
-        ISeatReservationService seatReservationService)
+    public ReservationLogic(ReservationRepository reservationRepository, SeatLogic seatService,
+        SeatReservationLogic seatReservationService)
     {
         _reservationRepository = reservationRepository;
         _seatService = seatService;
