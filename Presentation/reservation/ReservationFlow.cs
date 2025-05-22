@@ -271,7 +271,7 @@ public class ReservationFlow
 
             case ReservationState.Tickets:
                 // 2. select tickets type (childrent, adults, seniors)
-                List<Seat> seats = new TicketSelection(_seats).Run();
+                List<Seat> seats = new SelectTicketType(_seats, _movie.AgeRestriction >= 18).Run();
                 if (seats != null && seats.Count > 0)
                 {
                     _seats = seats;
