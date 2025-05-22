@@ -210,12 +210,30 @@ public class ReservationFlow
         return sb.ToString();
     }
 
+    private string MovieWarnings()
+    {
+        var sb = new StringBuilder();
+        int contentWidth = 70;
 
+        if (_movie.AgeRestriction > 0)
+        {
+            sb.AppendLine("╔══════════════════════════════════════════════════════════════════════════╗");
+            sb.AppendLine($"║  {TruncateAndPad($"The movie is rated {_movie.AgeRestriction}+", contentWidth)}  ║");
+            sb.AppendLine("║                                                                          ║");
+            sb.AppendLine($"║  {TruncateAndPad($"This film contains content not suitable for viewers under {_movie.AgeRestriction}.", contentWidth)}  ║");
+            sb.AppendLine($"║  {TruncateAndPad("By continuing, you confirm you are of legal age.", contentWidth)}  ║");
+            sb.AppendLine("╚══════════════════════════════════════════════════════════════════════════╝");
+        }
+
+
+        return sb.ToString();
+    }
 
     private string GetReservationInfo()
     {
         var sb = new StringBuilder();
 
+        sb.Append(MovieWarnings());
         sb.Append(SelectedMovieInfo());
         sb.Append(SelectedShowtimeInfo());
         sb.Append(SelectedSeatsInfo());
