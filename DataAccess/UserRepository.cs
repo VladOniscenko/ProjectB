@@ -102,4 +102,25 @@ public class UserRepository
         connection.Execute(@"
         UPDATE Users SET IsAdmin = 1 WHERE Email = @email",new { email });
     }
+    // Gotta thank Jesse for the help on this one
+    public void UpdateUser(User user)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        
+        string query = @"
+            UPDATE Users
+            SET FirstName = @FirstName,
+                LastName = @LastName,
+                Email = @Email,
+                Password = @Password,
+                IsAdmin = @IsAdmin
+            WHERE Id = @Id";
+
+        connection.Execute(query, new
+        {
+            user.FirstName, user.LastName, user.Email,
+            user.Password, user.IsAdmin, user.Id
+        });
+    }
 }

@@ -38,16 +38,21 @@ public class UserLogicTest
     [DataRow("Ababa")]
     [DataRow("Ababab")]
     [DataRow("Abababa")]
+    [DataRow("Elizabeth")]
+    [DataRow("aBc")]
     public void IsNameValid_ValidName_True(string name)
     {
         bool actual = _userLogic.IsNameValid(name);
         Assert.AreEqual(true, actual);
     }
 
-
     [DataTestMethod]
     [DataRow("Aba$")]
+    [DataRow("")]
     [DataRow("Abab3")]
+    [DataRow("John3")]
+    [DataRow("Ana@")]
+    [DataRow("Anna Lee1")]
     public void IsNameValid_NameWithSymbolsOrNumbers_false(string name)
     {
         bool actual = _userLogic.IsNameValid(name);
@@ -67,10 +72,25 @@ public class UserLogicTest
 
 
     [TestMethod]
-    public void IsEmailValid_ValidEmail_True()
+    [DataRow("email@email.com")]
+    [DataRow("a@gmail.com")]
+    [DataRow("cinema@hotmail.com")]
+    public void IsEmailValid_ValidEmail_True(string email)
     {
-        string email = "valid@email.com";
         bool actual = _userLogic.IsEmailValid(email);
         Assert.AreEqual(true, actual);
+    }
+    
+    [TestMethod]
+    [DataRow("strongpass1", true)]
+    [DataRow("Password123", true)]
+    [DataRow("SuperSecure!", true)]
+    [DataRow("short", false)]
+    [DataRow("", false)]
+    [DataRow("1234567", false)]
+    public void IsPasswordValid_TestCases(string password, bool expectedResult)
+    {
+        bool actual = _userLogic.IsPasswordValid(password);
+        Assert.AreEqual(expectedResult, actual);
     }
 }

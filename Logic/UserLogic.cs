@@ -57,7 +57,6 @@ public class UserLogic : IUserService
 
         return null;
     }
-
     public  List<User> GetAllUsers(){
         return _userRepository.GetAllUsers();
     }
@@ -72,5 +71,15 @@ public class UserLogic : IUserService
 
     public void MakeUserAdmin(string email){
         _userRepository.MakeUserAdmin(email);
+        }
+
+    public void UpdateUser(User user)
+    {
+        _userRepository.UpdateUser(user);
+    }
+
+    bool IUserService.VerifyPassword(string currentPassword, string password)
+    {
+        return VerifyPassword(currentPassword, password);
     }
 }

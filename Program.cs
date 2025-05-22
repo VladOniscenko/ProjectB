@@ -55,6 +55,10 @@ class Program
                 case "AU":
                     new AboutUs().Run();
                     break;
+                case "VP":
+                    var viewProfile = new ViewReservation();
+                    viewProfile.Run();
+                    break;
                 case "EX":
                     return;
                 case "LO":
@@ -69,7 +73,12 @@ class Program
                     createShowtime.Run();
                     break;
                 case "AA":
-                    MakeAccountAdmin.ChooseAccount();
+                    var makeAccountAdmin = new MakeAccountAdmin();
+                    makeAccountAdmin.ChooseAccount();
+                    break;
+                case "UP":
+                    var userProfile = new UserProfile();
+                    userProfile.Run();
                     break;
                 default:
                     ConsoleMethods.Error("Invalid option.");
@@ -82,8 +91,11 @@ class Program
     {
         DbFactory.InitializeDatabase();
 
+        // create services collection for dependency injection
         var services = new ServiceCollection();
 
+        // add repositories (data access layers)
+        // singleton makes sure that only one instance of any class exists
         services.AddSingleton<UserRepository>();
         services.AddSingleton<MovieRepository>();
         services.AddSingleton<ShowtimeRepository>();
@@ -92,16 +104,16 @@ class Program
         services.AddSingleton<AuditoriumRepository>();
         services.AddSingleton<SeatReservationRepository>();
         services.AddSingleton<SearchMovieLogic>();
+        services.AddSingleton<UserLogic>();
+        services.AddSingleton<MovieLogic>();
+        services.AddSingleton<ShowtimeLogic>();
+        services.AddSingleton<SeatLogic>();
+        services.AddSingleton<ReservationLogic>();
+        services.AddSingleton<AuditoriumLogic>();
+        services.AddSingleton<SeatReservationLogic>();
+        services.AddSingleton<SearchMovieLogic>();
 
-        services.AddSingleton<IUserService, UserLogic>();
-        services.AddSingleton<IMovieService, MovieLogic>();
-        services.AddSingleton<IShowtimeService, ShowtimeLogic>();
-        services.AddSingleton<ISeatService, SeatLogic>();
-        services.AddSingleton<IReservationService, ReservationLogic>();
-        services.AddSingleton<IAuditoriumService, AuditoriumLogic>();
-        services.AddSingleton<ISeatReservationService, SeatReservationLogic>();
-        services.AddSingleton<ISearchMovieService, SearchMovieLogic>();
-
+        // initializes all classes only once
         Services = services.BuildServiceProvider();
     }
 
@@ -117,7 +129,10 @@ class Program
         if (CurrentUser != null)
         {
             menuOptions.Add("LO", "Log out");
+            menuOptions.Add("VP", "View profile");
         
+            menuOptions.Add("UP", "Profile");
+            
             if (CurrentUser.IsAdmin)
             {
                 menuOptions.Add("CM", "Create Movie");
@@ -157,7 +172,6 @@ class Program
     public static void StartReservation(Movie movie)
     {
         var reservationFlow = new ReservationFlow(movie);
-
         reservationFlow.Run();
     }
 

@@ -8,13 +8,13 @@ namespace ProjectB.Presentation;
 public class TicketSelection
 {
     private IServiceProvider _services;
-    private ISeatService _seatService;
+    private SeatLogic _seatService;
     private List<Seat> _seats;
     public TicketSelection(List<Seat> seats)
     {
         _services = Program.Services;
         _seats = seats;
-        _seatService = _services.GetRequiredService<ISeatService>();
+        _seatService = _services.GetRequiredService<SeatLogic>();
     }
     
     public List<Seat>? Run()

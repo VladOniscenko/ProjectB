@@ -2,16 +2,25 @@ using System.Security.Cryptography.X509Certificates;
 using ProjectB.DataAccess;
 using ProjectB.Models;
 using ProjectB.Presentation;
+using Microsoft.Extensions.DependencyInjection;
 
-public static class MakeAccountAdmin{
+public class MakeAccountAdmin{
 
-    public static void ChooseAccount(){
+    private readonly IServiceProvider _services;
+    private readonly UserLogic _userLogicService;
+
+    public MakeAccountAdmin(){
+        _services = Program.Services;
+        _userLogicService = _services.GetRequiredService<UserLogic>();
+    }
+
+
+    public void ChooseAccount(){
         Console.Clear();
-        var userLogic = new UserLogic(new UserRepository());
-        List<User> AllUsers = userLogic.GetAllNonAdminUsers();
+        List<User> AllUsers = _userLogicService.GetAllNonAdminUsers();
 
 
-        if(userLogic.CheckIfUserListIsEmpty(AllUsers)){
+        if(_userLogicService.CheckIfUserListIsEmpty(AllUsers)){
             ConsoleMethods.Error("No non admin users exist");
             return;
         }
@@ -40,7 +49,7 @@ public static class MakeAccountAdmin{
                     Console.Clear();
                     Console.WriteLine($"are you sure you wish to make {AllUsers[selectedIndex].FirstName} {AllUsers[selectedIndex].LastName} an admin?");
                     if(BaseUI.BasicYesOrNo()){
-                        userLogic.MakeUserAdmin(AllUsers[selectedIndex].Email);
+                        _userLogicService.MakeUserAdmin(AllUsers[selectedIndex].Email);
                         ConsoleMethods.AnimateLoadingText("Making user admin", 2000);
                         Console.WriteLine($"{AllUsers[selectedIndex].FirstName} {AllUsers[selectedIndex].LastName} has been given admin rights!");
                         ConsoleMethods.AwaitUser();
@@ -60,7 +69,7 @@ public static class MakeAccountAdmin{
 
     }
 
-    public static void ShowUsers(List<User> Users){
+    public void ShowUsers(List<User> Users){
         for(int i = 0; i < Users.Count(); i++){
             string fullName = Users[i].FirstName + " " + Users[i].LastName;
             string email = Users[i].Email;
@@ -71,7 +80,7 @@ public static class MakeAccountAdmin{
         }
     }
 
-    public static void UpdateLine(User user, int index, bool isSelected){
+    public void UpdateLine(User user, int index, bool isSelected){
         int consoleWidth = Console.WindowWidth;
 
         if(isSelected){
