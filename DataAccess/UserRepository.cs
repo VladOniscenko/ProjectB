@@ -69,11 +69,17 @@ public class UserRepository
         VALUES (@FirstName, @LastName, @Email, @Password, @IsAdmin)", user);
     }
 
-    public IEnumerable<User> GetAllUsers()
+    public List<User> GetAllUsers()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<User>("SELECT * FROM Users");
+        return connection.Query<User>("SELECT * FROM Users").ToList();
+    }
+
+    public List<User> GetAllNonAdminUsers(){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.Query<User>("SELECT * FROM Users WHERE IsAdmin = 0").ToList();
     }
 
     public bool CheckIfUserExistByEmail(string email)
@@ -90,6 +96,12 @@ public class UserRepository
         return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Email = @email LIMIT 1", new { email });
     }
 
+    public void MakeUserAdmin(string email){
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        connection.Execute(@"
+        UPDATE Users SET IsAdmin = 1 WHERE Email = @email",new { email });
+    }
     // Gotta thank Jesse for the help on this one
     public void UpdateUser(User user)
     {
