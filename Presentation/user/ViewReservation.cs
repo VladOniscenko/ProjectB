@@ -57,8 +57,8 @@ public class ViewReservation
 
                 default:
                     Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
+                    Showtime ReservationShowtime = _reservationService.GetShowtimeByShowtimeId(reservation);
                     ShowReservationInformation(reservation);
-                    ShowPurchaseMenu(reservation);
                     continue;
 
             }
@@ -89,6 +89,7 @@ public class ViewReservation
             Console.WriteLine($"Reservated seats:\n{SeatInfo}");
         }
         Console.WriteLine("");
+        ShowPurchaseMenu(reservation, ReservationShowtime);
         
     }
 
@@ -103,12 +104,12 @@ public class ViewReservation
         return result;
     }
 
-    private void ShowPurchaseMenu(Reservation reservation)
+    private void ShowPurchaseMenu(Reservation reservation , Showtime showtime)
     {
         int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Cancel reservation", "Back to reservation list" };
 
-        if (reservation.Status == "Cancelled")
+        if (reservation.Status == "Cancelled" || DateTime.Now > showtime.StartTime)
         {
             options.Remove("Cancel reservation");
         }
