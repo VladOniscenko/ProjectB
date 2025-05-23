@@ -55,10 +55,6 @@ class Program
                 case "AU":
                     new AboutUs().Run();
                     break;
-                case "VP":
-                    var viewProfile = new ViewReservation();
-                    viewProfile.Run();
-                    break;
                 case "EX":
                     return;
                 case "LO":
