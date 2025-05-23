@@ -60,7 +60,7 @@ public class MovieList
             // convert movies to string options to choose from in the menu
             var movieOptions = moviesToShow.ToDictionary(
                 m => m.Id.ToString(),
-                m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}"
+                m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}" + $"{(m.AgeRestriction > 0 ? $" | {m.AgeRestriction}+" : "")}"
             );
 
             // make optiions for the previous and next pagge

@@ -29,7 +29,7 @@ public class SeatLogic : ISeatService
             string description = ticketType switch
             {
                 "adult" => "Adult ticket (18+)",
-                "child" => "Child ticket (12+)",
+                "child" => "Child ticket (<18)",
                 "senior" => "Senior ticket (65+)",
                 _ => ticketType
             };

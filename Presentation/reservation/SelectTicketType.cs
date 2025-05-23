@@ -5,16 +5,19 @@ using ProjectB.Models;
 
 namespace ProjectB.Presentation;
 
-public class TicketSelection
+public class SelectTicketType
 {
     private IServiceProvider _services;
     private SeatLogic _seatService;
     private List<Seat> _seats;
-    public TicketSelection(List<Seat> seats)
+    private bool AgeRestriction;
+    
+    public SelectTicketType(List<Seat> seats, bool ageRestriction = false)
     {
         _services = Program.Services;
         _seats = seats;
         _seatService = _services.GetRequiredService<SeatLogic>();
+        AgeRestriction = ageRestriction;
     }
     
     public List<Seat>? Run()
@@ -24,6 +27,11 @@ public class TicketSelection
         foreach (Seat seat in _seats)
         {
             var ticketOptions = _seatService.GetTicketOptionsForSeat(seat);
+            if (AgeRestriction)
+            {
+                ticketOptions.Remove("child");
+            }
+            
             ticketOptions.Add("all_adult", "Set all next seats to adult");
             ticketOptions.Add("return", "Previous step");
 
