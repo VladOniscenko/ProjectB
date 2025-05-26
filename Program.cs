@@ -57,9 +57,6 @@ class Program
                     break;
                 case "EX":
                     return;
-                case "LO":
-                    Logout();
-                    break;
                 case "LI":
                     var userLogin = new UserLogin();
                     userLogin.Run();
@@ -120,11 +117,7 @@ class Program
 
         if (CurrentUser != null)
         {
-            menuOptions.Add("LO", "Log out");
-            menuOptions.Add("VP", "View profile");
-        
             menuOptions.Add("UP", "Profile");
-            
             if (CurrentUser.IsAdmin)
             {
                 menuOptions.Add("CM", "Create Movie");
