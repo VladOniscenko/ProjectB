@@ -99,7 +99,6 @@ class Program
         services.AddSingleton<ReservationRepository>();
         services.AddSingleton<AuditoriumRepository>();
         services.AddSingleton<SeatReservationRepository>();
-        services.AddSingleton<SearchMovieLogic>();
         services.AddSingleton<UserLogic>();
         services.AddSingleton<MovieLogic>();
         services.AddSingleton<ShowtimeLogic>();
