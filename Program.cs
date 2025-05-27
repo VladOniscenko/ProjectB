@@ -52,6 +52,10 @@ class Program
                     var createMovieFlow = new CreateMovieFlow();
                     createMovieFlow.Run();
                     break;
+                case "MR":
+                    var manageReservation = new AdminReservation();
+                    manageReservation.Run();
+                    break;
                 case "AU":
                     new AboutUs().Run();
                     break;
@@ -116,11 +120,15 @@ class Program
 
         if (CurrentUser != null)
         {
+            menuOptions.Add("LO", "Log out");
+        
             menuOptions.Add("UP", "Profile");
+            
             if (CurrentUser.IsAdmin)
             {
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
+                menuOptions.Add("MR", "Manage Reservations");
             }
         }
         else

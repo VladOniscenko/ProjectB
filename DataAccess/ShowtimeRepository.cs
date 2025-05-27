@@ -102,7 +102,7 @@ public class ShowtimeRepository
             VALUES (@MovieId, @AuditoriumId, @StartTime, @EndTime)", showtime);
     }
 
-    public IEnumerable<Showtime> All()
+    public IEnumerable<Showtime> GetAllShowtimes()
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
@@ -136,5 +136,19 @@ public class ShowtimeRepository
             new { Id = id, Limit = limit },
             splitOn: "Id"
         );
+    }
+
+    public List<Showtime> GetShowtimeByDate(DateTime date)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        var startOfDay = date.Date;
+        var endOfDay = startOfDay.AddDays(1);
+
+        return connection.Query<Showtime>(
+            "SELECT * FROM Showtimes WHERE StartTime >= @Start AND StartTime < @End",
+        new { Start = startOfDay, End = endOfDay }
+        ).ToList();
     }
 }

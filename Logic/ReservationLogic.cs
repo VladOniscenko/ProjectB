@@ -153,6 +153,11 @@ public class ReservationLogic : IReservationService
             $"Total Price: {reservation.TotalPrice}, Payment Method: {reservation.PaymentMethod}, " +
             $"Created On: {reservation.CreationDate}";
     }
+
+    public IEnumerable<Reservation> GetAllReservation()
+    {
+        return _reservationRepository.GetAllReservations();
+    }
 }
 
 public class ReservationError
