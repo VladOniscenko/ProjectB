@@ -37,31 +37,31 @@ public class AdminReservation
         while (Running)
         {
 
-        int page = 0;
-        int totalPages = (int)Math.Ceiling((double)activeReservations.Count() / 5);
+            int page = 0;
+            int totalPages = (int)Math.Ceiling((double)activeReservations.Count() / 5);
 
 
-        var reservationDictionary = activeReservations.ToDictionary(
-            r => r.Id.ToString(),
-            r => ShowInfo(r, true)
-        );
+            var reservationDictionary = activeReservations.ToDictionary(
+                r => r.Id.ToString(),
+                r => ShowInfo(r, true)
+            );
 
-        var inactiveReservationDictionary = inactiveReservations.ToDictionary(
-            r => r.Id.ToString(),
-            r => ShowInfo(r, false)
-        );
+            var inactiveReservationDictionary = inactiveReservations.ToDictionary(
+                r => r.Id.ToString(),
+                r => ShowInfo(r, false)
+            );
 
-        foreach (var keyValue in inactiveReservationDictionary)
-        {
-            if (!reservationDictionary.ContainsKey(keyValue.Key))
+            foreach (var keyValue in inactiveReservationDictionary)
             {
-                reservationDictionary[keyValue.Key] = keyValue.Value;
+                if (!reservationDictionary.ContainsKey(keyValue.Key))
+                {
+                    reservationDictionary[keyValue.Key] = keyValue.Value;
+                }
             }
-        }   
 
-        reservationDictionary.Add("M", "Back to menu");
+            reservationDictionary.Add("M", "Back to menu");
 
-        
+
             Console.Clear();
 
             if (page < totalPages - 1)
@@ -116,5 +116,5 @@ public class AdminReservation
         {
             return $"Reservation ID: {reservation.Id} || Reservated on: {reservation.CreationDate.ToString("yyyy-MM-dd")} || Firstname: {user.FirstName} || Stauts: Cancelled";
         }
-    }    
+    }
 }

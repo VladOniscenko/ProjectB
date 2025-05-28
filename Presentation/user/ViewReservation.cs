@@ -86,11 +86,11 @@ public class ViewReservation
         Console.WriteLine($"Status: {reservation.Status}");
         if (reservation.Status == "Confirmed")
         {
-            Console.WriteLine($"Reservated seats:\n{SeatInfo}");
+            Console.WriteLine($"Reserved seats:\n{SeatInfo}");
         }
         Console.WriteLine("");
         ShowPurchaseMenu(reservation, ReservationShowtime);
-        
+
     }
 
     private string ShowSeats(List<Tuple<int, int>> seatInfo)
@@ -104,7 +104,7 @@ public class ViewReservation
         return result;
     }
 
-    private void ShowPurchaseMenu(Reservation reservation , Showtime showtime)
+    private void ShowPurchaseMenu(Reservation reservation, Showtime showtime)
     {
         int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Cancel reservation", "Back to reservation list" };
@@ -124,13 +124,11 @@ public class ViewReservation
         if (selected == 0 && reservation.Status == "Confirmed" && options.Count > 1)
         {
             Running = false;
-            canceling(reservation);  
+            canceling(reservation);
         }
 
         Console.Clear();
         return;
-        
-
     }
 
     private void canceling(Reservation reservation)
