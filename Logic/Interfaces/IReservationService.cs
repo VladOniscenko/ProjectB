@@ -17,4 +17,5 @@ public interface IReservationService
 
     public IEnumerable<Reservation> GetReservationsById(int userId);
     string GetReservationInfo(Reservation reservation);
+    public IEnumerable<Reservation> GetAllReservation();
 }

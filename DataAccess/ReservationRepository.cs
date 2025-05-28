@@ -1,6 +1,7 @@
 using Dapper;
 using ProjectB.Database;
 using ProjectB.Models;
+using SQLitePCL;
 
 namespace ProjectB.DataAccess;
 
@@ -77,8 +78,7 @@ public class ReservationRepository
         {
             throw new ArgumentException("Invalid user or user ID.");
         }
-
-        return connection.Query<Reservation>(@"SELECT * FROM Reservations WHERE UserId = @UserId", new { UserId = user.Id });
+        return connection.Query<Reservation>(@"SELECT * FROM Reservations", new { UserId = user.Id });
     }
 
     public void Cancel(int id)
@@ -96,11 +96,11 @@ public class ReservationRepository
             WHERE Id = @Id", new { Id = id, Status = "Cancelled" });
     }
 
-    public Showtime GetShowtimeByShowtimeId(Reservation showtime)
+    public Showtime GetShowtimeByShowtimeId(Reservation reservation)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<Showtime>(@"SELECT * FROM Showtimes WHERE Id = @Id", new { Id = showtime.ShowtimeId }).First();
+        return connection.Query<Showtime>(@"SELECT * FROM Showtimes WHERE Id = @Id", new { Id = reservation.ShowtimeId }).First();
     }
 
     public Movie GetMovieByShowtimeId(Reservation reservation)
@@ -139,10 +139,9 @@ public class ReservationRepository
 
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        var auditorium = connection.Query<string>(@"SELECT Name FROM Auditoriums WHERE Id = @Id", new { Id =  showtime.AuditoriumId }).First();
+        var auditorium = connection.Query<string>(@"SELECT Name FROM Auditoriums WHERE Id = @Id", new { Id = showtime.AuditoriumId }).First();
         return auditorium;
     }
-    // New method to get all reservations from a specific user
     public IEnumerable<Reservation> GetReservationsById(int userId)
     {
         using var connection = DbFactory.CreateConnection();

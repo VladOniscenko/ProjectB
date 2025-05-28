@@ -1,4 +1,5 @@
 
+using Bogus.DataSets;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectB.DataAccess;
 using ProjectB.Logic;
@@ -58,7 +59,6 @@ public class ViewReservation
                 default:
                     Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
                     ShowReservationInformation(reservation);
-                    ShowPurchaseMenu(reservation);
                     continue;
 
             }
@@ -86,10 +86,11 @@ public class ViewReservation
         Console.WriteLine($"Status: {reservation.Status}");
         if (reservation.Status == "Confirmed")
         {
-            Console.WriteLine($"Reservated seats:\n{SeatInfo}");
+            Console.WriteLine($"Reserved seats:\n{SeatInfo}");
         }
         Console.WriteLine("");
-        
+        ShowPurchaseMenu(reservation, ReservationShowtime);
+
     }
 
     private string ShowSeats(List<Tuple<int, int>> seatInfo)
@@ -103,7 +104,7 @@ public class ViewReservation
         return result;
     }
 
-    private void ShowPurchaseMenu(Reservation reservation)
+    private void ShowPurchaseMenu(Reservation reservation, Showtime showtime)
     {
         int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Cancel reservation", "Back to reservation list" };
@@ -113,27 +114,27 @@ public class ViewReservation
             options.Remove("Cancel reservation");
         }
 
+        if (showtime.StartTime <= DateTime.Now)
+        {
+            options.Remove("Cancel reservation");
+        }
+
         int selected = Menu.AddMenuFromStartRow("What would you like to", options, startingRow);
 
-        if (selected == 0 && reservation.Status != "Cancelled")
+        if (selected == 0 && reservation.Status == "Confirmed" && options.Count > 1)
         {
             Running = false;
-            canceling(reservation);  
+            canceling(reservation);
         }
 
         Console.Clear();
         return;
-        
-
     }
 
     private void canceling(Reservation reservation)
     {
         _reservationService.Cancel(reservation.Id);
-        ConsoleMethods.AnimateLoadingText("Canceling reservatoin");
+        ConsoleMethods.AnimateLoadingText("Canceling reservation");
         ConsoleMethods.Success("Succesfully canceled movie");
     }
-    
-
-
 }

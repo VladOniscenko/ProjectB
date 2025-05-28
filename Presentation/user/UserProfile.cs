@@ -141,34 +141,8 @@ public class UserProfile
 
     public void ShowTickets()
     {
-        Console.Clear();
-        var user = Program.CurrentUser;
-
-        if (user == null)
-        {
-            Console.WriteLine("No user logged in.");
-            Console.ReadLine();
-            return;
-        }
-
-        var reservations = _reservationService.GetReservationsById(user.Id).ToList();
-
-        if (!reservations.Any())
-        {
-            Console.WriteLine("No reservations found.");
-        }
-        else
-        {
-            foreach (var reservation in reservations)
-            {
-                Console.WriteLine(_reservationService.GetReservationInfo(reservation));
-                Console.WriteLine();
-            }
-        }
-
-        Console.WriteLine("\nPress any button to go back");
-        Console.ReadLine();
-
+        ViewReservation viewReservation = new();
+        viewReservation.Run();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

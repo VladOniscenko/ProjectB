@@ -14,14 +14,14 @@ public class ShowtimeLogic : IShowtimeService
     {
         _showtimeRepository = showtimeRepository;
     }
-    
+
     public Showtime? Find(int id)
     {
         return _showtimeRepository.Find(id);
     }
 
     public bool IsMovieIDValid(string movie)
-    {   
+    {
         if (movie == "")
         {
             return false;
@@ -36,9 +36,9 @@ public class ShowtimeLogic : IShowtimeService
             return false;
         }
 
-        if (!DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", 
-                CultureInfo.InvariantCulture, 
-                DateTimeStyles.None, 
+        if (!DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
                 out DateTime result))
         {
             return false;
@@ -62,5 +62,15 @@ public class ShowtimeLogic : IShowtimeService
     public void CreateShowtime(Showtime showtime)
     {
         _showtimeRepository.AddShowtime(showtime);
+    }
+
+    public IEnumerable<Showtime> GetAllShowtimes()
+    {
+        return _showtimeRepository.GetAllShowtimes();
+    }
+
+    public List<Showtime> GetShowtimeByDate(DateTime date)
+    {
+        return _showtimeRepository.GetShowtimeByDate(date);
     }
 }

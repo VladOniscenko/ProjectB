@@ -10,4 +10,7 @@ public interface IShowtimeService
     public bool IsMovieIDValid(string movie);
     public bool IsMovieStartTimeValid(string time);
     public DateTime parsedStartTime { get; set; }
+    public IEnumerable<Showtime> GetAllShowtimes();
+
+    public List<Showtime> GetShowtimeByDate(DateTime date);
 }
