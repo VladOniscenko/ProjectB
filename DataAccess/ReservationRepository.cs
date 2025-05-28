@@ -96,11 +96,11 @@ public class ReservationRepository
             WHERE Id = @Id", new { Id = id, Status = "Cancelled" });
     }
 
-    public Showtime GetShowtimeByShowtimeId(Reservation showtime)
+    public Showtime GetShowtimeByShowtimeId(Reservation reservation)
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        return connection.Query<Showtime>(@"SELECT * FROM Showtimes WHERE Id = @Id", new { Id = showtime.ShowtimeId }).First();
+        return connection.Query<Showtime>(@"SELECT * FROM Showtimes WHERE Id = @Id", new { Id = reservation.ShowtimeId }).First();
     }
 
     public Movie GetMovieByShowtimeId(Reservation reservation)

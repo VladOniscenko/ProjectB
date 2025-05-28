@@ -23,7 +23,7 @@ public class UserRepository
             );
         ");
     }
-    
+
     public static void PopulateTable()
     {
         try
@@ -55,7 +55,7 @@ public class UserRepository
             Console.WriteLine($"Error initializing admin user: {ex.Message}");
         }
     }
-    
+
     public int? AddUser(User user)
     {
         using var connection = DbFactory.CreateConnection();
@@ -92,7 +92,7 @@ public class UserRepository
     {
         using var connection = DbFactory.CreateConnection();
         connection.Open();
-        
+
         string query = @"
             UPDATE Users
             SET FirstName = @FirstName,
@@ -104,8 +104,19 @@ public class UserRepository
 
         connection.Execute(query, new
         {
-            user.FirstName, user.LastName, user.Email,
-            user.Password, user.IsAdmin, user.Id
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            user.Password,
+            user.IsAdmin,
+            user.Id
         });
+    }
+
+    public User? GetUserByReservationId(Reservation reservation)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+        return connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Id = @UserId LIMIT 1", new { reservation.UserId });
     }
 }

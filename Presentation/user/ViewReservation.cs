@@ -1,4 +1,5 @@
 
+using Bogus.DataSets;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectB.DataAccess;
 using ProjectB.Logic;
@@ -57,7 +58,6 @@ public class ViewReservation
 
                 default:
                     Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
-                    Showtime ReservationShowtime = _reservationService.GetShowtimeByShowtimeId(reservation);
                     ShowReservationInformation(reservation);
                     continue;
 
@@ -109,14 +109,19 @@ public class ViewReservation
         int startingRow = Console.CursorTop + 2;
         List<string> options = new() { "Cancel reservation", "Back to reservation list" };
 
-        if (reservation.Status == "Cancelled" || DateTime.Now > showtime.StartTime)
+        if (reservation.Status == "Cancelled")
+        {
+            options.Remove("Cancel reservation");
+        }
+
+        if (showtime.StartTime <= DateTime.Now)
         {
             options.Remove("Cancel reservation");
         }
 
         int selected = Menu.AddMenuFromStartRow("What would you like to", options, startingRow);
 
-        if (selected == 0 && reservation.Status != "Cancelled")
+        if (selected == 0 && reservation.Status == "Confirmed" && options.Count > 1)
         {
             Running = false;
             canceling(reservation);  

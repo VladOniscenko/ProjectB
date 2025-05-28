@@ -11,13 +11,13 @@ public class AdminReservation
     bool Running;
     private readonly IServiceProvider _services;
     private readonly ReservationLogic _reservationService;
-    private readonly ShowtimeLogic _showtimeService;
+    private readonly UserLogic _userService;
 
     public AdminReservation()
     {
         _services = Program.Services;
         _reservationService = _services.GetRequiredService<ReservationLogic>();
-        _showtimeService = _services.GetRequiredService<ShowtimeLogic>();
+        _userService = _services.GetRequiredService<UserLogic>();
         Running = false;
     }
 
@@ -25,15 +25,17 @@ public class AdminReservation
     {
         User currentUser = Program.CurrentUser;
         IEnumerable<Reservation> reservations = _reservationService.GetAllReservation();
-        IEnumerable<Showtime> showtimes = _showtimeService.GetAllShowtimes();
-
         List<Reservation> activeReservations = reservations.Where(r => r.Status == "Confirmed").ToList();
+        List<Reservation> inactiveReservations = reservations.Where(r => r.Status == "Cancelled").ToList();
 
         if (reservations.Count() == 0)
         {
             ConsoleMethods.Error("No reservations made");
             return;
         }
+        Running = true;
+        while (Running)
+        {
 
         int page = 0;
         int totalPages = (int)Math.Ceiling((double)activeReservations.Count() / 5);
@@ -41,12 +43,25 @@ public class AdminReservation
 
         var reservationDictionary = activeReservations.ToDictionary(
             r => r.Id.ToString(),
-            r => $"{r.CreationDate}"
+            r => ShowInfo(r, true)
         );
 
-        Running = true;
-        while (Running)
+        var inactiveReservationDictionary = inactiveReservations.ToDictionary(
+            r => r.Id.ToString(),
+            r => ShowInfo(r, false)
+        );
+
+        foreach (var keyValue in inactiveReservationDictionary)
         {
+            if (!reservationDictionary.ContainsKey(keyValue.Key))
+            {
+                reservationDictionary[keyValue.Key] = keyValue.Value;
+            }
+        }   
+
+        reservationDictionary.Add("M", "Back to menu");
+
+        
             Console.Clear();
 
 
@@ -61,11 +76,10 @@ public class AdminReservation
                 reservationDictionary.Add("P", "Previous Page");
             }
 
-            reservationDictionary.Add("M", "Back to menu");
             Console.ResetColor();
             Console.Clear();
 
-            var selectedOption = Menu.SelectMenu("All the reservation", reservationDictionary);
+            var selectedOption = Menu.SelectMenu($"Reservations|| Total reservations:{reservations.Count()} || Total active reservations:{activeReservations.Count()} || [ Page {page + 1}/{totalPages} ]  ", reservationDictionary);
 
             ConsoleMethods.AnimateLoadingText("Processing data");
 
@@ -83,10 +97,25 @@ public class AdminReservation
                     Running = false;
                     break;
                 default:
-                    Reservation? reservation = activeReservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
+                    Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
+                    ViewReservation viewReservation = new();
+                    viewReservation.ShowReservationInformation(reservation);
                     continue;
             }
 
         }
     }
+
+    private string ShowInfo(Reservation reservation, bool confirmed)
+    {
+        User? user = _userService.GetUserByReservationId(reservation);
+        if (confirmed)
+        {
+            return $"Reservation ID: {reservation.Id} || Reservated on: {reservation.CreationDate.Date} || Firstname: {user.FirstName} || Status: Confirmed";
+        }
+        else
+        {
+            return $"Reservation ID: {reservation.Id} || Reservated on: {reservation.CreationDate.ToString("yyyy-MM-dd")} || Firstname: {user.FirstName} || Stauts: Cancelled";
+        }
+    }    
 }

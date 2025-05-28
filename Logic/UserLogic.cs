@@ -67,4 +67,9 @@ public class UserLogic : IUserService
     {
         return VerifyPassword(currentPassword, password);
     }
+
+    public User? GetUserByReservationId(Reservation reservation)
+    {
+        return _userRepository.GetUserByReservationId(reservation);
+    }
 }

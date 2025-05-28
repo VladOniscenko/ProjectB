@@ -13,4 +13,6 @@ public interface IUserService
     bool IsPasswordIdentical(string password, string passwordHash);
     public void UpdateUser(User user);
     bool VerifyPassword(string enteredPassword, string storedHash);
+
+    User? GetUserByReservationId(Reservation reservation);
 }
