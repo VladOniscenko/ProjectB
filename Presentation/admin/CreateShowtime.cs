@@ -59,7 +59,7 @@ public class CreateShowtime
                 break;
             };
     
-            Console.WriteLine("Film niet gevonden.");
+            Console.WriteLine("Film not found.");
         }
         
         newShowtime.MovieId = selectedMovie.Id;
