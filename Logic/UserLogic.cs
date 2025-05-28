@@ -57,6 +57,21 @@ public class UserLogic : IUserService
 
         return null;
     }
+    public  List<User> GetAllUsers(){
+        return _userRepository.GetAllUsers();
+    }
+
+    public  List<User> GetAllNonAdminUsers(){
+        return _userRepository.GetAllNonAdminUsers();
+    }
+
+    public bool CheckIfUserListIsEmpty(List<User> users){
+        return !users.Any();
+    }
+
+    public void MakeUserAdmin(string email){
+        _userRepository.MakeUserAdmin(email);
+        }
 
     public void UpdateUser(User user)
     {
@@ -73,3 +88,4 @@ public class UserLogic : IUserService
         return _userRepository.GetUserByReservationId(reservation);
     }
 }
+
