@@ -136,10 +136,7 @@ public class ViewReservation
     private void canceling(Reservation reservation)
     {
         _reservationService.Cancel(reservation.Id);
-        ConsoleMethods.AnimateLoadingText("Canceling reservatoin");
+        ConsoleMethods.AnimateLoadingText("Canceling reservation");
         ConsoleMethods.Success("Succesfully canceled movie");
     }
-    
-
-
 }
