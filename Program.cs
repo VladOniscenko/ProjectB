@@ -72,6 +72,10 @@ class Program
                     var createShowtime = new CreateShowtime();
                     createShowtime.Run();
                     break;
+                case "AA":
+                    var makeAccountAdmin = new MakeAccountAdmin();
+                    makeAccountAdmin.ChooseAccount();
+                    break;
                 case "UP":
                     var userProfile = new UserProfile();
                     userProfile.Run();
@@ -132,6 +136,7 @@ class Program
             {
                 menuOptions.Add("CM", "Create Movie");
                 menuOptions.Add("CS", "Create Showtime");
+                menuOptions.Add("AA", "Give Admin Access");
             }
         }
         else
