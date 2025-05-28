@@ -64,8 +64,6 @@ public class AdminReservation
         
             Console.Clear();
 
-
-
             if (page < totalPages - 1)
             {
                 reservationDictionary.Add("N", "Next Page");
@@ -100,6 +98,7 @@ public class AdminReservation
                     Reservation? reservation = reservations.FirstOrDefault(r => r.Id == int.Parse(selectedOption));
                     ViewReservation viewReservation = new();
                     viewReservation.ShowReservationInformation(reservation);
+                    Running = false;
                     continue;
             }
 
