@@ -128,8 +128,6 @@ class Program
         if (CurrentUser != null)
         {
             menuOptions.Add("LO", "Log out");
-            menuOptions.Add("VP", "View profile");
-        
             menuOptions.Add("UP", "Profile");
             
             if (CurrentUser.IsAdmin)
