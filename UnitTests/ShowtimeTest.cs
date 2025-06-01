@@ -22,7 +22,7 @@ public class ShowtimeTest
     [DataRow(" ")]
     [DataRow("  ")]
     [DataRow("   ")]
-    public void IsMovieIDValid_IncorrectInput(string movieName)
+    public void IsMovieIDValid_EmptyInput_ReturnErrorMsg(string movieName)
     {
         bool input = _showtimeLogic.IsMovieIDValid(movieName);
         Assert.AreEqual(false, input);
@@ -35,7 +35,7 @@ public class ShowtimeTest
     [DataRow("Guw")]
     [DataRow("Guwn")]
     [DataRow("Guwns")]
-    public void IsMovieIDValid_CorrectInput(string movieName)
+    public void IsMovieIDValid_CorrectMovieInput_ListOfMovies(string movieName)
     {
         bool input = _showtimeLogic.IsMovieIDValid(movieName);
         Assert.AreEqual(true, input);
@@ -51,7 +51,7 @@ public class ShowtimeTest
     [DataRow("06-2004-16 100:100")]
     [DataRow("2004-06-16 25:10")]
     [DataRow("2004-06-16 23:59")]
-    public void IsMovieStartTimeValid_IncorrectInput(string startTime)
+    public void IsMovieStartTimeValid_InvalidDates_ReturnErrorMsg(string startTime)
     {
         bool input = _showtimeLogic.IsMovieIDValid(startTime);
         Assert.AreEqual(false, input);
@@ -64,7 +64,7 @@ public class ShowtimeTest
     [DataRow("2030-08-18 14:00")]
     [DataRow("2059-12-31 23:59")]
     [DataRow("2100-01-01 00:00")]
-    public void IsMovieStartTimeValid_CorrectInput(string startTime)
+    public void IsMovieStartTimeValid_ValidDates_ReturnsConfirmationMsg(string startTime)
     {
         bool input = _showtimeLogic.IsMovieIDValid(startTime);
         Assert.AreEqual(true, input);
