@@ -11,7 +11,7 @@ public class CreateMovieTest
     [DataRow("AAAA", true)]
     [DataRow("", false)]
     [DataRow("AB", false)]
-    [DataRow("This is a long but valid string", true)]
+    [DataRow("Longer but still valid string", true)]
     public void ValidateInput_ValitdateString_ReturnTrue(string inputString, bool expectedResult)
     {
         bool res = MovieLogic.ValidateInput<string>(2, 50, inputString);

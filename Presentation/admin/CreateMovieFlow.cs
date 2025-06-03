@@ -37,7 +37,7 @@ public class CreateMovieFlow
         {
             // Title
             movieTitle = BaseUI.DrawInputBox("Enter movie title", 20, 30, 0, 4, movieTitle);
-            while (!MovieLogic.ValidateInput<string>(20, 100, movieDescription))
+            while (!MovieLogic.ValidateInput<string>(3, 50, movieDescription))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 3 and 50 characters.", 5);
                 movieTitle = BaseUI.DrawInputBox("Enter movie title", 20, 30, 0, 4, movieTitle);
