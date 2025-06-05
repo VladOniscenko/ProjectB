@@ -5,7 +5,7 @@ public static class ConsoleMethods
     public static void AwaitUser()
     {
         Console.WriteLine(">> Press any key to continue");
-        Console.ReadLine();
+        Console.ReadKey();
     }
     
     public static void Warning(string message) => WriteToConsole(message, ConsoleColor.Yellow);
