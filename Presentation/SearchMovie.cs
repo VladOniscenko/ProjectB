@@ -91,6 +91,15 @@ public class SearchMovie
                 {
                     break;
                 }
+                
+                if (String.IsNullOrWhiteSpace(movieName) && String.IsNullOrWhiteSpace(genre) && String.IsNullOrWhiteSpace(actor))
+                {
+                    BaseUI.ShowErrorMessage("Please enter at least one field.", 9);
+                }
+                else
+                {
+                    BaseUI.ShowErrorMessage("No movies found. Try new filters", 9);
+                }
             }
 
             Console.ResetColor();
