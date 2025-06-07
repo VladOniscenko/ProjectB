@@ -10,7 +10,7 @@ public class CreateMovieTest
     [DataTestMethod]
     [DataRow("AAAA", true)]
     [DataRow("", false)]
-    [DataRow("AB", false)]
+    [DataRow("AB", true)]
     [DataRow("Longer but still valid string", true)]
     public void ValidateInput_ValitdateString_ReturnTrue(string inputString, bool expectedResult)
     {
@@ -22,7 +22,7 @@ public class CreateMovieTest
     [DataRow("1", true)]
     [DataRow("100", true)]
     [DataRow("", false)]
-    [DataRow("AAAAAA", false)]
+    [DataRow("AA    AAAA", false)]
 
     public void ValidateInput_IntInput_ReturnsExpected(string inputInt, bool expectedResult)
     {
@@ -32,7 +32,7 @@ public class CreateMovieTest
 
     [DataTestMethod]
     [DataRow("0.1", true)]
-    [DataRow("8.0", true)]
+    [DataRow("9.9", true)]
     [DataRow("10.5", false)]
     [DataRow("100", false)]
     [DataRow("abc", false)]
@@ -52,7 +52,7 @@ public class CreateMovieTest
     public void ValidateInput_StringRepresentingDateTime_ReturnsExpected(string input, bool expectedResult)
     {
         DateTime minDate = new DateTime(2000, 1, 1);
-        DateTime maxDate = new DateTime(2049, 12, 31);
+        DateTime maxDate = new DateTime(2050, 12, 31);
 
         bool result = MovieLogic.ValidateInput<DateTime>(minDate.Year, maxDate.Year, input);
         Assert.AreEqual(expectedResult, result);

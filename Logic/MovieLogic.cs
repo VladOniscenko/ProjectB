@@ -1,6 +1,9 @@
+using System.Data;
 using ProjectB.DataAccess;
 using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
+using System.Globalization;
+
 
 namespace ProjectB.Logic;
 
@@ -54,34 +57,44 @@ public class MovieLogic : IMovieService
     }
     
     public static bool ValidateInput<T>(int min = 0, int max = 100, string? input = null)
-    { 
-        if (typeof(T) == typeof(int))
+    {
+        try
         {
-            if (int.TryParse(input, out int value) && value >= min && value <= max)
+            if (typeof(T) == typeof(int))
             {
-                return true;
+                if (int.TryParse(input, out int value) && value >= min && value <= max)
+                {
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(string))
+            {
+                if (!string.IsNullOrEmpty(input) && input.Length >= min && input.Length <= max)
+                {
+                    return true;
+                }
+            }
+            else if (typeof(T) == typeof(double))
+            {
+                if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+                {
+                    if (value >= min && value <= max)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (typeof(T) == typeof(DateTime))
+            {
+                if (DateTime.TryParse(input, out DateTime date) && date.Year >= min && date.Year <= max)
+                {
+                    return true;
+                }
             }
         }
-        else if (typeof(T) == typeof(string))
+        catch
         {
-            if (!string.IsNullOrEmpty(input) && input.Length >= min && input.Length <= max)
-            {
-                return true;
-            }
-        }
-        else if (typeof(T) == typeof(double))
-        {
-            if (double.TryParse(input, out double value) && value >= min && value <= max )
-            {
-                return true;
-            }
-        }
-        else if (typeof(T) == typeof(DateTime))
-        {
-            if (DateTime.TryParse(input, out DateTime _))
-            {
-                return true;
-            }
+            return false;
         }
         return false;
     }
