@@ -78,9 +78,9 @@ public class ViewReservation
         Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("");
         Console.WriteLine($"Title: {ReservationMovie.Title}");
-        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime}");
-        Console.WriteLine($"Ending: {ReservationShowtime.EndTime}");
-        Console.WriteLine($"Reservated on: {reservation.CreationDate}");
+        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"Ending: {ReservationShowtime.EndTime:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"Reservated on: {reservation.CreationDate:yyyy-MM-dd HH:mm}");
         Console.WriteLine($"{AuditoriumInfo}");
         Console.WriteLine($"Reservation ID: {reservation.Id}");
         Console.WriteLine($"Status: {reservation.Status}");
