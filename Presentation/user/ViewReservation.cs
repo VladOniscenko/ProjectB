@@ -44,7 +44,7 @@ public class ViewReservation
 
             var reservationDictionary = reservationsToShow.ToDictionary(
                 r => r.Id.ToString(),
-                r => $"Date: {r.CreationDate.ToShortDateString()}||Reservation ID: {r.Id}||Price: {r.TotalPrice}"
+                r => $"Reservation ID: {r.Id} || Movie name: {_reservationService.GetMovieByShowtimeId(r).Title} || Start time movie: {_reservationService.GetShowtimeByShowtimeId(r).StartTime:yyyy-MM-dd HH:mm} || Price: €{r.TotalPrice}"
 
             );
 
