@@ -61,21 +61,36 @@ public class SearchMovie{
 
             Console.SetCursorPosition(0, 1);
             string movieName = BaseUI.ReadInputBox(0, 40, false, 1, null);
+            if (movieName == null)
+            {
+                BaseUI.ResetColor();
+                return;
+            }
             Console.SetCursorPosition(0,4);
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(new string(' ', 40));
             Console.SetCursorPosition(0,4);
             string genre = BaseUI.ReadInputBox(0, 40, false, 4, null);
-            while(!_searchMovieService.DoesGenreExist(genre))
+            if (genre == null)
+            {
+                BaseUI.ResetColor();
+                return;
+            }
+            while (!_searchMovieService.DoesGenreExist(genre))
             {
                 BaseUI.ShowErrorMessage("Genre could not be found", 5);
-                Console.SetCursorPosition(0,4);
+                Console.SetCursorPosition(0, 4);
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.Write(new string(' ', 40));
-                Console.SetCursorPosition(0,4);
+                Console.SetCursorPosition(0, 4);
                 genre = BaseUI.ReadInputBox(0, 40, false, 4, null);
+                if (genre == null)
+                {
+                    BaseUI.ResetColor();
+                    return;
+                }
             }
             Console.SetCursorPosition(0,5);
             Console.Write("                                             ");
@@ -88,6 +103,11 @@ public class SearchMovie{
             Console.Write(new string(' ', 40));
             Console.SetCursorPosition(0,7);
             string actor = BaseUI.ReadInputBox(0, 40, false, 7, null);
+            if (actor == null)
+            {
+                BaseUI.ResetColor();
+                return;
+            }
 
             foundMovies = _searchMovieService.FindSpeceficMovieList(movieName, genre, actor);
 

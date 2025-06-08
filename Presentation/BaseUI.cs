@@ -1,3 +1,5 @@
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+
 public static class BaseUI
 {
     private static int BoxX { get; set; }
@@ -53,6 +55,11 @@ public static class BaseUI
                 break;
             }
 
+            if (key.Key == ConsoleKey.Escape)
+            {
+                return null;
+            }
+
             if (key.Key == ConsoleKey.Backspace && input.Length > 0)
             {
                 input = input.Remove(input.Length - 1);
@@ -60,6 +67,7 @@ public static class BaseUI
                 Console.Write(" ");
                 Console.SetCursorPosition(boxX + input.Length, y);
             }
+
 
             else if (!char.IsControl(key.KeyChar) && input.Length < boxLength - 1)
             {
@@ -153,5 +161,11 @@ public static class BaseUI
     {
         int y = Console.CursorTop;
         return BasicYesOrNo(y + 1);
+    }
+
+    public static void ResetColor()
+    {
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.White;
     }
 }
