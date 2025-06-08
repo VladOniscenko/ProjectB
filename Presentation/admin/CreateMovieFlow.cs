@@ -102,11 +102,11 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Age Restriction
-            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput);
+            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput).Trim('+');
             while (!_movieService.ValidateInput<int>(0, 99, ageInput))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid non-negative integer for age restriction.", 18);
-                ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput);
+                ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput).Trim('+');
             }
 
             Console.SetCursorPosition(0, 18);
