@@ -33,6 +33,7 @@ namespace ProjectB
         {
             Console.Clear();
             Console.WriteLine(Prompt);
+            BaseUI.ColoredText("Use Up & Down keys to navigate.\nPress Enter to select an option.", ConsoleColor.Green);
 
             Console.WriteLine("╔══════════════════════════════════════╗");
 
@@ -58,7 +59,7 @@ namespace ProjectB
                 Console.Clear();
                 Console.CursorVisible = false;
                 DisplayOptions();
-
+                
                 ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
                 keyPressed = keyInfo.Key;
 
