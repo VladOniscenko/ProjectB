@@ -137,7 +137,7 @@ public class CreateMovieFlow
             Movie description: {movieDescription}
             Runtime: {runtime} minutes
             Featuring: {actorsInput}
-            Rating: {rating}/10
+            Movie Rating: {rating}/10
             Genre: {genreInput}
             Age restriction: {ageInput}
             Release: {releaseDate}
