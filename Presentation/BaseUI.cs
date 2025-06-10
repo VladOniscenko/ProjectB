@@ -163,9 +163,17 @@ public static class BaseUI
         return BasicYesOrNo(y + 1);
     }
 
+
     public static void ResetColor()
     {
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    public static void ColoredText(string text, ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(text);
+        Console.ResetColor();
     }
 }
