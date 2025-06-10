@@ -38,9 +38,23 @@ public class CreateShowtime
             Console.WriteLine("╔═════════════════════════════╗");
             Console.WriteLine("║       Create  Showtime      ║");
             Console.WriteLine("╚═════════════════════════════╝");
+
+            Console.SetCursorPosition(0, 24);
+            Console.Write("                                                                                     \n");
+
+            Console.WriteLine("╔══════════════════════════════════════════════╗");
+            Console.WriteLine("║     Press ESC to return back to the menu     ║");
+            Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+            Console.SetCursorPosition(0, 4);
             
-            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
-            string movieName = Console.ReadLine().Trim();
+            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.\n");
+            string movieName = BaseUI.DrawInputBox("name/keyword", 15, 30, -1, -1);
+            if (movieName == null)
+            {
+                BaseUI.ResetColor();
+                return;
+            }
 
             IEnumerable<Movie> movies = _movieLogic.GetMoviesByTitle(movieName);
 

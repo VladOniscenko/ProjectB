@@ -21,6 +21,13 @@ public class CreateMovieFlow
         Console.WriteLine("║     Create movie     ║");
         Console.WriteLine("╚══════════════════════╝");
 
+        Console.SetCursorPosition(0, 24);
+        Console.Write("                                                                                     \n");
+
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     Press ESC to return back to the menu     ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         bool completed = false;
 
         string movieTitle = "";

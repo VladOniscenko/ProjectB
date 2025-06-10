@@ -22,6 +22,13 @@ public class SearchMovie{
         while(true){
             Console.Clear();
 
+            Console.SetCursorPosition(0, 24);
+            Console.Write("                                                                                     \n");
+
+            Console.WriteLine("╔══════════════════════════════════════════════╗");
+            Console.WriteLine("║     Press ESC to return back to the menu     ║");
+            Console.WriteLine("╚══════════════════════════════════════════════╝");
+
             List<Movie>? foundMovies;
 
             while(true){
