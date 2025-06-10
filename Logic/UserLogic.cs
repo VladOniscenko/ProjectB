@@ -13,7 +13,9 @@ public class UserLogic : IUserService
 
     private EmailAddressAttribute email = new EmailAddressAttribute();
 
-    public bool IsNameValid(string name){
+    public bool IsNameValid(string name)
+    {
+        name = name.Replace(" ", "");
         return !(name.Length < 3 || name.Any(c => !char.IsLetter(c)));
     }
 
