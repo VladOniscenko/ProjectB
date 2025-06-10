@@ -15,8 +15,11 @@ public class Movie
 
     public override string ToString()
     {
-        // return $"{Id}: {Title} ({ReleaseDate.Year}) - {Genre} - {Ra        
         return $"{Title} ({ReleaseDate.Year})";
-
+    }
+    
+    public string RatingStars()
+    {
+        return $"[{new string('*', Convert.ToInt32(Rating) / 2).PadRight(5)}]";
     }
 }
