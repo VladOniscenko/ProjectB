@@ -26,10 +26,11 @@ class Menu
         return new string(' ', padleft) + new string($"{text}") + new string(' ', padright);
     }
 
-    public void DisplayOptions()
-    {
-        Console.Clear();
-        Console.WriteLine(Prompt);
+        public void DisplayOptions()
+        {
+            Console.Clear();
+            Console.WriteLine(Prompt);
+            BaseUI.ColoredText("Use Up & Down keys to navigate.\nPress Enter to select an option.", ConsoleColor.Green);
 
         Console.WriteLine("╔══════════════════════════════════════╗");
 

@@ -20,15 +20,20 @@ public class SearchMovie
             Console.Clear();
             List<Movie>? foundMovies;
 
-            while (true)
-            {
-                Console.SetCursorPosition(0, 0);
-                Console.Write("Movie name: ");
-                Console.SetCursorPosition(0, 1);
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(new string(' ', 40));
-                Console.ResetColor();
+            while(true){
+            Console.SetCursorPosition(0, 10);
+            BaseUI.ColoredText("At least one field required.", ConsoleColor.DarkGray);
+            Console.SetCursorPosition(0, 11);
+            BaseUI.ColoredText("Press Enter to move to the next text box.", ConsoleColor.DarkGray);
+            Console.SetCursorPosition(0, 12);
+            BaseUI.ColoredText("Press Enter at the final text box to search.", ConsoleColor.DarkGray);
+            Console.SetCursorPosition(0, 0);
+            Console.Write("Movie name: ");
+            Console.SetCursorPosition(0, 1);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(new string(' ', 40));
+            Console.ResetColor();
 
                 Console.SetCursorPosition(0, 3);
                 Console.Write("Genre: ");

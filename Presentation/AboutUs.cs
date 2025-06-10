@@ -10,21 +10,66 @@ public class AboutUs
     public void Run()
     {
         Console.Clear();
-        Console.WriteLine("=== About Us ===");
 
-        Console.WriteLine("Welcome to Byte Cinemas, where every visit is more than just a trip to" + 
-                          "\nthe movies—it’s an immersive cinematic experience. Founded by Jake Darcy,"+
-                           "\na passionate entrepreneur and film lover, our mission is to provide the most comfortable" + 
-                           "\nmovie-going experience possible. \n \n");
+        // Title
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+        Console.WriteLine("║                Welcome to Byte Cinemas                 ║");
+        Console.WriteLine("╚════════════════════════════════════════════════════════╝");
+        Console.ResetColor();
 
-        Console.WriteLine("Byte Cinemas, currently located at Wijnhaven 107 3011 WN, features state-of-the-art technology" + 
-                          "\nwith Auro 3D sound and IMAX 3D digital prjectors. Along with comfortable seating options" +
-                          "\ntailored to your comfort, you can choose between standard, premium and VIP. Furthermore it" +
-                          "\nhas a stylish lounge area and bar, perfect for unwinding before or after your film. \n\n");
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Gray;
+        Console.WriteLine("     More than just movies — it’s a cinematic experience.\n");
+        Console.ResetColor();
 
-        Console.WriteLine("Whether you're a casual moviegoer or a certified cinephile, Byte Cinemas aims \n" +
-                          "to let you enjoy movies fully, the right way.");
-        
+        // Our Story
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("★ Our Story");
+        Console.ResetColor();
+        Console.WriteLine("  Founded by Jake Darcy, a film lover and entrepreneur,");
+        Console.WriteLine("  Byte Cinemas exists to make every visit feel special.");
+        Console.WriteLine("  From the moment you walk in to the final credits.\n");
+
+        // Location
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("★ Location & Opening/Closing times");
+        Console.ResetColor();
+        Console.WriteLine("  Wijnhaven 107, 3011 WN — sleek, central, and easy to reach.\n");
+        Console.WriteLine("  Monday — Saturday | 10:00 — 22:00");
+        Console.WriteLine("  Sunday            | Closed\n");
+
+        // Tech & Comfort
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("★ Tech & Comfort");
+        Console.ResetColor();
+        Console.WriteLine("  > Auro 3D sound and IMAX 3D digital projection");
+        Console.WriteLine("  > Seating that suits you:");
+        Console.WriteLine("     - Standard");
+        Console.WriteLine("     - Premium");
+        Console.WriteLine("     - VIP (plush seats, exclusive perks)\n");
+
+        // Lounge & Bar
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("★ Lounge & Bar");
+        Console.ResetColor();
+        Console.WriteLine("  Modern lounge area to relax before or after your film.");
+        Console.WriteLine("  Enjoy signature drinks and cinema-themed cocktails.\n");
+
+        // Blah blah, yap yap!
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.WriteLine("★ For Everyone");
+        Console.ResetColor();
+        Console.WriteLine("  Whether you’re a casual viewer or a hardcore film fan,");
+        Console.WriteLine("  Byte Cinemas gives you the movie experience you deserve.\n");
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("╔════════════════════════════════════════════════════════╗");
+        Console.WriteLine("║            Movie nights done right—with Byte.          ║");
+        Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
+        Console.ResetColor();
+
+        BaseUI.ColoredText("Press Enter to return to menu", ConsoleColor.DarkGray);
         Console.ReadKey();
     }
 }

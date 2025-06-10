@@ -59,7 +59,7 @@ public class CreateShowtime
                 break;
             };
     
-            Console.WriteLine("Film niet gevonden.");
+            Console.WriteLine("Film not found.");
         }
         
         newShowtime.MovieId = selectedMovie.Id;
@@ -85,7 +85,12 @@ public class CreateShowtime
         while (true)
         {
             Console.Clear();
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm) for the movie you want to create a showtime for.");
+            BaseUI.ColoredText("Datetime format: yyyy-MM-dd HH:mm", ConsoleColor.DarkGray);
+            BaseUI.ColoredText("Date: yyyy-MM-dd (ex: 2027-08-21)", ConsoleColor.DarkGray);
+            BaseUI.ColoredText("Time: 24-hour (ex: 23:00)", ConsoleColor.DarkGray);
+            Console.SetCursorPosition(0, 6);
             string movieStartTime = Console.ReadLine()?.Trim() ?? "";
 
             if (!_showtimeLogic.IsMovieStartTimeValid(movieStartTime))

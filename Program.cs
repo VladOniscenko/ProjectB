@@ -12,7 +12,7 @@ class Program
 {
     public static ServiceProvider Services { get; private set; }
     public static User? CurrentUser { get; set; } = null;
-
+    public static string Instruction = "Use Up & Down keys to select an option.";
     public static string Logo = @"
  ____             __               ____                                              __             
 /\  _`\          /\ \__           /\  _`\    __                                     /\ \            
@@ -30,7 +30,7 @@ class Program
     {
         InitializeServices();
         Console.OutputEncoding = Encoding.UTF8;
-        
+
         while (true)
         {
             Console.Clear();
@@ -126,7 +126,7 @@ class Program
         {
             menuOptions.Add("LO", "Log out");
             menuOptions.Add("UP", "Profile");
-            
+
             if (CurrentUser.IsAdmin)
             {
                 menuOptions.Add("CM", "Create Movie");
@@ -142,7 +142,7 @@ class Program
         }
 
         menuOptions.Add("EX", "Exit");
-        
+
         var customerName = CurrentUser is not null ? $"back {CurrentUser.FirstName}" : "";
         List<Movie> Promotedmovie = new MovieLogic(new MovieRepository()).GetPromotedMovies();
 
@@ -154,9 +154,8 @@ class Program
                        2: {Promotedmovie[1]}
                        3: {Promotedmovie[2]}
                        
-                       Welcome {customerName}to the Byte Cinema!
-                       Use Up & Down keys to select an option.
-                       
+                       Welcome {customerName} to the Byte Cinema's!
+                
                        """;
 
         var selectMenu = new Menu(heading, menuOptions);
