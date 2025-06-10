@@ -151,6 +151,39 @@ public class MovieRepository
             new { Count = limit, Title = title }
         ).ToList();
     }
+    
+    public List<Movie> SearchMoviesByFilters(string title, string genre, string actor, int limit = 10)
+    {
+        using var connection = DbFactory.CreateConnection();
+        connection.Open();
+
+        string query = "SELECT * FROM Movies";
+        bool where = false;
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            query += where ? " AND" : " WHERE";
+            query += " LOWER(Title) LIKE LOWER('%' || @Title || '%')";
+            where = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(genre))
+        {
+            query += where ? " AND" : " WHERE";
+            query += " LOWER(Genre) LIKE LOWER('%' || @Genre || '%')";
+            where = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(actor))
+        {
+            query += where ? " AND" : " WHERE";
+            query += " LOWER(Actors) LIKE LOWER('%' || @Actor || '%')";
+            where = true;
+        }
+
+        query += " LIMIT @Count";
+        return connection.Query<Movie>(query, new { Title = title, Genre = genre, Actor = actor, Count = limit }).ToList();
+    }
 
     public List<Movie> GetMoviesByTitleAndGenre(string title, string genre, int limit = 10)
     {

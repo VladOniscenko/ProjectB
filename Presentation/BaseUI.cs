@@ -154,4 +154,11 @@ public static class BaseUI
         int y = Console.CursorTop;
         return BasicYesOrNo(y + 1);
     }
+
+    public static void ColoredText(string text, ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(text);
+        Console.ResetColor();
+    }
 }

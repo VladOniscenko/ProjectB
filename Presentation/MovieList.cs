@@ -60,7 +60,7 @@ public class MovieList
             // convert movies to string options to choose from in the menu
             var movieOptions = moviesToShow.ToDictionary(
                 m => m.Id.ToString(),
-                m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {CalcStars(m.Rating)}" + $"{(m.AgeRestriction > 0 ? $" | {m.AgeRestriction}+" : "")}"
+                m => $"{m.Title} | ({m.Runtime} min) | Genres: {m.Genre} | {m.RatingStars()}" + $"{(m.AgeRestriction > 0 ? $" | {m.AgeRestriction}+" : "")}"
             );
 
             // make optiions for the previous and next pagge
@@ -118,7 +118,7 @@ public class MovieList
         Console.WriteLine($"Description     : {movie.Description}");
         Console.WriteLine($"Runtime         : {movie.Runtime} minutes");
         Console.WriteLine($"Actors          : {movie.Actors}");
-        Console.WriteLine($"Rating          : {CalcStars(movie.Rating)} ({movie.Rating}/5)");
+        Console.WriteLine($"Rating          : {movie.RatingStars()}");
         Console.WriteLine($"Genre           : {movie.Genre}");
         
         if (movie.AgeRestriction > 0)
@@ -146,41 +146,5 @@ public class MovieList
         // start reservation process
         Running = false;
         Program.StartReservation(movie);
-    }
-
-    /// <summary>
-    /// Adds a menu to the console from a specified start row.
-    /// </summary>
-    /// <param name="title"> Title of the menu </param>
-    /// <param name="options"> Options the menu provides </param>
-    /// <param name="startRow"> Row from where to start the menu </param>
-    /// <param name="rowBuffer"> Used in addition to the startRow param to maniupulate the actual start of writing the menu. </param>
-    /// <returns></returns>
-
-    private static string CalcStars(double rating)
-    {
-        string StarString = "";
-        int StarsNumber = Convert.ToInt32(rating) / 2;
-
-        switch(StarsNumber)
-        {
-            case 1:
-                StarString = "[*    ]";
-                break;
-            case 2:
-                StarString = "[**   ]";
-                break;
-            case 3:
-                StarString = "[***  ]";
-                break;
-            case 4:
-                StarString = "[**** ]";
-                break;
-            case 5:
-                StarString = "[*****]";
-                break;
-        }
-
-        return StarString;
     }
 }
