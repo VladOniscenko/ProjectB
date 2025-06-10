@@ -1,27 +1,23 @@
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
-using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 using ProjectB.Presentation;
 
-public class SearchMovie{
-
+public class SearchMovie
+{
     private readonly IServiceProvider _services;
     private readonly SearchMovieLogic _searchMovieService;
 
-    public SearchMovie(){
+    public SearchMovie()
+    {
         _services = Program.Services;
         _searchMovieService = _services.GetRequiredService<SearchMovieLogic>();
     }
 
-
-    public void SearchForMovies(){
-
-
-        while(true){
+    public void SearchForMovies()
+    {
+        while (true)
+        {
             Console.Clear();
-
             List<Movie>? foundMovies;
 
             while(true){
@@ -39,22 +35,22 @@ public class SearchMovie{
             Console.Write(new string(' ', 40));
             Console.ResetColor();
 
-            Console.SetCursorPosition(0, 3);
-            Console.Write("Genre: ");
-            Console.SetCursorPosition(0, 4);
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write(new string(' ', 40));
-            Console.ResetColor();
+                Console.SetCursorPosition(0, 3);
+                Console.Write("Genre: ");
+                Console.SetCursorPosition(0, 4);
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(new string(' ', 40));
+                Console.ResetColor();
 
-            
-            // Console.SetCursorPosition(28, 3);
-            // Console.Write("Release date (in dd-mm-yy): ");
-            // Console.SetCursorPosition(28, 4);
-            // Console.BackgroundColor = ConsoleColor.White;
-            // Console.ForegroundColor = ConsoleColor.Black;
-            // Console.Write(new string(' ', 35));
-            // Console.ResetColor();
+
+                // Console.SetCursorPosition(28, 3);
+                // Console.Write("Release date (in dd-mm-yy): ");
+                // Console.SetCursorPosition(28, 4);
+                // Console.BackgroundColor = ConsoleColor.White;
+                // Console.ForegroundColor = ConsoleColor.Black;
+                // Console.Write(new string(' ', 35));
+                // Console.ResetColor();
 
 
             Console.SetCursorPosition(0, 6);
@@ -115,32 +111,34 @@ public class SearchMovie{
                 return;
             }
 
-            foundMovies = _searchMovieService.FindSpeceficMovieList(movieName, genre, actor);
+                foundMovies = _searchMovieService.FindSpeceficMovieList(movieName, genre, actor);
 
-            if(foundMovies is not null){
+                if (foundMovies is not null)
+                {
+                    break;
+                }
+                
+                if (String.IsNullOrWhiteSpace(movieName) && String.IsNullOrWhiteSpace(genre) && String.IsNullOrWhiteSpace(actor))
+                {
+                    BaseUI.ShowErrorMessage("Please enter at least one field.", 9);
+                }
+                else
+                {
+                    BaseUI.ShowErrorMessage("No movies found. Try new filters", 9);
+                }
+            }
+
+            Console.ResetColor();
+            Console.Clear();
+
+            ConsoleMethods.AnimateLoadingText("Searching for movies");
+            MovieList movieList = new MovieList();
+            movieList.Run(foundMovies);
+
+            if (!movieList.Running)
+            {
                 break;
             }
-            BaseUI.ShowErrorMessage("Please enter at least one field", 9);
-
-
-            }
-        Console.ResetColor();
-        Console.Clear();
-        // Console.WriteLine($"Movies found for'{movieName}'\n=============================");
-
-        // foreach(Movie movie in _searchMovieService.GetSearchedMovies(movieName, 30)){
-        //     Console.WriteLine(movie.Title);
-        // }
-
-        ConsoleMethods.AnimateLoadingText("Searching for movies");
-        
-
-        MovieList movieList = new MovieList();
-        movieList.Run(foundMovies);
-
-        if(!movieList.Running){
-            break;
-        }
         }
     }
 }
