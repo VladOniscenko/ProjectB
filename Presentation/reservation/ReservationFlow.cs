@@ -145,7 +145,7 @@ public class ReservationFlow
         sb.AppendLine($"║  {TruncateAndPad($"Title: {_movie.Title}", contentWidth)}  ║");
         sb.AppendLine($"║  {TruncateAndPad($"Runtime: {_movie.Runtime} minutes", contentWidth)}  ║");
         sb.AppendLine($"║  {TruncateAndPad($"Actors: {_movie.Actors}", contentWidth)}  ║");
-        sb.AppendLine($"║  {TruncateAndPad($"Rating: {_movie.Rating}/10", contentWidth)}  ║");
+        sb.AppendLine($"║  {TruncateAndPad($"Rating: {_movie.RatingStars()}", contentWidth)}  ║");
         sb.AppendLine($"║  {TruncateAndPad($"Genre: {_movie.Genre}", contentWidth)}  ║");
 
         if (_movie.AgeRestriction > 0)

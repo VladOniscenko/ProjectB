@@ -44,7 +44,7 @@ public class ViewReservation
 
             var reservationDictionary = reservationsToShow.ToDictionary(
                 r => r.Id.ToString(),
-                r => $"Date: {r.CreationDate.ToShortDateString()} || Reservation ID: {r.Id} || Price: {r.TotalPrice}"
+                r => $"Reservation ID: {r.Id} || Movie name: {_reservationService.GetMovieByShowtimeId(r).Title} || Start time movie: {_reservationService.GetShowtimeByShowtimeId(r).StartTime:yyyy-MM-dd HH:mm} || Price: €{r.TotalPrice}"
 
             );
 
@@ -78,9 +78,9 @@ public class ViewReservation
         Console.WriteLine(new string('-', Console.WindowWidth));
         Console.WriteLine("");
         Console.WriteLine($"Title: {ReservationMovie.Title}");
-        Console.WriteLine($"Starting Time: {ReservationShowtime.StartTime}");
-        Console.WriteLine($"Ending: {ReservationShowtime.EndTime}");
-        Console.WriteLine($"Reserved on: {reservation.CreationDate}");
+        Console.WriteLine($"Startingtime: {ReservationShowtime.StartTime:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"Ending: {ReservationShowtime.EndTime:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"Reservated on: {reservation.CreationDate:yyyy-MM-dd HH:mm}");
         Console.WriteLine($"{AuditoriumInfo}");
         Console.WriteLine($"Reservation ID: {reservation.Id}");
         Console.WriteLine($"Status: {reservation.Status}");

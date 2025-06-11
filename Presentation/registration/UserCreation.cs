@@ -14,6 +14,7 @@ public class UserCreation
 
     private readonly IServiceProvider _services;
     private readonly UserLogic _userService;
+    private bool returnToMenu = false;
 
     public UserCreation()
     {
@@ -30,6 +31,13 @@ public class UserCreation
         Console.WriteLine("║   Create New User    ║");
         Console.WriteLine("╚══════════════════════╝");
 
+        Console.SetCursorPosition(0, 24);
+        Console.Write("                                                                                     \n");
+
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     Press ESC to return back to the menu     ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         User newUser = new User();
         if (user is not null)
         {
@@ -37,39 +45,70 @@ public class UserCreation
         }
 
         newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
-        while (!_userService.IsNameValid(newUser.FirstName))
+        if (newUser.FirstName != null)
         {
-            BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 5);
-            newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
+            while (!_userService.IsNameValid(newUser.FirstName))
+            {
+                if (newUser.FirstName == null)
+                {
+                    return false;
+                }
+                BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 5);
+                newUser.FirstName = BaseUI.DrawInputBox("First name", BoxX, Width, 0, 4, newUser.FirstName);
+            }
         }
+        else
+        {
+            BaseUI.ResetColor();
+            return false;
+        }
+        
+        
 
         Console.SetCursorPosition(0, 5);
         Console.Write("                                                                                     ");
 
         newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
-        while (!_userService.IsNameValid(newUser.LastName))
+        if (newUser.LastName != null)
         {
-            BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 7);
-            newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
+            while (!_userService.IsNameValid(newUser.LastName))
+            {
+                BaseUI.ShowErrorMessage("Name must be longer than 3 characters and can only contain letters", 7);
+                newUser.LastName = BaseUI.DrawInputBox("Last name", BoxX, Width, 0, 6, newUser.LastName);
+            }
         }
-
+        else
+        {
+            BaseUI.ResetColor();
+            return false;
+        }
+        
         Console.SetCursorPosition(0, 7);
         Console.Write("                                                                                     ");
 
         newUser.Email = BaseUI.DrawInputBox("Email", BoxX, Width, 0, 8, newUser.Email);
-        while (!_userService.IsEmailValid(newUser.Email) || _userService.DoesUserExist(newUser.Email))
+        if (newUser.Email != null)
         {
-            if (!_userService.IsEmailValid(newUser.Email))
+            while (!_userService.IsEmailValid(newUser.Email) || _userService.DoesUserExist(newUser.Email))
             {
-                BaseUI.ShowErrorMessage("Please enter a valid email address", 9);
-            }
-            else
-            {
-                BaseUI.ShowErrorMessage("Account with this email already exists", 9);
-            }
+                if (!_userService.IsEmailValid(newUser.Email))
+                {
+                    BaseUI.ShowErrorMessage("Please enter a valid email address", 9);
+                }
+                else
+                {
+                    BaseUI.ShowErrorMessage("Account with this email already exists", 9);
+                }
 
-            newUser.Email = BaseUI.DrawInputBox("Email", BoxX, Width, 0, 8, newUser.Email);
+                newUser.Email = BaseUI.DrawInputBox("Email", BoxX, Width, 0, 8, newUser.Email);
+            }
         }
+        else
+        {
+            BaseUI.ResetColor();
+            return false;
+        }
+        
 
         Console.SetCursorPosition(0, 9);
         Console.Write("                                                                  ");
@@ -78,28 +117,47 @@ public class UserCreation
         while (!_userService.IsPasswordIdentical(newUser.Password, secondPassword))
         {
             newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
-
-            while (!_userService.IsPasswordValid(newUser.Password))
+            if (newUser.Password != null)
             {
-                BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
-                    11);
-                newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
+                while (!_userService.IsPasswordValid(newUser.Password))
+                {
+                    BaseUI.ShowErrorMessage("Please enter a valid password (must be at least 8 characters long)",
+                        11);
+                    newUser.Password = BaseUI.DrawInputBox("Password", BoxX, Width, 0, 10, newUser.Password, true);
+                }
             }
+            else
+            {
+                BaseUI.ResetColor();
+                return false;
+            }
+
+
 
             Console.SetCursorPosition(0, 11);
             Console.Write(
                 "                                                                                                   ");
 
             secondPassword = BaseUI.DrawInputBox("Re-enter password", BoxX, Width, 0, 12, newUser.Password, true);
-            if (!_userService.IsPasswordIdentical(newUser.Password, secondPassword))
+            if (secondPassword != null)
             {
-                BaseUI.ShowErrorMessage("Passwords are not identical",
-                    13);
-                Console.SetCursorPosition(BoxX, 12);
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.WriteLine(new string(' ', Width));
-                Console.ResetColor();
+                if (!_userService.IsPasswordIdentical(newUser.Password, secondPassword))
+                {
+                    BaseUI.ShowErrorMessage("Passwords are not identical",
+                        13);
+                    Console.SetCursorPosition(BoxX, 12);
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.WriteLine(new string(' ', Width));
+                    Console.ResetColor();
+                }
             }
+            else
+            {
+                BaseUI.ResetColor();
+                return false;
+            }
+            
+            
         }
 
         if (CheckIfDataCorrect(newUser))
@@ -110,7 +168,7 @@ public class UserCreation
                 ConsoleMethods.Error("Something went wrong! Please try again.");
                 return false;
             }
-            
+
             newUser.Id = userId.Value;
             Program.CurrentUser = newUser;
             Console.WriteLine("\nYour account has been made!");

@@ -108,13 +108,16 @@ public class AdminReservation
     private string ShowInfo(Reservation reservation, bool confirmed)
     {
         User? user = _userService.GetUserByReservationId(reservation);
+        var ReservationShowtime = _reservationService.GetShowtimeByShowtimeId(reservation);
+        var ReservationMovie = _reservationService.GetMovieByShowtimeId(reservation);
+        var ReservationSeats = _reservationService.GetSeatIdByReservationId(reservation);
         if (confirmed)
         {
-            return $"Reservation ID: {reservation.Id} || Reservated on: {reservation.CreationDate.Date} || Firstname: {user.FirstName} || Status: Confirmed";
+            return $"Reservation ID: {reservation.Id} || Movie name: {ReservationMovie.Title} || Starting time: {ReservationShowtime.StartTime:yyyy-MM-dd HH:mm} || Firstname: {user.FirstName} || Status: Confirmed";
         }
         else
         {
-            return $"Reservation ID: {reservation.Id} || Reservated on: {reservation.CreationDate.ToString("yyyy-MM-dd")} || Firstname: {user.FirstName} || Stauts: Cancelled";
+            return $"Reservation ID: {reservation.Id} || Movie name: {ReservationMovie.Title} || Starting time: {ReservationShowtime.StartTime:yyyy-MM-dd HH:mm} || Firstname: {user.FirstName} || Stauts: Cancelled";
         }
     }
 }
