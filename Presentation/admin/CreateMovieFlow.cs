@@ -65,7 +65,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Runtime
-            runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 8, runtime);
+            runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 9, runtime);
             while (!MovieLogic.ValidateInput<int>(60, 240, runtime.ToString()))
             {
                 BaseUI.ShowErrorMessage("Please enter a number in between 60 and 240 minutes.", 10);
@@ -75,7 +75,7 @@ public class CreateMovieFlow
             Console.SetCursorPosition(0, 10);
             Console.Write("                                                                                     ");
             // Actors
-            actorsInput = BaseUI.DrawInputBox("Enter actor names (comma separated)", 40, 30, 0, 10, actorsInput);
+            actorsInput = BaseUI.DrawInputBox("Enter actor names (comma separated)", 40, 30, 0, 11, actorsInput);
             while (!MovieLogic.ValidateInput<string>(5, 200, actorsInput))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 5 and 200 characters.", 12);
@@ -86,7 +86,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Rating
-            rating = BaseUI.DrawInputBox("Enter rating", 20, 30, 0, 12, rating);
+            rating = BaseUI.DrawInputBox("Enter rating", 20, 30, 0, 13, rating);
             while (!MovieLogic.ValidateInput<double>(0, 10, rating))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid rating between 0.0 and 10.0.", 14);
@@ -98,7 +98,7 @@ public class CreateMovieFlow
 
 
             // Genre
-            genreInput = BaseUI.DrawInputBox("Enter genre", 20, 30, 0, 14, genreInput);
+            genreInput = BaseUI.DrawInputBox("Enter genre", 20, 30, 0, 15, genreInput);
             while (!MovieLogic.ValidateInput<string>(3, 50, genreInput))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 3 and 50 characters.", 16);
@@ -109,7 +109,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Age Restriction
-            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 16, ageInput);
+            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput);
             while (!MovieLogic.ValidateInput<int>(0, 99, ageInput))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid non-negative integer for age restriction.", 18);
@@ -120,7 +120,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Release Date
-            releaseDate = BaseUI.DrawInputBox("Enter release date", 30, 30, 0, 18, releaseDate);
+            releaseDate = BaseUI.DrawInputBox("Enter release date", 30, 30, 0, 19, releaseDate);
             while (!MovieLogic.ValidateInput<DateTime>(0, 100, releaseDate))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid date in the format yyyy-MM-dd.", 20);
@@ -130,7 +130,7 @@ public class CreateMovieFlow
             Console.SetCursorPosition(0, 20);
             Console.Write("                                                                                     ");
             // Country
-            countryInput = BaseUI.DrawInputBox("Enter country", 25, 30, 0, 20, countryInput);
+            countryInput = BaseUI.DrawInputBox("Enter country", 25, 30, 0, 21, countryInput);
             while (!MovieLogic.ValidateInput<string>(2, 50, countryInput))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 2 and 50 characters.", 22);
