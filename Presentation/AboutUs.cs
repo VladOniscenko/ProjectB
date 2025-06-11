@@ -69,7 +69,7 @@ public class AboutUs
         Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
         Console.ResetColor();
 
-        BaseUI.ColoredText("Press Enter to return to menu", ConsoleColor.DarkGray);
+        BaseUI.ColoredText("Press any key to return to menu", ConsoleColor.DarkGray);
         Console.ReadKey();
     }
 }
