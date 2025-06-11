@@ -2,11 +2,6 @@ namespace ProjectB.Presentation;
 
 public class AboutUs
 {
-    public AboutUs()
-    {
-        
-    }
-
     public void Run()
     {
         Console.Clear();
@@ -20,7 +15,7 @@ public class AboutUs
 
         Console.WriteLine();
         Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine("     More than just movies — it’s a cinematic experience.\n");
+        Console.WriteLine("   More than just movies — it’s a cinematic experience.\n");
         Console.ResetColor();
 
         // Our Story
