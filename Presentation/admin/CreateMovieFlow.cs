@@ -54,7 +54,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Description
-            movieDescription = BaseUI.DrawInputBox("Enter movie description", 25, 30, 0, 6, movieDescription);
+            movieDescription = DrawMovieDescriptionInputBox("Enter movie description", 25, 70, 2, 0, 6, movieDescription);
             while (!MovieLogic.ValidateInput<string>(20, 100, movieDescription))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 20 and 100 characters.", 8);
