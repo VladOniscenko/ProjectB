@@ -2,8 +2,8 @@ using Microsoft.VisualStudio.TestPlatform.Utilities;
 
 public static class BaseUI
 {
-    private static int BoxX { get; set; }
-    private static int Width { get; set; }
+    private static int BoxX;
+    private static int Width;
     //make width boXx AND X Y OPTIONAL
 
     static BaseUI()
