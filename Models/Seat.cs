@@ -1,8 +1,7 @@
 namespace ProjectB.Models;
 
-public class Seat : IEquatable<Seat>, IComparable<Seat>
+public class Seat : BaseModel, IEquatable<Seat>, IComparable<Seat>
 {
-    public int Id { get; set; }
     public int AuditoriumId { get; set; }
     public int Row { get; set; }
     public int Number { get; set; }
@@ -11,6 +10,11 @@ public class Seat : IEquatable<Seat>, IComparable<Seat>
     public int Taken { get; set; } = 0;
     public bool Selected { get; set; }
     public string TicketType { get; set; }
+    
+    public override string ToString()
+    {
+        return $"Seat {Row}-{Number}";
+    }
     
     public int CompareTo(Seat? other)
     {

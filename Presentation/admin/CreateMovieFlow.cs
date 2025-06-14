@@ -196,7 +196,7 @@ private string DrawMovieDescriptionInputBox(string label, int BoxX = 15, int Wid
 
     if (previouslyWritten is not null)
     {
-        var words = previouslyWritten.Split(' ');
+        var words = previouslyWritten.Split(' '); 
         int currentLine = 0;
         foreach (var word in words)
         {

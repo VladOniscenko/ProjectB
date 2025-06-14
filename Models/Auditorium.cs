@@ -1,8 +1,7 @@
 namespace ProjectB.Models;
 
-public class Auditorium
+public class Auditorium : BaseModel
 {
-    public int Id { get; set; }
     public int TotalSeats { get; set; }
     public string Name { get; set; }
     public int CinemaId { get; set; }
