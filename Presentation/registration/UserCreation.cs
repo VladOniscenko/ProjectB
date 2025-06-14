@@ -31,6 +31,13 @@ public class UserCreation
         Console.WriteLine("║   Create New User    ║");
         Console.WriteLine("╚══════════════════════╝");
 
+        Console.SetCursorPosition(0, 24);
+        Console.Write("                                                                                     \n");
+
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     Press ESC to return back to the menu     ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+
         User newUser = new User();
         if (user is not null)
         {

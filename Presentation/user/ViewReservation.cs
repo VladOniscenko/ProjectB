@@ -107,28 +107,19 @@ public class ViewReservation
     private void ShowPurchaseMenu(Reservation reservation, Showtime showtime)
     {
         int startingRow = Console.CursorTop + 2;
-        List<string> options = new() { "Cancel reservation", "Back to reservation list" };
+        List<string> options = new() { "Back to reservation list" };
 
-        if (reservation.Status == "Cancelled")
+        if (reservation.Status == "Confirmed" && showtime.StartTime >= DateTime.Now)
         {
-            options.Remove("Cancel reservation");
+            options.Add("Cancel reservation");
         }
 
-        if (showtime.StartTime <= DateTime.Now)
-        {
-            options.Remove("Cancel reservation");
-        }
-
-        int selected = Menu.AddMenuFromStartRow("What would you like to", options, startingRow);
-
-        if (selected == 0 && reservation.Status == "Confirmed" && options.Count > 1)
-        {
+        if (Menu.AddMenuFromStartRow("What would you like to", options, startingRow) == 1 && reservation.Status == "Confirmed" && options.Count > 1) {
             Running = false;
             canceling(reservation);
         }
 
         Console.Clear();
-        return;
     }
 
     private void canceling(Reservation reservation)

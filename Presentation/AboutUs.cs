@@ -2,11 +2,6 @@ namespace ProjectB.Presentation;
 
 public class AboutUs
 {
-    public AboutUs()
-    {
-        
-    }
-
     public void Run()
     {
         Console.Clear();
@@ -20,7 +15,7 @@ public class AboutUs
 
         Console.WriteLine();
         Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine("     More than just movies — it’s a cinematic experience.\n");
+        Console.WriteLine("   More than just movies — it’s a cinematic experience.\n");
         Console.ResetColor();
 
         // Our Story
@@ -69,7 +64,7 @@ public class AboutUs
         Console.WriteLine("╚════════════════════════════════════════════════════════╝\n");
         Console.ResetColor();
 
-        BaseUI.ColoredText("Press Enter to return to menu", ConsoleColor.DarkGray);
+        BaseUI.ColoredText("Press any key to return to menu", ConsoleColor.DarkGray);
         Console.ReadKey();
     }
 }

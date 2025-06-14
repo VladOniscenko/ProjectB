@@ -86,6 +86,7 @@ public class CreateMovieFlow
 
             // Runtime
             runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 9, runtime);
+
             if (runtime == null)
             {
                 BaseUI.ResetColor();

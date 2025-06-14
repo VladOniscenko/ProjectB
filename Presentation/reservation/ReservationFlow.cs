@@ -47,6 +47,24 @@ public class ReservationFlow
 
     public void Run()
     {
+
+        if (_movie.AgeRestriction > 0)
+        {
+            Console.Clear();
+            Console.WriteLine(GetReservationInfo());
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine($"Please confirm that all guests in your party are {_movie.AgeRestriction} years of age or older.");
+            Console.ResetColor();
+            
+            if (!BaseUI.BasicYesOrNo())
+            {
+                Console.WriteLine("\n");
+                ConsoleMethods.Error($"Guests must be at least {_movie.AgeRestriction} years old. Reservations are not allowed for individuals below this age.");
+                return;
+            }
+        }
+        
         Running = true;
         while (Running)
         {

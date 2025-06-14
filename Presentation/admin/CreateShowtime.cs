@@ -38,9 +38,23 @@ public class CreateShowtime
             Console.WriteLine("╔═════════════════════════════╗");
             Console.WriteLine("║       Create  Showtime      ║");
             Console.WriteLine("╚═════════════════════════════╝");
+
+            Console.SetCursorPosition(0, 24);
+            Console.Write("                                                                                     \n");
+
+            Console.WriteLine("╔══════════════════════════════════════════════╗");
+            Console.WriteLine("║     Press ESC to return back to the menu     ║");
+            Console.WriteLine("╚══════════════════════════════════════════════╝");
+
+            Console.SetCursorPosition(0, 4);
             
-            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.");
-            string movieName = Console.ReadLine().Trim();
+            Console.WriteLine("\nEnter the name/keyword of the movie you want to create a showtime for.\n");
+            string movieName = BaseUI.DrawInputBox("name/keyword", 15, 30, -1, -1);
+            if (movieName == null)
+            {
+                BaseUI.ResetColor();
+                return;
+            }
 
             IEnumerable<Movie> movies = _movieLogic.GetMoviesByTitle(movieName);
 
@@ -59,6 +73,7 @@ public class CreateShowtime
                 break;
             };
     
+
             Console.WriteLine("Film not found.");
         }
         
@@ -86,16 +101,16 @@ public class CreateShowtime
         {
             Console.Clear();
             Console.SetCursorPosition(0, 0);
-            Console.WriteLine("\nEnter the date and time (yyyy-MM-dd HH:mm) for the movie you want to create a showtime for.");
+            Console.WriteLine("\nEnter the date and time for the movie you want to create a showtime for.");
             BaseUI.ColoredText("Datetime format: yyyy-MM-dd HH:mm", ConsoleColor.DarkGray);
-            BaseUI.ColoredText("Date: yyyy-MM-dd (ex: 2027-08-21)", ConsoleColor.DarkGray);
+            BaseUI.ColoredText("Date: year-month-day (ex: 2027-08-21)", ConsoleColor.DarkGray);
             BaseUI.ColoredText("Time: 24-hour (ex: 23:00)", ConsoleColor.DarkGray);
             Console.SetCursorPosition(0, 6);
             string movieStartTime = Console.ReadLine()?.Trim() ?? "";
 
             if (!_showtimeLogic.IsMovieStartTimeValid(movieStartTime))
             {
-                ConsoleMethods.Error("Something went wrong! Check if the date is correct format (yyyy-MM-dd HH:mm) and is not in the past!");
+                ConsoleMethods.Error("Something went wrong! Check if the date is correct format (yyyy-MM-dd HH:mm) and is not in the past.");
                 continue;
             }
 
