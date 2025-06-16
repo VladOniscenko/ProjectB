@@ -54,7 +54,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Description
-            movieDescription = DrawMovieDescriptionInputBox("Enter movie description", 25, 70, 2, 0, 6, movieDescription);
+            movieDescription = DrawMovieDescriptionInputBox("Enter movie description", 25, 50, 2, 0, 6, movieDescription);
             while (!MovieLogic.ValidateInput<string>(20, 100, movieDescription))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 20 and 100 characters.", 8);
@@ -109,7 +109,7 @@ public class CreateMovieFlow
             Console.Write("                                                                                     ");
 
             // Age Restriction
-            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput);
+            ageInput = BaseUI.DrawInputBox("Enter age restriction", 30, 30, 0, 17, ageInput).Trim('+');
             while (!MovieLogic.ValidateInput<int>(0, 99, ageInput))
             {
                 BaseUI.ShowErrorMessage("Please enter a valid non-negative integer for age restriction.", 18);
