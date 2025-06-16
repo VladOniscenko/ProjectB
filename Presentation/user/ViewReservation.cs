@@ -1,9 +1,6 @@
 
-using Bogus.DataSets;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectB.DataAccess;
 using ProjectB.Logic;
-using ProjectB.Logic.Interfaces;
 using ProjectB.Models;
 
 namespace ProjectB.Presentation;

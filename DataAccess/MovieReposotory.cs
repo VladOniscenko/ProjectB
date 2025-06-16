@@ -2,7 +2,7 @@ using Dapper;
 using ProjectB.Database;
 using System.Text.Json;
 using ProjectB.Models;
-using Bogus;
+using Bogus; // used to generate fake actor names for the movies
 
 namespace ProjectB.DataAccess;
 
