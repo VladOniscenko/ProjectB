@@ -70,6 +70,7 @@ public class CreateMovieFlow
                 BaseUI.ResetColor();
                 return;
             }
+            movieDescription = DrawMovieDescriptionInputBox("Enter movie description", 25, 50, 2, 0, 6, movieDescription);
             while (!MovieLogic.ValidateInput<string>(20, 100, movieDescription))
             {
                 BaseUI.ShowErrorMessage("Your input has to be between 20 and 100 characters.", 8);
@@ -86,7 +87,6 @@ public class CreateMovieFlow
 
             // Runtime
             runtime = BaseUI.DrawInputBox("Enter runtime (in minutes)", 30, 30, 0, 9, runtime);
-
             if (runtime == null)
             {
                 BaseUI.ResetColor();
