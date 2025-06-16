@@ -287,22 +287,22 @@ public class CreateMovieFlow
         for (int i = 0; i < Height; i++)
             lines[i] = string.Empty;
 
-        if (previouslyWritten is not null)
+    if (previouslyWritten is not null)
+    {
+        var words = previouslyWritten.Split(' '); 
+        int currentLine = 0;
+        foreach (var word in words)
         {
-            var words = previouslyWritten.Split(' ');
-            int currentLine = 0;
-            foreach (var word in words)
+            if (lines[currentLine].Length + word.Length + 1 > Width - 1)
             {
-                if (lines[currentLine].Length + word.Length + 1 > Width - 1)
-                {
-                    currentLine++;
-                    if (currentLine >= Height) break;
-                }
-                if (lines[currentLine].Length > 0)
-                    lines[currentLine] += " ";
-                lines[currentLine] += word;
+                currentLine++;
+                if (currentLine >= Height) break;
             }
+            if (lines[currentLine].Length > 0)
+                lines[currentLine] += " ";
+            lines[currentLine] += word;
         }
+    }
 
         for (int i = 0; i < Height; i++)
         {
