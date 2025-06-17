@@ -139,8 +139,6 @@ class Program
             menuOptions.Add("LI", "Log in");
         }
 
-        menuOptions.Add("EX", "Exit");
-
         var customerName = CurrentUser is not null ? $"back {CurrentUser.FirstName}" : "";
         List<Movie> Promotedmovie = new MovieLogic(new MovieRepository()).GetPromotedMovies();
 
